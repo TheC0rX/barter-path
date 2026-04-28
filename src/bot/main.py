@@ -4,7 +4,7 @@ from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
 
 from src.bot.handlers import setup_routers
-from src.bot.middlewares.i18n import get_i18n_middleware
+from src.bot.middlewares.i18n import setup_i18n
 
 from src.config import config
 
@@ -16,8 +16,7 @@ async def main() -> None:
     )
     dp = Dispatcher()
 
-    i18n_middleware = get_i18n_middleware()
-    i18n_middleware.setup(dp)
+    setup_i18n(dp)
 
     dp.include_router(setup_routers())
 

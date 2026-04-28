@@ -19,10 +19,11 @@ class UserManager(BaseManager):
         pass
 
 
-def get_i18n_middleware() -> I18nMiddleware:
+def setup_i18n(dp) -> I18nMiddleware:
     locales_path = Path(__file__).parent.parent.parent / "locales"
 
     core = FluentRuntimeCore(path=str(locales_path / "{locale}"))
     middleware = I18nMiddleware(core=core, default_locale="en", manager=UserManager())
 
+    middleware.setup(dp)
     return middleware
