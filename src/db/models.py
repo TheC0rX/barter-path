@@ -19,4 +19,6 @@ class User(Base):
 
     user_id: Mapped[int] = mapped_column(BIGINT, primary_key=True, autoincrement=False)
     locale: Mapped[str] = mapped_column(VARCHAR(2), default="en")
-    created_at: Mapped[datetime] = mapped_column(TIMESTAMP, server_default=func.now())
+    created_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), server_default=func.now()
+    )
