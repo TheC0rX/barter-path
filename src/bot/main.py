@@ -3,9 +3,10 @@ from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
 
+from src.bot import middlewares
 from src.bot.handlers import setup_routers
-from src.bot.middlewares.i18n import setup_i18n
 
+from src.db.base import engine, async_session_maker
 from src.config import config
 
 
@@ -16,7 +17,10 @@ async def main() -> None:
     )
     dp = Dispatcher()
 
-    setup_i18n(dp)
+    dp.update.middleware(
+        middlewares.DbSessionMiddleware(session_pool=async_session_maker)
+    )
+    middlewares.setup_i18n(dp)
 
     dp.include_router(setup_routers())
 
@@ -32,5 +36,6 @@ async def main() -> None:
         logger.exception(e)
 
     finally:
+        await engine.dispose()
         await bot.session.close()
         logger.info("The bot has been stopped.")
