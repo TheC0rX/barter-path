@@ -20,10 +20,10 @@ settings-language_changed =
     Язык был успешно изменен.
 
 buttons-back =
-    ⬅️ Назад
+    Назад
 
 buttons-settings =
-    ⚙️ Настройки
+    Настройки
 
 settings-switch-lang =
     🇺🇸 Switch to English

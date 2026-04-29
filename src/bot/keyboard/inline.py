@@ -9,7 +9,8 @@ def get_main_menu_kb(i18n: I18nContext) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
     builder.button(
-        text=i18n.get("buttons-settings"), callback_data=MenuClick(target="settings")
+        text="⚙️ " + i18n.get("buttons-settings"),
+        callback_data=MenuClick(target="settings"),
     )
 
     builder.adjust(1)
@@ -25,7 +26,7 @@ def get_settings_kb(i18n: I18nContext) -> InlineKeyboardMarkup:
         callback_data=LanguageClick(locale=target_locale),
     )
     builder.button(
-        text=i18n.get("buttons-back"), callback_data=MenuClick(target="main")
+        text="⬅️ " + i18n.get("buttons-back"), callback_data=MenuClick(target="main")
     )
 
     builder.adjust(1)
