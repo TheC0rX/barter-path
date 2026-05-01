@@ -22,7 +22,7 @@ def get_settings_kb(i18n: I18nContext) -> InlineKeyboardMarkup:
 
     target_locale = "en" if i18n.locale == "ru" else "ru"
     builder.button(
-        text=i18n.get("settings-switch-lang"),
+        text=i18n.get("settings-switch_lang"),
         callback_data=LanguageClick(locale=target_locale),
     )
     builder.button(

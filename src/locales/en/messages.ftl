@@ -25,5 +25,5 @@ buttons-back =
 buttons-settings =
     Settings
 
-settings-switch-lang =
+settings-switch_lang =
     🇷🇺 Перейти на Русский

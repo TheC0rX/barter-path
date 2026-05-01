@@ -25,5 +25,5 @@ buttons-back =
 buttons-settings =
     Настройки
 
-settings-switch-lang =
+settings-switch_lang =
     🇺🇸 Switch to English
