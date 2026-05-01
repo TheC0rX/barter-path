@@ -5,7 +5,9 @@ from aiogram.fsm.context import FSMContext
 from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.db.repo import ItemRepo
+from src.db.repo import UserRepo, ItemRepo
+from src.db.models import UserTask
+from src.bot.keyboard import inline
 from src.bot.utils.states import AddTaskStates
 from src.bot.keyboard.callback_data import MenuClick, RecipeNav
 
@@ -59,6 +61,7 @@ async def process_item_selection(
 
     await callback.message.edit_text(text=text, reply_markup=kb)  # type: ignore
     await state.clear()
+
     await callback.answer()
 
 
@@ -78,4 +81,30 @@ async def navigate_recipe(
     except Exception:
         pass
 
+    await callback.answer()
+
+
+@router.callback_query(F.data.startswith("add_task:"))
+async def add_task_confirmation(
+    callback: CallbackQuery, session: AsyncSession, i18n: I18nContext
+) -> None:
+    _, item_id, offer_idx = str(callback.data).split(":")
+
+    repo = UserRepo(session)
+    is_task_exist = await repo.check_task_exists(callback.from_user.id, item_id)
+
+    if is_task_exist:
+        await callback.message.edit_text(  # type: ignore
+            text=i18n.get("task-already-exist"),
+            reply_markup=inline.get_back_button(i18n),
+        )
+        return
+
+    new_task = UserTask(
+        user_id=callback.from_user.id, item_id=item_id, offer_idx=int(offer_idx)
+    )
+    session.add(new_task)
+    await session.commit()
+
+    await callback.message.edit_text(text=i18n.get("add_task-created_success"), reply_markup=inline.get_back_button(i18n))  # type: ignore
     await callback.answer()

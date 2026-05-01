@@ -27,6 +27,14 @@ class UserRepo:
 
         return result.scalar() or 0
 
+    async def check_task_exists(self, user_id: int, item_id: str) -> bool:
+        stmt = select(UserTask).where(
+            UserTask.user_id == user_id, UserTask.item_id == item_id
+        )
+        result = await self.session.execute(stmt)
+
+        return result.scalar_one_or_none() is not None
+
 
 class ItemRepo:
     def __init__(self, session: AsyncSession):
