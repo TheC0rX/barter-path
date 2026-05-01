@@ -26,11 +26,11 @@ async def main() -> None:
 
     try:
         await bot.delete_webhook(True)
-        logger.info("The bot has been started.")
+        logger.success("The bot has been started.")
 
         await dp.start_polling(bot)
 
-    except (KeyboardInterrupt, SystemExit):
+    except KeyboardInterrupt, SystemExit:
         logger.warning("The bot is shutting down...")
     except Exception as e:
         logger.exception(e)
