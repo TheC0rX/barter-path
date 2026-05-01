@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, or_
 
-from .models import User
+from .models import User, Item
 
 
 class UserRepo:
@@ -16,3 +16,29 @@ class UserRepo:
         user = User(user_id=user_id, locale=locale)  # type: ignore
         await self.session.merge(user)
         await self.session.commit()
+
+
+class ItemRepo:
+    def __init__(self, session: AsyncSession):
+        self.session = session
+
+    async def search_items(self, query: str):
+        clean_query = query.strip().lower()
+        for char in "«»\"'.-":
+            clean_query = clean_query.replace(char, " ")
+
+        search_pattern = f"%{'%'.join(clean_query.split())}%"
+
+        stmt = (
+            select(Item)
+            .where(
+                or_(
+                    Item.name_ru.ilike(search_pattern),
+                    Item.name_en.ilike(search_pattern),
+                )
+            )
+            .limit(5)
+        )
+
+        result = await self.session.execute(stmt)
+        return result.scalars().all()
