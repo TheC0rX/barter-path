@@ -32,6 +32,15 @@ selected-offer =
     Выбранное предложение: { $offer }/{ $total_offers }.
 required-ings =
     Необходимые ресурсы:
+pcs =
+    шт
+too-many-tasks =
+    У вас уже достаточно задач для создания новых.
+task-already-exist =
+    Задача на создание этого предмета уже создана.
+add_task-created_success =
+    Задача была успешно добавлена.
+    Удачи!
 
 menu-settings-text =
     <b>Настройки</b>

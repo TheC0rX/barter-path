@@ -32,6 +32,15 @@ selected-offer =
     Selected offer: { $offer }/{ $total_offers }.
 required-ings =
     Require resources:
+pcs =
+    pcs
+too-many-tasks =
+    You already have too many goals to add a new task.
+task-already-exist =
+    The task to make this item is already exist.
+add_task-created_success =
+    The task has been successfully created.
+    Good luck!
 
 menu-settings-text =
     <b>Settings</b>
