@@ -40,7 +40,7 @@ async def render_item_card(
 
     for ing_item, amount in current_ings:
         name = ing_item.name_ru if i18n.locale == "ru" else ing_item.name_en
-        text += f"- {name} - <code>{amount}</code>\n"
+        text += f"- {name}: <code>{amount}</code> {i18n.get('pcs')}.\n"
 
     builder = InlineKeyboardBuilder()
 
