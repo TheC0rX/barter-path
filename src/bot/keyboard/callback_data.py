@@ -6,5 +6,10 @@ class MenuClick(CallbackData, prefix="menu"):
     back_to: str = "main"
 
 
+class RecipeNav(CallbackData, prefix="recipe_nav"):
+    item_id: str
+    idx: str
+
+
 class LanguageClick(CallbackData, prefix="lang"):
     locale: str
