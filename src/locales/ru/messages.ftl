@@ -10,6 +10,19 @@ menu-main-text =
 
     Контент главного меню.
 
+menu-add_task-text =
+    <b>Добавление Задачи</b>
+    ___
+
+    Введите название предмета, который желаете сделать.
+
+add_item-search_empty =
+    Ни одного предмета с таким названием не было найдено.
+    Попробуйте написать полное название предмета.
+
+add_task-search_results =
+    Удалось найти несколько предметов.
+
 menu-settings-text =
     <b>Настройки</b>
     ___
@@ -21,6 +34,9 @@ settings-language_changed =
 
 buttons-back =
     Назад
+
+buttons-add_task =
+    Добавить задачу
 
 buttons-settings =
     Настройки

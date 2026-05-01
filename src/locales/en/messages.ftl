@@ -10,6 +10,20 @@ menu-main-text =
     
     The content of main menu below.
 
+menu-add_task-text =
+    <b>Add Task</b>
+    ___
+
+    Enter item name, that you want to make.
+
+add_item-search_empty =
+    Cannot find an item with this name.
+    Try to enter full name of the item.
+
+add_task-search_results =
+    A few items were found.
+
+
 menu-settings-text =
     <b>Settings</b>
     ___
@@ -21,6 +35,9 @@ settings-language_changed =
 
 buttons-back =
     Back
+
+buttons-add_task =
+    Add task
 
 buttons-settings =
     Settings
