@@ -23,6 +23,15 @@ add_item-search_empty =
 add_task-search_results =
     A few items were found.
 
+add_task-confirm =
+    Confirm
+
+selected-item =
+    Selected item: { $item_name }.
+selected-offer =
+    Selected offer: { $offer }/{ $total_offers }.
+required-ings =
+    Require resources:
 
 menu-settings-text =
     <b>Settings</b>

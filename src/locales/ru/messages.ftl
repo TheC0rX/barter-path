@@ -23,6 +23,16 @@ add_item-search_empty =
 add_task-search_results =
     Удалось найти несколько предметов.
 
+add_task-confirm =
+    Подтвердить
+
+selected-item =
+    Выбранный предмет: { $item_name }.
+selected-offer =
+    Выбранное предложение: { $offer }/{ $total_offers }.
+required-ings =
+    Необходимые ресурсы:
+
 menu-settings-text =
     <b>Настройки</b>
     ___
