@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, or_
+from sqlalchemy import select, or_, func
 
-from .models import User, Item, Recipe
+from .models import User, Item, Recipe, UserTask
 
 
 class UserRepo:
@@ -16,6 +16,16 @@ class UserRepo:
         user = User(user_id=user_id, locale=locale)  # type: ignore
         await self.session.merge(user)
         await self.session.commit()
+
+    async def get_user_tasks_count(self, user_id: int) -> int:
+        stmt = (
+            select(func.count())
+            .select_from(UserTask)
+            .where(UserTask.user_id == user_id)
+        )
+        result = await self.session.execute(stmt)
+
+        return result.scalar() or 0
 
 
 class ItemRepo:
