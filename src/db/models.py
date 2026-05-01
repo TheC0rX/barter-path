@@ -28,6 +28,17 @@ class User(Base):
     )
 
 
+class UserTask(Base):
+    __tablename__ = "user_tasks"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(
+        BIGINT, ForeignKey("users.user_id", ondelete="CASCADE")
+    )
+    item_id: Mapped[str] = mapped_column(ForeignKey("items.id", ondelete="CASCADE"))
+    offer_idx: Mapped[int] = mapped_column(INTEGER, default=0)
+
+
 class Item(Base):
     __tablename__ = "items"
 
