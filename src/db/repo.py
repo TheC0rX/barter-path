@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, or_
 
-from .models import User, Item
+from .models import User, Item, Recipe
 
 
 class UserRepo:
@@ -43,3 +43,17 @@ class ItemRepo:
 
         result = await self.session.execute(stmt)
         return result.scalars().all()
+
+    async def get_item_recipes(self, item_id: str):
+        stmt = (
+            select(Recipe, Item)
+            .join(Item, Recipe.ingredient_id == Item.id)
+            .where(Recipe.item_id == item_id)
+            .order_by(Recipe.offer_index)
+        )
+
+        result = await self.session.execute(stmt)
+        return result.all()
+
+    async def get_item(self, item_id: str) -> Item | None:
+        return await self.session.get(Item, item_id)
