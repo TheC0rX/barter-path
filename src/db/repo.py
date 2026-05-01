@@ -32,10 +32,11 @@ class ItemRepo:
         stmt = (
             select(Item)
             .where(
+                Item.is_barterable == True,
                 or_(
                     Item.name_ru.ilike(search_pattern),
                     Item.name_en.ilike(search_pattern),
-                )
+                ),
             )
             .limit(5)
         )

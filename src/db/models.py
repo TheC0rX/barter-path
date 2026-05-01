@@ -10,6 +10,7 @@ from sqlalchemy.dialects.postgresql import (
     INTEGER,
     BIGINT,
     VARCHAR,
+    BOOLEAN,
     TIMESTAMP,
 )
 
@@ -36,6 +37,8 @@ class Item(Base):
     name_ru: Mapped[str] = mapped_column(VARCHAR)
     name_en: Mapped[str] = mapped_column(VARCHAR)
 
+    is_barterable: Mapped[bool] = mapped_column(BOOLEAN, default=False, index=True)
+
     recipe_results: Mapped[List["Recipe"]] = relationship(
         "Recipe", foreign_keys="[Recipe.item_id]", back_populates="result_item"
     )
@@ -50,6 +53,7 @@ class Recipe(Base):
         ForeignKey("items.id", ondelete="CASCADE")
     )
     amount: Mapped[int] = mapped_column(INTEGER)
+    offer_index: Mapped[int] = mapped_column(INTEGER, default=0)
 
     result_item: Mapped["Item"] = relationship(
         "Item", foreign_keys=[item_id], back_populates="recipe_results"
