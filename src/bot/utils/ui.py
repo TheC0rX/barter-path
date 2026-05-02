@@ -68,3 +68,38 @@ async def render_item_card(
     builder.adjust(1, 2, 1)
 
     return text, builder.as_markup()
+
+
+async def show_main_menu(
+    event: Message | CallbackQuery,
+    session: AsyncSession,
+    i18n: I18nContext,
+    task_idx: int = 0,
+) -> None:
+    repo = UserRepo(session)
+    user_id = event.from_user.id  # type: ignore
+    tasks = await repo.get_user_tasks(user_id)
+
+    if not tasks:
+        text = i18n.get("menu-main-text", name=event.from_user.first_name)  # type: ignore
+        kb = inline.get_main_menu_kb(i18n, has_tasks=False)
+    else:
+        current_task = tasks[task_idx % len(tasks)]
+        card_text, _ = await render_item_card(
+            current_task.item_id, current_task.offer_idx, session, i18n
+        )
+
+        text = i18n.get("menu-main-text") + "\n\n" + card_text
+        kb = inline.get_main_menu_kb(
+            i18n,
+            has_tasks=True,
+            task_idx=task_idx,
+            total_tasks=len(tasks),
+            current_task_id=current_task.id,
+        )
+
+    if isinstance(event, CallbackQuery):
+        await event.message.edit_text(text=text, reply_markup=kb)  # type: ignore
+        await event.answer()
+    else:
+        await event.answer(text=text, reply_markup=kb)

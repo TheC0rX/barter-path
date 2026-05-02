@@ -6,6 +6,10 @@ class MenuClick(CallbackData, prefix="menu"):
     back_to: str = "main"
 
 
+class MenuTaskNav(CallbackData, prefix="menu_nav"):
+    task_idx: int
+
+
 class RecipeNav(CallbackData, prefix="recipe_nav"):
     item_id: str
     idx: str
