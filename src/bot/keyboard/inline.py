@@ -2,7 +2,12 @@ from aiogram.types import InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram_i18n import I18nContext
 
-from src.bot.keyboard.callback_data import MenuClick, MenuTaskNav, LanguageClick
+from src.bot.keyboard.callback_data import (
+    MenuClick,
+    MenuTaskNav,
+    DeleteTaskClick,
+    LanguageClick,
+)
 
 
 def get_main_menu_kb(
@@ -10,7 +15,7 @@ def get_main_menu_kb(
     has_tasks: bool,
     task_idx: int = 0,
     total_tasks: int = 0,
-    current_task_id=None,
+    current_task_id: int = 0,
 ) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
@@ -26,7 +31,7 @@ def get_main_menu_kb(
     if has_tasks:
         builder.button(
             text="🗑️ " + i18n.get("buttons-delete_task"),
-            callback_data=f"delete_task:{current_task_id}",
+            callback_data=DeleteTaskClick(task_id=current_task_id),
         )
 
     builder.button(

@@ -59,6 +59,11 @@ class UserRepo:
         await self.session.execute(stmt)
         await self.session.commit()
 
+    async def drop_task(self, task_id: int):
+        stmt = delete(UserTask).where(UserTask.id == task_id)
+        await self.session.execute(stmt)
+        await self.session.commit()
+
 
 class ItemRepo:
     def __init__(self, session: AsyncSession):

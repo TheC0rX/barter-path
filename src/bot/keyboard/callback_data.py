@@ -19,6 +19,14 @@ class SearchItem(CallbackData, prefix="select_task_item"):
     item_id: str
 
 
+class DeleteTaskClick(CallbackData, prefix="delete_task"):
+    task_id: int
+
+
+class ConfirmDeleteClick(CallbackData, prefix="confirm_delete_task"):
+    task_id: int
+
+
 class RecipeNav(CallbackData, prefix="recipe_nav"):
     item_id: str
     idx: str
