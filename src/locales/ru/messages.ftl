@@ -42,6 +42,11 @@ add_task-created_success =
     Задача была успешно добавлена.
     Удачи!
 
+task-delete-confirm-text =
+    Вы действительно хотите удалить задачу на создания выбранного предмета?
+delete_task-deleted_success =
+    Задача была успешно удалена.
+
 menu-settings-text =
     <b>Настройки</b>
     ___
@@ -59,6 +64,10 @@ buttons-settings =
     Настройки
 buttons-delete_task =
     Удалить задачу
+buttons-confirm-yes =
+    Подтвердить
+buttons-confirm-no =
+    Отменить
 
 settings-switch_lang =
     🇺🇸 Switch to English

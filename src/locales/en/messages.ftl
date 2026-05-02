@@ -42,6 +42,11 @@ add_task-created_success =
     The task has been successfully created.
     Good luck!
 
+task-delete-confirm-text =
+    Do you really want to delete the selected task?
+delete_task-deleted_success =
+    The task has been successfully deleted.
+
 menu-settings-text =
     <b>Settings</b>
     ___
@@ -59,6 +64,10 @@ buttons-settings =
     Settings
 buttons-delete_task =
     Delete task
+buttons-confirm-yes =
+    Confirm
+buttons-confirm-no =
+    Cancel
 
 settings-switch_lang =
     🇷🇺 Перейти на Русский
