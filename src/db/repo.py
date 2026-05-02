@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, or_, func
+from sqlalchemy.orm import joinedload
 
 from .models import User, Item, Recipe, UserTask
 
@@ -34,6 +35,22 @@ class UserRepo:
         result = await self.session.execute(stmt)
 
         return result.scalar_one_or_none() is not None
+
+    async def has_tasks(self, user_id: int) -> bool:
+        stmt = select(UserTask).where(UserTask.user_id == user_id).limit(1)
+        result = await self.session.execute(stmt)
+
+        return result.scalar_one_or_none() is not None
+
+    async def get_user_tasks(self, user_id: int):
+        stmt = (
+            select(UserTask)
+            .options(joinedload(UserTask.item))
+            .where(UserTask.user_id == user_id)
+            .order_by(UserTask.id)
+        )
+        result = await self.session.execute(stmt)
+        return result.scalars().all()
 
 
 class ItemRepo:
