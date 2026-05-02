@@ -9,7 +9,12 @@ from src.db.repo import UserRepo, ItemRepo
 from src.db.models import UserTask
 from src.bot.keyboard import inline
 from src.bot.utils.states import AddTaskStates
-from src.bot.keyboard.callback_data import MenuClick, RecipeNav
+from src.bot.keyboard.callback_data import (
+    MenuClick,
+    RecipeNav,
+    SearchItem,
+    AddTaskClick,
+)
 
 from src.bot.utils.ui import render_item_card
 
@@ -39,7 +44,7 @@ async def search_item(
     builder = InlineKeyboardBuilder()
     for item in items:
         display_name = item.name_ru if i18n.locale == "ru" else item.name_en
-        builder.button(text=display_name, callback_data=f"select_task_item:{item.id}")
+        builder.button(text=display_name, callback_data=SearchItem(item_id=item.id))
     builder.button(
         text="⬅️ " + i18n.get("buttons-back"), callback_data=MenuClick(target="main")
     )
@@ -50,13 +55,15 @@ async def search_item(
     )
 
 
-@router.callback_query(
-    AddTaskStates.wait_for_item_name, F.data.startswith("select_task_item:")
-)
+@router.callback_query(SearchItem.filter())
 async def process_item_selection(
-    callback: CallbackQuery, state: FSMContext, session: AsyncSession, i18n: I18nContext
+    callback: CallbackQuery,
+    callback_data: SearchItem,
+    state: FSMContext,
+    session: AsyncSession,
+    i18n: I18nContext,
 ):
-    item_id = str(callback.data).split(":")[1]
+    item_id = callback_data.item_id
     text, kb = await render_item_card(item_id, 0, session, i18n)
 
     await callback.message.edit_text(text=text, reply_markup=kb)  # type: ignore
@@ -84,11 +91,15 @@ async def navigate_recipe(
     await callback.answer()
 
 
-@router.callback_query(F.data.startswith("add_task:"))
+@router.callback_query(AddTaskClick.filter())
 async def add_user_task(
-    callback: CallbackQuery, session: AsyncSession, i18n: I18nContext
+    callback: CallbackQuery,
+    callback_data: AddTaskClick,
+    session: AsyncSession,
+    i18n: I18nContext,
 ) -> None:
-    _, item_id, offer_idx = str(callback.data).split(":")
+    item_id = callback_data.item_id
+    offer_idx = callback_data.offer_idx
 
     repo = UserRepo(session)
     is_task_exist = await repo.check_task_exists(callback.from_user.id, item_id)

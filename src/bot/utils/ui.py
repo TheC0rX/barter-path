@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.repo import UserRepo, ItemRepo
 from src.bot.keyboard import inline
-from src.bot.keyboard.callback_data import RecipeNav, MenuClick
+from src.bot.keyboard.callback_data import RecipeNav, MenuClick, AddTaskClick
 
 
 async def render_item_card(
@@ -48,7 +48,7 @@ async def render_item_card(
 
     builder.button(
         text=i18n.get("add_task-confirm"),
-        callback_data=f"add_task:{item_id}:{offer_idx}",
+        callback_data=AddTaskClick(item_id=item_id, offer_idx=offer_idx),
     )
 
     if total_offers > 1:
