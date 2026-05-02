@@ -38,6 +38,8 @@ class UserTask(Base):
     item_id: Mapped[str] = mapped_column(ForeignKey("items.id", ondelete="CASCADE"))
     offer_idx: Mapped[int] = mapped_column(INTEGER, default=0)
 
+    item: Mapped["Item"] = relationship("Item")
+
 
 class Item(Base):
     __tablename__ = "items"
