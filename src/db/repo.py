@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, or_, func
+from sqlalchemy import select, or_, func, delete, insert
 from sqlalchemy.orm import joinedload
 
 from .models import User, Item, Recipe, UserTask
@@ -51,6 +51,13 @@ class UserRepo:
         )
         result = await self.session.execute(stmt)
         return result.scalars().all()
+
+    async def add_task(self, user_id: int, item_id: str, offer_idx: int):
+        stmt = insert(UserTask).values(
+            user_id=user_id, item_id=item_id, offer_idx=offer_idx
+        )
+        await self.session.execute(stmt)
+        await self.session.commit()
 
 
 class ItemRepo:

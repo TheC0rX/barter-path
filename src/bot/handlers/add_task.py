@@ -1,4 +1,4 @@
-from aiogram import Router, F
+from aiogram import Router
 from aiogram.types import Message, CallbackQuery
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.fsm.context import FSMContext
@@ -6,7 +6,6 @@ from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.repo import UserRepo, ItemRepo
-from src.db.models import UserTask
 from src.bot.keyboard import inline
 from src.bot.utils.states import AddTaskStates
 from src.bot.keyboard.callback_data import (
@@ -111,11 +110,9 @@ async def add_user_task(
         )
         return
 
-    new_task = UserTask(
+    await repo.add_task(
         user_id=callback.from_user.id, item_id=item_id, offer_idx=int(offer_idx)
     )
-    session.add(new_task)
-    await session.commit()
 
     await callback.message.edit_text(text=i18n.get("add_task-created_success"), reply_markup=inline.get_back_button(i18n))  # type: ignore
     await callback.answer()
