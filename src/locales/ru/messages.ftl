@@ -53,12 +53,12 @@ settings-language_changed =
 
 buttons-back =
     Назад
-
 buttons-add_task =
     Добавить задачу
-
 buttons-settings =
     Настройки
+buttons-delete_task =
+    Удалить задачу
 
 settings-switch_lang =
     🇺🇸 Switch to English

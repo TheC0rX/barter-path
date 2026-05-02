@@ -53,12 +53,12 @@ settings-language_changed =
 
 buttons-back =
     Back
-
 buttons-add_task =
     Add task
-
 buttons-settings =
     Settings
+buttons-delete_task =
+    Delete task
 
 settings-switch_lang =
     🇷🇺 Перейти на Русский
