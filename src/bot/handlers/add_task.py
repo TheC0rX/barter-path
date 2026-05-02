@@ -11,7 +11,7 @@ from src.bot.keyboard import inline
 from src.bot.utils.states import AddTaskStates
 from src.bot.keyboard.callback_data import MenuClick, RecipeNav
 
-from src.bot.utils.render import render_item_card
+from src.bot.utils.ui import render_item_card
 
 router = Router()
 
@@ -85,7 +85,7 @@ async def navigate_recipe(
 
 
 @router.callback_query(F.data.startswith("add_task:"))
-async def add_task_confirmation(
+async def add_user_task(
     callback: CallbackQuery, session: AsyncSession, i18n: I18nContext
 ) -> None:
     _, item_id, offer_idx = str(callback.data).split(":")
