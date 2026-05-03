@@ -1,73 +1,81 @@
-start-welcome =
-    Привет, { $name }! 👋
-    
-    Я - <b>Barter Path</b>, твой помощник по бартеру в STALCRAFT.
-    Помогу рассчитать ресурсы и не запутаться в задачах.
-
-menu-main-text =
+# --- PLACEHOLDERS
+main_menu-placeholder =
     <b>Главное Меню</b>
     ___
 
-    Контент главного меню.
-
-menu-add_task-text =
+add_task-placeholder =
     <b>Добавление Задачи</b>
     ___
 
-    Введите название предмета, который желаете сделать.
+delete_task-placeholder =
+    <b>Удаление Задачи</b>
+    ___
 
-add_item-search_empty =
-    Ни одного предмета с таким названием не было найдено.
-    Попробуйте написать полное название предмета.
-
-add_task-search_results =
-    Удалось найти несколько предметов.
-
-add_task-confirm =
-    Подтвердить
-
-selected-item =
-    Выбранный предмет: { $item_name }.
-selected-offer =
-    Выбранное предложение: { $offer }/{ $total_offers }.
-required-ings =
-    Необходимые ресурсы:
-pcs =
-    шт
-too-many-tasks =
-    У вас уже достаточно задач для создания новых.
-task-already-exist =
-    Задача на создание этого предмета уже создана.
-add_task-created_success =
-    Задача была успешно добавлена.
-    Удачи!
-
-task-delete-confirm-text =
-    Вы действительно хотите удалить задачу на создания выбранного предмета?
-delete_task-deleted_success =
-    Задача была успешно удалена.
-
-menu-settings-text =
+settings-placeholder =
     <b>Настройки</b>
     ___
 
-    Контент настроек ниже.
+# --- ADITING TASK
+enter-item-name =
+    Введите название предмета, который желаете сделать.
+enter-item-name-again =
+    Попробуйте написать полное название предмета.
+
+search-empty =
+    Ни одного предмета с таким названием не было найдено.
+search-results =
+    Удалось найти несколько предметов.
+
+no-tasks =
+    У Вас нет ни одной задачи.
+too-many-tasks =
+    У Вас слишком много созданных задач.
+task-already-exist =
+    Задача на этот предмет уже существует.
+
+add_task-created =
+    Задача была успешно добавлена.
+add_task-good_luck =
+    Удачи!
+
+# --- ITEM CARD
+item_card-selected_item =
+    Выбранный предмет: { $item_name }.
+item_card-selected_offer =
+    Выбранное предложение: { $offer }/{ $total_offers }.
+item_card-required_ings =
+    Необходимые ресурсы:
+item_card-pieces =
+    шт.
+
+# --- DELETING TASK
+delete_task-confirmation =
+    Вы действительно хотите удалить выбранную задачу?
+
+delete_task-deleted =
+    Задача была успешно удалена.
+
+# --- SETTINGS
+settings-description-text =
+    Здесь Вы можете поменять язык.
 
 settings-language_changed =
     Язык был успешно изменен.
 
-buttons-back =
-    Назад
-buttons-add_task =
-    Добавить задачу
-buttons-settings =
-    Настройки
-buttons-delete_task =
-    Удалить задачу
-buttons-confirm-yes =
+# --- BUTTONS
+btn-confirm =
     Подтвердить
-buttons-confirm-no =
+btn-cancel =
     Отменить
+btn-back =
+    Назад
 
-settings-switch_lang =
+btn-add_task =
+    Добавить задачу
+btn-delete_task =
+    Удалить задачу
+btn-settings =
+    Настройки
+
+btn-switch_lang =
     🇺🇸 Switch to English

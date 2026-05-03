@@ -15,7 +15,9 @@ async def change_language(
     await i18n.set_locale(callback_data.locale)
 
     await callback.message.edit_text(  # type: ignore
-        text=i18n.get("settings-language_changed"),
+        text=i18n.get("settings-placeholder")
+        + "\n\n"
+        + i18n.get("settings-language_changed"),
         reply_markup=inline.get_settings_kb(i18n),
     )
     await callback.answer()

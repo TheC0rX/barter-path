@@ -23,17 +23,20 @@ async def process_task_confirmation(
 
     builder = InlineKeyboardBuilder()
     builder.button(
-        text="✅ " + i18n.get("buttons-confirm-yes"),
+        text="✅ " + i18n.get("btn-confirm"),
         callback_data=ConfirmDeleteClick(task_id=task_id),
     )
     builder.button(
-        text="❌ " + i18n.get("buttons-confirm-no"),
+        text="❌ " + i18n.get("btn-cancel"),
         callback_data=MenuClick(target="main"),
     )
     builder.adjust(2)
 
     await callback.message.edit_text(  # type: ignore
-        text=i18n.get("task-delete-confirm-text"), reply_markup=builder.as_markup()
+        text=i18n.get("delete_task-placeholder")
+        + "\n\n"
+        + i18n.get("delete_task-confirmation"),
+        reply_markup=builder.as_markup(),
     )
     await callback.answer()
 
@@ -50,5 +53,10 @@ async def delete_user_task(
     repo = UserRepo(session)
     await repo.drop_task(task_id)
 
-    await callback.message.edit_text(text=i18n.get("delete_task-deleted_success"), reply_markup=inline.get_back_button(i18n))  # type: ignore
+    await callback.message.edit_text(  # type: ignore
+        text=i18n.get("delete_task-placeholder")
+        + "\n\n"
+        + i18n.get("delete_task-deleted"),
+        reply_markup=inline.get_back_button(i18n),
+    )
     await callback.answer()

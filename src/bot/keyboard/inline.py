@@ -24,18 +24,18 @@ def get_main_menu_kb(
         builder.button(text="➡️", callback_data=MenuTaskNav(task_idx=task_idx + 1))
 
     builder.button(
-        text="📝 " + i18n.get("buttons-add_task"),
+        text="📝 " + i18n.get("btn-add_task"),
         callback_data=MenuClick(target="add_task"),
     )
 
     if has_tasks:
         builder.button(
-            text="🗑️ " + i18n.get("buttons-delete_task"),
+            text="🗑️ " + i18n.get("btn-delete_task"),
             callback_data=DeleteTaskClick(task_id=current_task_id),
         )
 
     builder.button(
-        text="⚙️ " + i18n.get("buttons-settings"),
+        text="⚙️ " + i18n.get("btn-settings"),
         callback_data=MenuClick(target="settings"),
     )
 
@@ -53,7 +53,7 @@ def get_back_button(i18n: I18nContext) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
     builder.button(
-        text="⬅️ " + i18n.get("buttons-back"), callback_data=MenuClick(target="main")
+        text="⬅️ " + i18n.get("btn-back"), callback_data=MenuClick(target="main")
     )
 
     builder.adjust(1)
@@ -65,11 +65,11 @@ def get_settings_kb(i18n: I18nContext) -> InlineKeyboardMarkup:
 
     target_locale = "en" if i18n.locale == "ru" else "ru"
     builder.button(
-        text=i18n.get("settings-switch_lang"),
+        text=i18n.get("btn-switch_lang"),
         callback_data=LanguageClick(locale=target_locale),
     )
     builder.button(
-        text="⬅️ " + i18n.get("buttons-back"), callback_data=MenuClick(target="main")
+        text="⬅️ " + i18n.get("btn-back"), callback_data=MenuClick(target="main")
     )
 
     builder.adjust(1)

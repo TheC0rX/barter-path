@@ -36,20 +36,16 @@ async def render_item_card(
     item = await repo.get_item(item_id)
     target_name = item.name_ru if i18n.locale == "ru" else item.name_en  # type: ignore
 
-    text = f"{i18n.get("selected-item", item_name=target_name)}\n"
-    text += f"{i18n.get('selected-offer', offer=offer_idx+1, total_offers=total_offers)}\n\n"
-    text += f"📋 {i18n.get('required-ings')}\n"
+    text = f"{i18n.get("add_task-placeholder")}\n\n"
+    text += f"{i18n.get("item_card-selected_item", item_name=target_name)}\n"
+    text += f"{i18n.get('item_card-selected_offer', offer=offer_idx+1, total_offers=total_offers)}\n\n"
+    text += f"📋 {i18n.get('item_card-required_ings')}\n"
 
     for ing_item, amount in current_ings:
         name = ing_item.name_ru if i18n.locale == "ru" else ing_item.name_en
-        text += f"- {name}: <code>{amount}</code> {i18n.get('pcs')}.\n"
+        text += f"- {name}: <code>{amount}</code> {i18n.get('item_card-pieces')}\n"
 
     builder = InlineKeyboardBuilder()
-
-    builder.button(
-        text=i18n.get("add_task-confirm"),
-        callback_data=AddTaskClick(item_id=item_id, offer_idx=offer_idx),
-    )
 
     if total_offers > 1:
         prev_idx = (offer_idx - 1) % total_offers
@@ -62,11 +58,19 @@ async def render_item_card(
         )
 
     builder.button(
-        text="⬅️ " + i18n.get("buttons-back"),
+        text=i18n.get("btn-confirm"),
+        callback_data=AddTaskClick(item_id=item_id, offer_idx=offer_idx),
+    )
+
+    builder.button(
+        text="⬅️ " + i18n.get("btn-back"),
         callback_data=MenuClick(target="add_task"),
     )
-    builder.adjust(1, 2, 1)
 
+    if total_offers > 1:
+        builder.adjust(2, 1)
+    else:
+        builder.adjust(1)
     return text, builder.as_markup()
 
 
@@ -81,7 +85,7 @@ async def show_main_menu(
     tasks = await repo.get_user_tasks(user_id)
 
     if not tasks:
-        text = i18n.get("menu-main-text", name=event.from_user.first_name)  # type: ignore
+        text = i18n.get("main_menu-placeholder") + "\n\n" + i18n.get("no-tasks")  # type: ignore
         kb = inline.get_main_menu_kb(i18n, has_tasks=False)
     else:
         current_task = tasks[task_idx % len(tasks)]
@@ -89,7 +93,7 @@ async def show_main_menu(
             current_task.item_id, current_task.offer_idx, session, i18n
         )
 
-        text = i18n.get("menu-main-text") + "\n\n" + card_text
+        text = i18n.get("main_menu-placeholder") + "\n\n" + card_text
         kb = inline.get_main_menu_kb(
             i18n,
             has_tasks=True,

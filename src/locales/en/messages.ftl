@@ -1,73 +1,81 @@
-start-welcome =
-    Hello, { $name }! 👋
-    
-    I'm <b>Barter Path</b>, your STALCRAFT barter assistant.
-    I'll help you calculate resources and track your tasks.
-
-menu-main-text =
+# --- PLACEHOLDERS
+main_menu-placeholder =
     <b>Main Menu</b>
     ___
-    
-    The content of main menu below.
 
-menu-add_task-text =
-    <b>Add Task</b>
+add_task-placeholder =
+    <b>Additing Task</b>
     ___
 
-    Enter item name, that you want to make.
+delete_task-placeholder =
+    <b>Deleting Task</b>
+    ___
 
-add_item-search_empty =
-    Cannot find an item with this name.
-    Try to enter full name of the item.
-
-add_task-search_results =
-    A few items were found.
-
-add_task-confirm =
-    Confirm
-
-selected-item =
-    Selected item: { $item_name }.
-selected-offer =
-    Selected offer: { $offer }/{ $total_offers }.
-required-ings =
-    Require resources:
-pcs =
-    pcs
-too-many-tasks =
-    You already have too many goals to add a new task.
-task-already-exist =
-    The task to make this item is already exist.
-add_task-created_success =
-    The task has been successfully created.
-    Good luck!
-
-task-delete-confirm-text =
-    Do you really want to delete the selected task?
-delete_task-deleted_success =
-    The task has been successfully deleted.
-
-menu-settings-text =
+settings-placeholder =
     <b>Settings</b>
     ___
 
-    The content of settings below.
+# --- ADITING TASK
+enter-item-name =
+    Enter an item name you want to craft.
+enter-item-name-again =
+    Try to enter the full item name you want to craft.
+
+search-empty =
+    No item was found with this name.
+search-results =
+    A few items were found:
+
+no-tasks =
+    You don't have any tasks.
+too-many-tasks =
+    You already have too many tasks.
+task-already-exist =
+    This task already exists.
+
+add_task-created =
+    The task has been successfully added.
+add_task-good_luck =
+    Good luck!
+
+# --- ITEM CARD
+item_card-selected_item =
+    Selected item: { $item_name }.
+item_card-selected_offer =
+    Selected offer: { $offer }/{ $total_offers }.
+item_card-required_ings =
+    Required resources:
+item_card-pieces =
+    pcs.
+
+# --- DELETING TASK
+delete_task-confirmation =
+    Do you really want to delete selected task?
+
+delete_task-deleted =
+    The task has been successfully deleted.
+
+# --- SETTINGS
+settings-description-text =
+    Here you can switch the language.
 
 settings-language_changed =
     The language has been successfully changed.
 
-buttons-back =
-    Back
-buttons-add_task =
-    Add task
-buttons-settings =
-    Settings
-buttons-delete_task =
-    Delete task
-buttons-confirm-yes =
+# --- BUTTONS
+btn-confirm =
     Confirm
-buttons-confirm-no =
+btn-cancel =
     Cancel
+btn-back =
+    Back
 
-settings-switch_lang =
+btn-add_task =
+    Add task
+btn-delete_task =
+    Delete task
+btn-settings =
+    Settings
+
+btn-switch_lang =
     🇷🇺 Перейти на Русский

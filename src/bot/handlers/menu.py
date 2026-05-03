@@ -41,12 +41,17 @@ async def open_add_task(
     user_tasks_count = await repo.get_user_tasks_count(callback.from_user.id)
 
     if user_tasks_count >= 3:
-        await callback.message.edit_text(text=i18n.get("too-many-tasks"), reply_markup=inline.get_back_button(i18n))  # type: ignore
+        await callback.message.edit_text(  # type: ignore
+            text=i18n.get("main_menu-placeholder")
+            + "\n\n"
+            + i18n.get("too-many-tasks"),
+            reply_markup=inline.get_back_button(i18n),
+        )
         return
 
     await state.set_state(AddTaskStates.wait_for_item_name)
     await callback.message.edit_text(  # type: ignore
-        text=i18n.get("menu-add_task-text"),
+        text=i18n.get("add_task-placeholder") + "\n\n" + i18n.get("enter-item-name"),
         reply_markup=inline.get_back_button(i18n),
     )
     await callback.answer()
@@ -55,7 +60,9 @@ async def open_add_task(
 @router.callback_query(MenuClick.filter(F.target == "settings"))
 async def open_settings(callback: CallbackQuery, i18n: I18nContext) -> None:
     await callback.message.edit_text(  # type: ignore
-        text=i18n.get("menu-settings-text"),
+        text=i18n.get("settings-placeholder")
+        + "\n\n"
+        + i18n.get("settings-description-text"),
         reply_markup=inline.get_settings_kb(i18n),
     )
     await callback.answer()

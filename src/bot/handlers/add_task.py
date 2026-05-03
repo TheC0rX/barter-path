@@ -28,7 +28,14 @@ async def search_item(
     items = await repo.search_items(str(message.text))
 
     if not items:
-        await message.answer(i18n.get("add_item-search_empty"))
+        await message.answer(
+            text=i18n.get("add_task-placeholder")
+            + "\n\n"
+            + i18n.get("search-empty")
+            + "\n"
+            + i18n.get("enter-item-name-again"),
+            reply_markup=inline.get_back_button(i18n),
+        )
         return
 
     if len(items) == 1:
@@ -45,12 +52,13 @@ async def search_item(
         display_name = item.name_ru if i18n.locale == "ru" else item.name_en
         builder.button(text=display_name, callback_data=SearchItem(item_id=item.id))
     builder.button(
-        text="⬅️ " + i18n.get("buttons-back"), callback_data=MenuClick(target="main")
+        text="⬅️ " + i18n.get("btn-back"), callback_data=MenuClick(target="main")
     )
     builder.adjust(1)
 
     await message.answer(
-        text=i18n.get("add_task-search_results"), reply_markup=builder.as_markup()
+        text=i18n.get("add_task-placeholder") + "\n\n" + i18n.get("search-results"),
+        reply_markup=builder.as_markup(),
     )
 
 
@@ -105,7 +113,9 @@ async def add_user_task(
 
     if is_task_exist:
         await callback.message.edit_text(  # type: ignore
-            text=i18n.get("task-already-exist"),
+            text=i18n.get("add_task-placeholder")
+            + "\n\n"
+            + i18n.get("task-already-exist"),
             reply_markup=inline.get_back_button(i18n),
         )
         return
@@ -114,5 +124,12 @@ async def add_user_task(
         user_id=callback.from_user.id, item_id=item_id, offer_idx=int(offer_idx)
     )
 
-    await callback.message.edit_text(text=i18n.get("add_task-created_success"), reply_markup=inline.get_back_button(i18n))  # type: ignore
+    await callback.message.edit_text(  # type: ignore
+        text=i18n.get("add_task-placeholder")
+        + "\n\n"
+        + i18n.get("add_task-created")
+        + "\n"
+        + i18n.get("add_task-good_luck"),
+        reply_markup=inline.get_back_button(i18n),
+    )
     await callback.answer()
