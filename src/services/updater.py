@@ -75,22 +75,32 @@ class StalcraftUpdater:
                 is_goal = item_id in barterable_ids
                 await session.merge(Item(**item_data, is_barterable=is_goal))
 
+            await session.flush()
+
             logger.info("Updating data of recipes...")
+            recipes_to_add = []
+            seen_recipes = set()
             for location in recipes_data:  # type: ignore
                 for rec in location.get("recipes", []):
                     target_id = rec["item"]
 
                     for offer_idx, offer in enumerate(rec.get("offers", [])):
                         for ing in offer.get("requiredItems", []):
-                            session.add(
-                                Recipe(
-                                    item_id=target_id,
-                                    ingredient_id=ing["item"],
-                                    amount=ing["amount"],
-                                    offer_index=offer_idx,
-                                )
-                            )
+                            ing_id = ing["item"]
+                            recipe_key = (target_id, ing_id, offer_idx)
 
+                            if recipe_key not in seen_recipes:
+                                recipes_to_add.append(
+                                    Recipe(
+                                        item_id=target_id,
+                                        ingredient_id=ing_id,
+                                        amount=ing["amount"],
+                                        offer_index=offer_idx,
+                                    )
+                                )
+                                seen_recipes.add(recipe_key)
+
+            session.add_all(recipes_to_add)
             await session.commit()
             logger.success("Database was successfully updated.")
 
