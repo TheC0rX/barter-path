@@ -1,7 +1,7 @@
 """fix relationships, add uniqueconstraint, optimize field types
 
 Revision ID: b3e2f7fbe49f
-Revises: fccd5b410c8d
+Revises: 2cc3b498adac
 Create Date: 2026-05-03 23:52:03.153081
 
 """
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision: str = 'b3e2f7fbe49f'
-down_revision: Union[str, Sequence[str], None] = 'fccd5b410c8d'
+down_revision: Union[str, Sequence[str], None] = '2cc3b498adac'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
