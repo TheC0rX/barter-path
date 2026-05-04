@@ -62,7 +62,7 @@ class UserRepo:
         await self.session.execute(stmt)
         await self.session.commit()
 
-    async def get_item_name_by_task_id(self, task_id: int, locale: str) -> str | None:
+    async def get_item_name_by_task_id(self, task_id: int, locale: str) -> str:
         name_col = Item.name_ru if locale == "ru" else Item.name_en
         stmt = (
             select(name_col)
@@ -71,7 +71,7 @@ class UserRepo:
         )
 
         result = await self.session.execute(stmt)
-        return result.scalar_one_or_none()
+        return result.scalar_one()
 
 
 class ItemRepo:
