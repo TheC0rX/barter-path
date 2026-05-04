@@ -62,7 +62,7 @@ async def render_item_card(
     )
 
     builder.button(
-        text="⬅️ " + i18n.get("btn-back"),
+        text=i18n.get("btn-back"),
         callback_data=MenuClick(target="add_task"),
     )
 

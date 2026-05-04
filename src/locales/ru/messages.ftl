@@ -44,7 +44,7 @@ item_card-selected_item =
 item_card-selected_offer =
     Выбранное предложение: { $offer }/{ $total_offers }.
 item_card-required_ings =
-    Необходимые ресурсы:
+    📋 Необходимые ресурсы:
 item_card-pieces =
     шт.
 
@@ -64,18 +64,18 @@ settings-language_changed =
 
 # --- BUTTONS
 btn-confirm =
-    Подтвердить
+    ✅ Подтвердить
 btn-cancel =
-    Отменить
+    ❌ Отменить
 btn-back =
-    Назад
+    ⬅️ Назад
 
 btn-add_task =
-    Добавить задачу
+    📝 Добавить задачу
 btn-delete_task =
-    Удалить задачу
+    🗑️ Удалить задачу
 btn-settings =
-    Настройки
+    ⚙️ Настройки
 
 btn-switch_lang =
     🇺🇸 Switch to English

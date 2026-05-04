@@ -53,9 +53,7 @@ async def search_item(
     for item in items:
         display_name = item.name_ru if i18n.locale == "ru" else item.name_en
         builder.button(text=display_name, callback_data=SearchItem(item_id=item.id))
-    builder.button(
-        text="⬅️ " + i18n.get("btn-back"), callback_data=MenuClick(target="main")
-    )
+    builder.button(text=i18n.get("btn-back"), callback_data=MenuClick(target="main"))
     builder.adjust(1)
 
     await message.answer(

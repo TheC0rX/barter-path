@@ -23,11 +23,11 @@ async def process_task_confirmation(
 
     builder = InlineKeyboardBuilder()
     builder.button(
-        text="✅ " + i18n.get("btn-confirm"),
+        text=i18n.get("btn-confirm"),
         callback_data=ConfirmDeleteClick(task_id=task_id),
     )
     builder.button(
-        text="❌ " + i18n.get("btn-cancel"),
+        text=i18n.get("btn-cancel"),
         callback_data=MenuClick(target="main"),
     )
     builder.adjust(2)
