@@ -36,10 +36,9 @@ async def render_item_card(
     item = await repo.get_item(item_id)
     target_name = item.name_ru if i18n.locale == "ru" else item.name_en  # type: ignore
 
-    text = f"{i18n.get("add_task-placeholder")}\n\n"
-    text += f"{i18n.get("item_card-selected_item", item_name=target_name)}\n"
+    text = f"{i18n.get("item_card-selected_item", item_name=target_name)}\n"
     text += f"{i18n.get('item_card-selected_offer', offer=offer_idx+1, total_offers=total_offers)}\n\n"
-    text += f"📋 {i18n.get('item_card-required_ings')}\n"
+    text += f"{i18n.get('item_card-required_ings')}\n"
 
     for ing_item, amount in current_ings:
         name = ing_item.name_ru if i18n.locale == "ru" else ing_item.name_en

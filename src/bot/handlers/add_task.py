@@ -42,7 +42,9 @@ async def search_item(
         target_item = items[0]
 
         text, kb = await render_item_card(target_item.id, 0, session, i18n)
-        await message.answer(text=text, reply_markup=kb)
+        await message.answer(
+            text=i18n.get("add_task-placeholder") + "\n\n" + text, reply_markup=kb
+        )
 
         await state.clear()
         return
@@ -73,7 +75,7 @@ async def process_item_selection(
     item_id = callback_data.item_id
     text, kb = await render_item_card(item_id, 0, session, i18n)
 
-    await callback.message.edit_text(text=text, reply_markup=kb)  # type: ignore
+    await callback.message.edit_text(text=i18n.get("add_task-placeholder") + "\n\n" + text, reply_markup=kb)  # type: ignore
     await state.clear()
 
     await callback.answer()
@@ -91,7 +93,7 @@ async def navigate_recipe(
     )
 
     try:
-        await callback.message.edit_text(text=text, reply_markup=kb)  # type: ignore
+        await callback.message.edit_text(text=i18n.get("add_task-placeholder") + "\n\n" + text, reply_markup=kb)  # type: ignore
     except Exception:
         pass
 
