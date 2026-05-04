@@ -17,9 +17,15 @@ router = Router()
 
 @router.callback_query(DeleteTaskClick.filter())
 async def process_task_confirmation(
-    callback: CallbackQuery, callback_data: DeleteTaskClick, i18n: I18nContext
+    callback: CallbackQuery,
+    callback_data: DeleteTaskClick,
+    session: AsyncSession,
+    i18n: I18nContext,
 ) -> None:
     task_id = callback_data.task_id
+
+    repo = UserRepo(session)
+    item_name = await repo.get_item_name_by_task_id(task_id=task_id, locale=i18n.locale)
 
     builder = InlineKeyboardBuilder()
     builder.button(
@@ -35,7 +41,7 @@ async def process_task_confirmation(
     await callback.message.edit_text(  # type: ignore
         text=i18n.get("delete_task-placeholder")
         + "\n\n"
-        + i18n.get("delete_task-confirmation"),
+        + i18n.get("delete_task-confirmation", item_name=item_name),
         reply_markup=builder.as_markup(),
     )
     await callback.answer()

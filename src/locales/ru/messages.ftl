@@ -50,7 +50,7 @@ item_card-pieces =
 
 # --- DELETING TASK
 delete_task-confirmation =
-    Вы действительно хотите удалить выбранную задачу?
+    Вы действительно хотите удалить задачу на создание { $item_name }?
 
 delete_task-deleted =
     Задача была успешно удалена.

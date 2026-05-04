@@ -50,7 +50,7 @@ item_card-pieces =
 
 # --- DELETING TASK
 delete_task-confirmation =
-    Do you really want to delete selected task?
+    Do you really want to delete the task to craft { $item_name }?
 
 delete_task-deleted =
     The task has been successfully deleted.
