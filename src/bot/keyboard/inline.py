@@ -58,6 +58,22 @@ def get_back_button(i18n: I18nContext) -> InlineKeyboardMarkup:
     return builder.as_markup()
 
 
+def get_delete_task_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+
+    builder.button(
+        text=i18n.get("btn-confirm"),
+        callback_data=DeleteTaskClick(task_id=task_id),
+    )
+    builder.button(
+        text=i18n.get("btn-cancel"),
+        callback_data=MenuClick(target="main"),
+    )
+
+    builder.adjust(2)
+    return builder.as_markup()
+
+
 def get_settings_kb(i18n: I18nContext) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
