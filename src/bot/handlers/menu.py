@@ -57,6 +57,27 @@ async def open_add_task(
     await callback.answer()
 
 
+@router.callback_query(MenuClick.filter(F.target == "delete_task"))
+async def open_delete_task(
+    callback: CallbackQuery,
+    callback_data: MenuClick,
+    session: AsyncSession,
+    i18n: I18nContext,
+) -> None:
+    task_id = callback_data.task_id
+
+    repo = UserRepo(session)
+    item_name = await repo.get_item_name_by_task_id(task_id=task_id, locale=i18n.locale)
+
+    await callback.message.edit_text(  # type: ignore
+        text=i18n.get("delete_task-placeholder")
+        + "\n\n"
+        + i18n.get("delete_task-confirmation", item_name=item_name),
+        reply_markup=inline.get_delete_task_kb(task_id=task_id, i18n=i18n),
+    )
+    await callback.answer()
+
+
 @router.callback_query(MenuClick.filter(F.target == "settings"))
 async def open_settings(callback: CallbackQuery, i18n: I18nContext) -> None:
     await callback.message.edit_text(  # type: ignore

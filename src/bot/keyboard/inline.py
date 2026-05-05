@@ -31,7 +31,7 @@ def get_main_menu_kb(
     if has_tasks:
         builder.button(
             text=i18n.get("btn-delete_task"),
-            callback_data=DeleteTaskClick(task_id=current_task_id),
+            callback_data=MenuClick(target="delete_task", task_id=current_task_id),
         )
 
     builder.button(

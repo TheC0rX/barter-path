@@ -3,6 +3,7 @@ from aiogram.filters.callback_data import CallbackData
 
 class MenuClick(CallbackData, prefix="menu"):
     target: str
+    task_id: int = 0
     back_to: str = "main"
 
 
@@ -20,10 +21,6 @@ class SearchItem(CallbackData, prefix="select_task_item"):
 
 
 class DeleteTaskClick(CallbackData, prefix="delete_task"):
-    task_id: int
-
-
-class ConfirmDeleteTaskClick(CallbackData, prefix="confirm_delete_task"):
     task_id: int
 
 
