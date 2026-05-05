@@ -16,7 +16,7 @@ router = Router()
 
 
 @router.callback_query(DeleteTaskClick.filter())
-async def process_task_confirmation(
+async def process_delete_task_confirmation(
     callback: CallbackQuery,
     callback_data: DeleteTaskClick,
     session: AsyncSession,

@@ -21,7 +21,7 @@ router = Router()
 
 
 @router.message(AddTaskStates.wait_for_item_name)
-async def search_item(
+async def process_item_searching(
     message: Message, state: FSMContext, session: AsyncSession, i18n: I18nContext
 ) -> None:
     repo = ItemRepo(session)
