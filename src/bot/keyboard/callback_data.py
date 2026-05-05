@@ -23,7 +23,7 @@ class DeleteTaskClick(CallbackData, prefix="delete_task"):
     task_id: int
 
 
-class ConfirmDeleteClick(CallbackData, prefix="confirm_delete_task"):
+class ConfirmDeleteTaskClick(CallbackData, prefix="confirm_delete_task"):
     task_id: int
 
 

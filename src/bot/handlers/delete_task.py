@@ -8,7 +8,7 @@ from src.db.repo import UserRepo
 from src.bot.keyboard import inline
 from src.bot.keyboard.callback_data import (
     DeleteTaskClick,
-    ConfirmDeleteClick,
+    ConfirmDeleteTaskClick,
     MenuClick,
 )
 
@@ -30,7 +30,7 @@ async def process_task_confirmation(
     builder = InlineKeyboardBuilder()
     builder.button(
         text=i18n.get("btn-confirm"),
-        callback_data=ConfirmDeleteClick(task_id=task_id),
+        callback_data=ConfirmDeleteTaskClick(task_id=task_id),
     )
     builder.button(
         text=i18n.get("btn-cancel"),
@@ -47,10 +47,10 @@ async def process_task_confirmation(
     await callback.answer()
 
 
-@router.callback_query(ConfirmDeleteClick.filter())
+@router.callback_query(ConfirmDeleteTaskClick.filter())
 async def delete_user_task(
     callback: CallbackQuery,
-    callback_data: ConfirmDeleteClick,
+    callback_data: ConfirmDeleteTaskClick,
     session: AsyncSession,
     i18n: I18nContext,
 ) -> None:
