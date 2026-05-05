@@ -9,7 +9,11 @@ from src.bot.keyboard.callback_data import RecipeNav, MenuClick, AddTaskClick
 
 
 async def render_item_card(
-    item_id: str, offer_idx: int, session: AsyncSession, i18n: I18nContext
+    item_id: str,
+    offer_idx: int,
+    session: AsyncSession,
+    i18n: I18nContext,
+    discount: int = 0,
 ):
     repo = ItemRepo(session)
     rows = await repo.get_item_recipes(item_id)
@@ -42,7 +46,12 @@ async def render_item_card(
 
     for ing_item, amount in current_ings:
         name = ing_item.name_ru if i18n.locale == "ru" else ing_item.name_en
-        text += f"- {name}: <code>{amount}</code> {i18n.get('item_card-pieces')}\n"
+
+        discount_amount = max(1, round(amount * (1 - discount / 100)))
+        if amount != discount_amount:
+            text += f"- {name}: <s>{amount}</s> <code>{discount_amount}</code> {i18n.get('item_card-pieces')}\n"
+        else:
+            text += f"- {name}: <code>{amount}</code> {i18n.get('item_card-pieces')}\n"
 
     builder = InlineKeyboardBuilder()
 
