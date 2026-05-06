@@ -11,6 +11,11 @@ delete_task-placeholder =
     <b>Удаление Задачи</b>
     ___
 
+activate_discount-placeholder =
+    <b>Активация Скидки</b>
+    ___
+
+
 settings-placeholder =
     <b>Настройки</b>
     ___
@@ -55,6 +60,13 @@ delete_task-confirmation =
 delete_task-deleted =
     Задача была успешно удалена.
 
+# --- ACTIVATING DISCOUNT
+select-discount =
+    Выберите скидку, которую хотите применить.
+
+activate_discount-activated =
+    Скидка { $discount } была успешно применена к задаче на { $item_name }.
+
 # --- SETTINGS
 settings-description-text =
     Здесь Вы можете поменять язык.
@@ -74,6 +86,8 @@ btn-add_task =
     📝 Добавить задачу
 btn-delete_task =
     🗑️ Удалить задачу
+btn-activate_discount =
+    🎟️ Применить скидку
 btn-settings =
     ⚙️ Настройки
 

@@ -11,6 +11,10 @@ delete_task-placeholder =
     <b>Deleting Task</b>
     ___
 
+activate_discount-placeholder =
+    <b>Activating Discount</b>
+    ___
+
 settings-placeholder =
     <b>Settings</b>
     ___
@@ -55,6 +59,13 @@ delete_task-confirmation =
 delete_task-deleted =
     The task has been successfully deleted.
 
+# --- ACTIVATING DISCOUNT
+select-discount =
+    Select the discount you want to apply.
+
+activate_discount-activated =
+    Discount { $discount } was successfully applied to task { $item_name }.
+
 # --- SETTINGS
 settings-description-text =
     Here you can switch the language.
@@ -74,6 +85,8 @@ btn-add_task =
     📝 Add task
 btn-delete_task =
     🗑️ Delete task
+btn-activate_discount =
+    🎟️ Activate discount
 btn-settings =
     ⚙️ Settings
 
