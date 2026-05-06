@@ -78,6 +78,21 @@ async def open_delete_task(
     await callback.answer()
 
 
+@router.callback_query(MenuClick.filter(F.target == "activate_discount"))
+async def open_activate_discount(
+    callback: CallbackQuery, callback_data: MenuClick, i18n: I18nContext
+) -> None:
+    task_id = callback_data.task_id
+
+    await callback.message.edit_text(  # type: ignore
+        text=i18n.get("activate_discount-placeholder")
+        + "\n\n"
+        + i18n.get("select-discount"),
+        reply_markup=inline.get_discount_offers_kb(task_id, i18n),
+    )
+    await callback.answer()
+
+
 @router.callback_query(MenuClick.filter(F.target == "settings"))
 async def open_settings(callback: CallbackQuery, i18n: I18nContext) -> None:
     await callback.message.edit_text(  # type: ignore
