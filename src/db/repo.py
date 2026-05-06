@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, or_, func, delete
+from sqlalchemy import select, or_, func, delete, update
 from sqlalchemy.orm import joinedload
 
 from .models import User, Item, Recipe, UserTask
@@ -61,6 +61,17 @@ class UserRepo:
         stmt = delete(UserTask).where(UserTask.id == task_id)
         await self.session.execute(stmt)
         await self.session.commit()
+
+    async def activate_discount(self, task_id: int, discount: int):
+        stmt = update(UserTask).where(UserTask.id == task_id).values(discount=discount)
+        await self.session.execute(stmt)
+        await self.session.commit()
+
+    async def get_task_by_task_id(self, task_id: int):
+        stmt = select(UserTask).where(UserTask.id == task_id)
+        result = await self.session.execute(stmt)
+
+        return result.scalar_one()
 
     async def get_item_name_by_task_id(self, task_id: int, locale: str) -> str:
         name_col = Item.name_ru if locale == "ru" else Item.name_en
