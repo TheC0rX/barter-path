@@ -77,8 +77,9 @@ def get_delete_task_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
         text=i18n.get("btn-cancel"),
         callback_data=MenuClick(target="main"),
     )
+    builder.button(text=i18n.get("btn-back"), callback_data=MenuClick(target="main"))
 
-    builder.adjust(2)
+    builder.adjust(2, 1)
     return builder.as_markup()
 
 
@@ -111,8 +112,9 @@ def get_activate_discount_kb(
         text=i18n.get("btn-cancel"),
         callback_data=MenuClick(target="main"),
     )
+    builder.button(text=i18n.get("btn-back"), callback_data=MenuClick(target="main"))
 
-    builder.adjust(2)
+    builder.adjust(2, 1)
     return builder.as_markup()
 
 
