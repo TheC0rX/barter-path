@@ -98,7 +98,11 @@ async def show_main_menu(
     else:
         current_task = tasks[task_idx % len(tasks)]
         card_text, _ = await render_item_card(
-            current_task.item_id, current_task.offer_idx, session, i18n
+            current_task.item_id,
+            current_task.offer_idx,
+            session,
+            i18n,
+            discount=current_task.discount,
         )
 
         text = i18n.get("main_menu-placeholder") + "\n\n" + card_text
