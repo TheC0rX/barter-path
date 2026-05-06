@@ -6,6 +6,8 @@ from src.bot.keyboard.callback_data import (
     MenuClick,
     MenuTaskNav,
     DeleteTaskClick,
+    DiscountOfferClick,
+    ActivateDiscountClick,
     LanguageClick,
 )
 
@@ -32,6 +34,12 @@ def get_main_menu_kb(
         builder.button(
             text=i18n.get("btn-delete_task"),
             callback_data=MenuClick(target="delete_task", task_id=current_task_id),
+        )
+        builder.button(
+            text=i18n.get("btn-activate_discount"),
+            callback_data=MenuClick(
+                target="activate_discount", task_id=current_task_id
+            ),
         )
 
     builder.button(
@@ -64,6 +72,40 @@ def get_delete_task_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
     builder.button(
         text=i18n.get("btn-confirm"),
         callback_data=DeleteTaskClick(task_id=task_id),
+    )
+    builder.button(
+        text=i18n.get("btn-cancel"),
+        callback_data=MenuClick(target="main"),
+    )
+
+    builder.adjust(2)
+    return builder.as_markup()
+
+
+def get_discount_offers_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+
+    discounts = [10, 15, 20, 25, 30, 50, 75, 99]
+    for d in discounts:
+        builder.button(
+            text=f"{d}%",
+            callback_data=DiscountOfferClick(task_id=task_id, discount=d),
+        )
+
+    builder.button(text=i18n.get("btn-back"), callback_data=MenuClick(target="main"))
+
+    builder.adjust(1)
+    return builder.as_markup()
+
+
+def get_activate_discount_kb(
+    task_id: int, discount: int, i18n: I18nContext
+) -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+
+    builder.button(
+        text=i18n.get("btn-confirm"),
+        callback_data=ActivateDiscountClick(task_id=task_id, discount=discount),
     )
     builder.button(
         text=i18n.get("btn-cancel"),

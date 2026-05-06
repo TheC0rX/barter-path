@@ -24,6 +24,16 @@ class DeleteTaskClick(CallbackData, prefix="delete_task"):
     task_id: int
 
 
+class DiscountOfferClick(CallbackData, prefix="discount_offer"):
+    task_id: int
+    discount: int
+
+
+class ActivateDiscountClick(CallbackData, prefix="activate_discount"):
+    task_id: int
+    discount: int
+
+
 class RecipeNav(CallbackData, prefix="recipe_nav"):
     item_id: str
     idx: str
