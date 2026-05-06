@@ -48,7 +48,6 @@ async def activate_task_discount(
     discount = callback_data.discount
 
     repo = UserRepo(session)
-    current_task = await repo.get_task_by_task_id(task_id)
     item_name = await repo.get_item_name_by_task_id(task_id, i18n.locale)
 
     await repo.activate_discount(task_id, discount)
