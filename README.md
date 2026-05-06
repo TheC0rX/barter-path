@@ -2,12 +2,12 @@
 <h1>Barter PATH</h1>
   
 <p>
-  <img src="https://img.shields.io/badge/Python-1F2937?style=for-the-badge&logo=python&logoColor=white" />
-  <img src="https://img.shields.io/badge/aiogram-1F2937?style=for-the-badge&logo=telegram&logoColor=white" />
-  <img src="https://img.shields.io/badge/aiogram--i18n-1F2937?style=for-the-badge&logo=googletranslate&logoColor=white" />
-  <img src="https://img.shields.io/badge/SQLAlchemy-1F2937?style=for-the-badge&logo=sqlalchemy&logoColor=white" />
-  <img src="https://img.shields.io/badge/Postgres-1F2937?style=for-the-badge&logo=postgresql&logoColor=white" />
-  <img src="https://img.shields.io/badge/Alembic-1F2937?style=for-the-badge" />
+  <a href="#"><img src="https://img.shields.io/badge/Python-1F2937?style=for-the-badge&logo=python&logoColor=white" /></a>
+  <a href="#"><img src="https://img.shields.io/badge/aiogram-1F2937?style=for-the-badge&logo=telegram&logoColor=white" /></a>
+  <a href="#"><img src="https://img.shields.io/badge/aiogram--i18n-1F2937?style=for-the-badge&logo=googletranslate&logoColor=white" /></a>
+  <a href="#"><img src="https://img.shields.io/badge/SQLAlchemy-1F2937?style=for-the-badge&logo=sqlalchemy&logoColor=white" /></a>
+  <a href="#"><img src="https://img.shields.io/badge/Postgres-1F2937?style=for-the-badge&logo=postgresql&logoColor=white" /></a>
+  <a href="#"><img src="https://img.shields.io/badge/Alembic-1F2937?style=for-the-badge" /></a>
 </p>
 
 <span>An automated Stalcraft barter tracker providing real-time resource calculations, discount management, and progression monitoring via official database.</span>
