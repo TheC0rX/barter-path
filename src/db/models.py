@@ -43,6 +43,7 @@ class UserTask(Base):
         ForeignKey("items.id", ondelete="CASCADE"), index=True
     )
     offer_idx: Mapped[int] = mapped_column(INTEGER, default=0)
+    discount: Mapped[int] = mapped_column(INTEGER, default=0)
 
     user: Mapped["User"] = relationship("User", back_populates="tasks")
     item: Mapped["Item"] = relationship("Item", back_populates="user_tasks")
