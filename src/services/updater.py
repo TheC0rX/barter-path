@@ -2,10 +2,12 @@ import asyncio
 from loguru import logger
 
 from sqlalchemy import delete
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.services.stalcraft_api import StalcraftAPI
 from src.db.models import Item, Recipe
 from src.db.base import async_session_maker
+from src.db.repo import StalcraftRepo
 
 
 class StalcraftUpdater:
@@ -27,7 +29,7 @@ class StalcraftUpdater:
             "category": data.get("category", "unknown"),
         }
 
-    async def update_all_data(self):
+    async def update_all_data(self, session: AsyncSession):
         logger.info("Updating items database...")
 
         paths = await self.api.get_items_tree()
@@ -65,46 +67,64 @@ class StalcraftUpdater:
             parsed_items.extend([r for r in results if r])
             logger.info(f"Loaded: {len(parsed_items)}/{len(tasks_paths)}")
 
-        async with async_session_maker() as session:
-            logger.info("Deleting old recipes...")
-            await session.execute(delete(Recipe))
+        logger.info("Deleting old recipes...")
+        await session.execute(delete(Recipe))
 
-            logger.info("Updating data of items...")
-            for item_data in parsed_items:
-                item_id = item_data["id"]
-                is_goal = item_id in barterable_ids
-                await session.merge(Item(**item_data, is_barterable=is_goal))
+        logger.info("Updating data of items...")
+        for item_data in parsed_items:
+            item_id = item_data["id"]
+            is_goal = item_id in barterable_ids
+            await session.merge(Item(**item_data, is_barterable=is_goal))
 
-            await session.flush()
+        await session.flush()
 
-            logger.info("Updating data of recipes...")
-            recipes_to_add = []
-            seen_recipes = set()
-            for location in recipes_data:  # type: ignore
-                for rec in location.get("recipes", []):
-                    target_id = rec["item"]
+        logger.info("Updating data of recipes...")
+        recipes_to_add = []
+        seen_recipes = set()
+        for location in recipes_data:  # type: ignore
+            for rec in location.get("recipes", []):
+                target_id = rec["item"]
 
-                    for offer_idx, offer in enumerate(rec.get("offers", [])):
-                        for ing in offer.get("requiredItems", []):
-                            ing_id = ing["item"]
-                            recipe_key = (target_id, ing_id, offer_idx)
+                for offer_idx, offer in enumerate(rec.get("offers", [])):
+                    for ing in offer.get("requiredItems", []):
+                        ing_id = ing["item"]
+                        recipe_key = (target_id, ing_id, offer_idx)
 
-                            if recipe_key not in seen_recipes:
-                                recipes_to_add.append(
-                                    Recipe(
-                                        item_id=target_id,
-                                        ingredient_id=ing_id,
-                                        amount=ing["amount"],
-                                        offer_index=offer_idx,
-                                    )
+                        if recipe_key not in seen_recipes:
+                            recipes_to_add.append(
+                                Recipe(
+                                    item_id=target_id,
+                                    ingredient_id=ing_id,
+                                    amount=ing["amount"],
+                                    offer_index=offer_idx,
                                 )
-                                seen_recipes.add(recipe_key)
+                            )
+                            seen_recipes.add(recipe_key)
 
-            session.add_all(recipes_to_add)
-            await session.commit()
-            logger.success("Database was successfully updated.")
+        session.add_all(recipes_to_add)
+        logger.success("Database was successfully updated.")
 
+    async def check_and_update(self):
+        latest_sha = await self.api.get_latest_commit_sha()
 
-if __name__ == "__main__":
-    stalcraftupdater = StalcraftUpdater()
-    asyncio.run(stalcraftupdater.update_all_data())
+        async with async_session_maker() as session:
+            repo = StalcraftRepo(session)
+            current_sha = await repo.get_current_commit_sha()
+
+            if current_sha == latest_sha:
+                logger.info("Database is up to date.")
+                return
+
+            logger.info(
+                f"Update required. {current_sha[:7] if current_sha else "None"} -> {latest_sha[:7]}"
+            )
+
+            try:
+                await self.update_all_data(session)
+                await repo.update_commit_sha(sha=latest_sha)
+
+                await session.commit()
+                logger.success(f"Successfully updated to {latest_sha[:7]}")
+            except Exception as e:
+                await session.rollback()
+                logger.error(f"Update failed: {e}")
