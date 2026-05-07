@@ -19,6 +19,13 @@ class StalcraftAPI:
             "User-Agent": "Barter-Path",
         }
 
+    async def get_latest_commit_sha(self) -> str:
+        url = f"{self.api_url}/repos/{self.owner}/{self.repo}/commits/main"
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url, headers=self.headers)
+            response.raise_for_status()
+            return response.json()["sha"]
+
     async def get_items_tree(self):
         url = (
             f"{self.api_url}/repos/{self.owner}/{self.repo}/git/trees/main?recursive=1"
