@@ -6,11 +6,21 @@ from aiogram.client.default import DefaultBotProperties
 from src.bot import middlewares
 from src.bot.handlers import setup_routers
 
+from sys import exit
+from src.services.updater import StalcraftUpdater
+
 from src.db.base import engine, async_session_maker
 from src.config import config
 
 
 async def main() -> None:
+    updater = StalcraftUpdater()
+    try:
+        await updater.check_and_update()
+    except Exception as e:
+        logger.error(f"Critical error during startup update: {e}")
+        exit(1)
+
     bot = Bot(
         token=config.BOT_TOKEN.get_secret_value(),
         default=DefaultBotProperties(parse_mode=ParseMode.HTML),
