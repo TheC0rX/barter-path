@@ -103,3 +103,16 @@ class Recipe(Base):
             "item_id", "ingredient_id", "offer_index", name="uq_recipe_ingredient"
         ),
     )
+
+
+class StalcraftVersion(Base):
+    __tablename__ = "stalcraft_version"
+
+    id: Mapped[str] = mapped_column(VARCHAR(6), primary_key=True, default="latest")
+
+    version_sha: Mapped[str] = mapped_column(VARCHAR(40), nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+    )
