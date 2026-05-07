@@ -2,11 +2,10 @@ from loguru import logger
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from src.bot import middlewares
 from src.bot.handlers import setup_routers
-
-from sys import exit
 from src.services.updater import StalcraftUpdater
 
 from src.db.base import engine, async_session_maker
@@ -14,13 +13,6 @@ from src.config import config
 
 
 async def main() -> None:
-    updater = StalcraftUpdater()
-    try:
-        await updater.check_and_update()
-    except Exception as e:
-        logger.error(f"Critical error during startup update: {e}")
-        exit(1)
-
     bot = Bot(
         token=config.BOT_TOKEN.get_secret_value(),
         default=DefaultBotProperties(parse_mode=ParseMode.HTML),
@@ -31,8 +23,18 @@ async def main() -> None:
         middlewares.DbSessionMiddleware(session_pool=async_session_maker)
     )
     middlewares.setup_i18n(dp)
-
     dp.include_router(setup_routers())
+
+    updater = StalcraftUpdater()
+    scheduler = AsyncIOScheduler()
+
+    @dp.startup()
+    async def on_startup():
+        await updater.check_and_update()
+
+        scheduler.add_job(updater.check_and_update, "interval", hours=1)
+        scheduler.start()
+        logger.info("Scheduler has been started.")
 
     try:
         await bot.delete_webhook(True)
@@ -46,6 +48,9 @@ async def main() -> None:
         logger.exception(e)
 
     finally:
+        scheduler.shutdown()
+        logger.info("Scheduler has been stopped.")
+
         await engine.dispose()
         await bot.session.close()
         logger.info("The bot has been stopped.")
