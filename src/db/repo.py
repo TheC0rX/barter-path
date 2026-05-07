@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, or_, func, delete, update
 from sqlalchemy.orm import joinedload
 
-from .models import User, Item, Recipe, UserTask
+from .models import User, Item, Recipe, UserTask, StalcraftVersion
 
 
 class UserRepo:
@@ -124,3 +124,19 @@ class ItemRepo:
 
     async def get_item(self, item_id: str) -> Item | None:
         return await self.session.get(Item, item_id)
+
+
+class StalcraftRepo:
+    def __init__(self, session: AsyncSession):
+        self.session = session
+
+    async def get_current_commit_sha(self) -> str | None:
+        stmt = select(StalcraftVersion.version_sha).where(
+            StalcraftVersion.id == "latest"
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()
+
+    async def update_commit_sha(self, sha: str):
+        new_version = StalcraftVersion(id="latest", version_sha=sha)
+        await self.session.merge(new_version)
