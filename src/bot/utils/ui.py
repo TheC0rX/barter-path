@@ -1,11 +1,9 @@
 from aiogram.types import CallbackQuery, Message
 from aiogram_i18n import I18nContext
-from aiogram.utils.keyboard import InlineKeyboardBuilder
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.repo import UserRepo, ItemRepo
 from src.bot.keyboard import inline
-from src.bot.keyboard.callback_data import RecipeNav, MenuClick, AddTaskClick
 
 
 async def render_item_card(
@@ -53,33 +51,8 @@ async def render_item_card(
         else:
             text += f"- {name}: <code>{amount}</code> {i18n.get('item_card-pieces')}\n"
 
-    builder = InlineKeyboardBuilder()
-
-    if total_offers > 1:
-        prev_idx = (offer_idx - 1) % total_offers
-        next_idx = (offer_idx + 1) % total_offers
-        builder.button(
-            text="⬅️", callback_data=RecipeNav(item_id=item_id, idx=str(prev_idx))
-        )
-        builder.button(
-            text="➡️", callback_data=RecipeNav(item_id=item_id, idx=str(next_idx))
-        )
-
-    builder.button(
-        text=i18n.get("btn-confirm"),
-        callback_data=AddTaskClick(item_id=item_id, offer_idx=offer_idx),
-    )
-
-    builder.button(
-        text=i18n.get("btn-back"),
-        callback_data=MenuClick(target="add_task"),
-    )
-
-    if total_offers > 1:
-        builder.adjust(2, 1)
-    else:
-        builder.adjust(1)
-    return text, builder.as_markup()
+    kb = inline.get_card_nav_kb(offer_idx, total_offers, item_id, i18n)
+    return text, kb
 
 
 async def show_main_menu(

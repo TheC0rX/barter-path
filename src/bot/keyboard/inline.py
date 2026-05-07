@@ -5,6 +5,9 @@ from aiogram_i18n import I18nContext
 from src.bot.keyboard.callback_data import (
     MenuClick,
     MenuTaskNav,
+    SearchItem,
+    AddTaskClick,
+    RecipeNav,
     DeleteTaskClick,
     DiscountOfferClick,
     ActivateDiscountClick,
@@ -63,6 +66,55 @@ def get_back_button(i18n: I18nContext) -> InlineKeyboardMarkup:
     builder.button(text=i18n.get("btn-back"), callback_data=MenuClick(target="main"))
 
     builder.adjust(1)
+    return builder.as_markup()
+
+
+def get_found_items_kb(items, i18n: I18nContext) -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+
+    for item in items:
+        display_name = item.name_ru if i18n.locale == "ru" else item.name_en
+        builder.button(text=display_name, callback_data=SearchItem(item_id=item.id))
+
+    builder.button(text=i18n.get("btn-back"), callback_data=MenuClick(target="main"))
+    builder.adjust(1)
+
+    return builder.as_markup()
+
+
+def get_card_nav_kb(
+    offer_idx: int,
+    total_offers: int,
+    item_id: str,
+    i18n: I18nContext,
+) -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+
+    if total_offers > 1:
+        prev_idx = (offer_idx - 1) % total_offers
+        next_idx = (offer_idx + 1) % total_offers
+        builder.button(
+            text="⬅️", callback_data=RecipeNav(item_id=item_id, idx=str(prev_idx))
+        )
+        builder.button(
+            text="➡️", callback_data=RecipeNav(item_id=item_id, idx=str(next_idx))
+        )
+
+    builder.button(
+        text=i18n.get("btn-confirm"),
+        callback_data=AddTaskClick(item_id=item_id, offer_idx=offer_idx),
+    )
+
+    builder.button(
+        text=i18n.get("btn-back"),
+        callback_data=MenuClick(target="add_task"),
+    )
+
+    if total_offers > 1:
+        builder.adjust(2, 1)
+    else:
+        builder.adjust(1)
+
     return builder.as_markup()
 
 

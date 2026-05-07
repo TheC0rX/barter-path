@@ -1,6 +1,5 @@
 from aiogram import Router
 from aiogram.types import Message, CallbackQuery
-from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.fsm.context import FSMContext
 from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -9,7 +8,6 @@ from src.db.repo import UserRepo, ItemRepo
 from src.bot.keyboard import inline
 from src.bot.utils.states import AddTaskStates
 from src.bot.keyboard.callback_data import (
-    MenuClick,
     RecipeNav,
     SearchItem,
     AddTaskClick,
@@ -49,16 +47,9 @@ async def process_item_searching(
         await state.clear()
         return
 
-    builder = InlineKeyboardBuilder()
-    for item in items:
-        display_name = item.name_ru if i18n.locale == "ru" else item.name_en
-        builder.button(text=display_name, callback_data=SearchItem(item_id=item.id))
-    builder.button(text=i18n.get("btn-back"), callback_data=MenuClick(target="main"))
-    builder.adjust(1)
-
     await message.answer(
         text=i18n.get("add_task-placeholder") + "\n\n" + i18n.get("search-results"),
-        reply_markup=builder.as_markup(),
+        reply_markup=inline.get_found_items_kb(items, i18n),
     )
 
 
