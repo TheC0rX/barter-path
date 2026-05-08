@@ -36,10 +36,10 @@ async def main() -> None:
         scheduler.start()
         logger.info("Scheduler has been started.")
 
+        logger.info("The bot has been started.")
+
     try:
         await bot.delete_webhook(True)
-        logger.success("The bot has been started.")
-
         await dp.start_polling(bot)
 
     except KeyboardInterrupt, SystemExit:
