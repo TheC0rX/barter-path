@@ -1,11 +1,10 @@
 import asyncio
 from loguru import logger
 
-from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.services.stalcraft_api import StalcraftAPI
-from src.db.models import Item, Recipe
+from src.db.models import Recipe
 from src.db.base import async_session_maker
 from src.db.repo import StalcraftRepo
 
