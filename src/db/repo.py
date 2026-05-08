@@ -130,6 +130,17 @@ class StalcraftRepo:
     def __init__(self, session: AsyncSession):
         self.session = session
 
+    async def update_items_and_recipes(
+        self, items_data: list[dict], recipes_list: list[Recipe]
+    ):
+        await self.session.execute(delete(Recipe))
+
+        for item_data in items_data:
+            await self.session.merge(Item(**item_data))
+
+        self.session.add_all(recipes_list)
+        await self.session.flush()
+
     async def get_current_commit_sha(self) -> str | None:
         stmt = select(StalcraftVersion.version_sha).where(
             StalcraftVersion.id == "latest"
@@ -140,3 +151,4 @@ class StalcraftRepo:
     async def update_commit_sha(self, sha: str):
         new_version = StalcraftVersion(id="latest", version_sha=sha)
         await self.session.merge(new_version)
+        await self.session.commit()

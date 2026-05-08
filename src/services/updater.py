@@ -67,16 +67,11 @@ class StalcraftUpdater:
             parsed_items.extend([r for r in results if r])
             logger.info(f"Loaded: {len(parsed_items)}/{len(tasks_paths)}")
 
-        logger.info("Deleting old recipes...")
-        await session.execute(delete(Recipe))
-
         logger.info("Updating data of items...")
+        items_to_merge = []
         for item_data in parsed_items:
-            item_id = item_data["id"]
-            is_goal = item_id in barterable_ids
-            await session.merge(Item(**item_data, is_barterable=is_goal))
-
-        await session.flush()
+            item_data["is_barterable"] = item_data["id"] in barterable_ids
+            items_to_merge.append(item_data)
 
         logger.info("Updating data of recipes...")
         recipes_to_add = []
@@ -101,8 +96,8 @@ class StalcraftUpdater:
                             )
                             seen_recipes.add(recipe_key)
 
-        session.add_all(recipes_to_add)
-        logger.success("Database was successfully updated.")
+        repo = StalcraftRepo(session)
+        await repo.update_items_and_recipes(items_to_merge, recipes_to_add)
 
     async def check_and_update(self):
         latest_sha = await self.api.get_latest_commit_sha()
@@ -123,7 +118,6 @@ class StalcraftUpdater:
                 await self.update_all_data(session)
                 await repo.update_commit_sha(sha=latest_sha)
 
-                await session.commit()
                 logger.success(f"Successfully updated to {latest_sha[:7]}")
             except Exception as e:
                 await session.rollback()
