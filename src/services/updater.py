@@ -121,3 +121,8 @@ class StalcraftUpdater:
             except Exception as e:
                 await session.rollback()
                 logger.error(f"Update failed: {e}")
+
+
+if __name__ == "__main__":
+    updater = StalcraftUpdater()
+    asyncio.run(updater.check_and_update())
