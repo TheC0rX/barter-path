@@ -19,7 +19,7 @@ async def main() -> None:
     )
     dp = Dispatcher()
 
-    dp.update.middleware(
+    dp.update.outer_middleware(
         middlewares.DbSessionMiddleware(session_pool=async_session_maker)
     )
     middlewares.setup_i18n(dp)
