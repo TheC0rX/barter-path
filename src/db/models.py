@@ -47,9 +47,31 @@ class UserTask(Base):
 
     user: Mapped["User"] = relationship("User", back_populates="tasks")
     item: Mapped["Item"] = relationship("Item", back_populates="user_tasks")
+    progress: Mapped[List["TaskProgress"]] = relationship(
+        "TaskProgress", back_populates="task", cascade="all, delete-orphan"
+    )
 
     __table_args__ = (
         UniqueConstraint("user_id", "item_id", "offer_idx", name="uq_user_item_offer"),
+    )
+
+
+class TaskProgress(Base):
+    __tablename__ = "task_progress"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    task_id: Mapped[int] = mapped_column(
+        ForeignKey("user_tasks.id", ondelete="CASCADE"), index=True
+    )
+    ingredient_id: Mapped[str] = mapped_column(
+        ForeignKey("items.id", ondelete="CASCADE")
+    )
+    collected_amount: Mapped[int] = mapped_column(INTEGER, default=0)
+
+    task: Mapped["UserTask"] = relationship("UserTask", back_populates="progress")
+
+    __table_args__ = (
+        UniqueConstraint("task_id", "ingredient_id", name="uq_task_ingredient"),
     )
 
 
