@@ -69,6 +69,7 @@ class TaskProgress(Base):
     collected_amount: Mapped[int] = mapped_column(INTEGER, default=0)
 
     task: Mapped["UserTask"] = relationship("UserTask", back_populates="progress")
+    ingredient_item: Mapped["Item"] = relationship("Item")
 
     __table_args__ = (
         UniqueConstraint("task_id", "ingredient_id", name="uq_task_ingredient"),
