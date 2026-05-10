@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, or_, func, delete, update
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, selectinload
 
-from .models import User, Item, Recipe, UserTask, StalcraftVersion
+from .models import User, Item, Recipe, UserTask, TaskProgress, StalcraftVersion
 
 
 class UserRepo:
@@ -45,7 +45,12 @@ class UserRepo:
     async def get_user_tasks(self, user_id: int):
         stmt = (
             select(UserTask)
-            .options(joinedload(UserTask.item))
+            .options(
+                joinedload(UserTask.item),
+                selectinload(UserTask.progress).joinedload(
+                    TaskProgress.ingredient_item
+                ),
+            )
             .where(UserTask.user_id == user_id)
             .order_by(UserTask.id)
         )
@@ -55,6 +60,22 @@ class UserRepo:
     async def add_task(self, user_id: int, item_id: str, offer_idx: int):
         new_task = UserTask(user_id=user_id, item_id=item_id, offer_idx=offer_idx)
         self.session.add(new_task)
+        await self.session.flush()
+
+        recipe_stmt = select(Recipe).where(
+            Recipe.item_id == item_id, Recipe.offer_index == offer_idx
+        )
+        recipe_result = await self.session.execute(recipe_stmt)
+        ingredients = recipe_result.scalars().all()
+
+        for ingredient in ingredients:
+            progress = TaskProgress(
+                task_id=new_task.id,
+                ingredient_id=ingredient.ingredient_id,
+                collected_amount=0,
+            )
+            self.session.add(progress)
+
         await self.session.commit()
 
     async def drop_task(self, task_id: int):
