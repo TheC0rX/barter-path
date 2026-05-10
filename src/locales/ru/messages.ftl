@@ -3,6 +3,9 @@ main_menu-placeholder =
     <b>Главное Меню</b>
     ___
 
+main_menu-pagination =
+    Список задач: { $current_task }/{ $total_tasks }
+
 add_task-placeholder =
     <b>Добавление Задачи</b>
     ___
@@ -45,9 +48,11 @@ add_task-good_luck =
 
 # --- ITEM CARD
 item_card-selected_item =
-    Выбранный предмет: { $item_name }.
+    Выбранный предмет: { $item_name }
 item_card-selected_offer =
-    Выбранное предложение: { $offer }/{ $total_offers }.
+    Выбранное предложение: { $offer }/{ $total_offers }
+item_card-selected_discount =
+    Выбранная скидка: { $discount }%
 item_card-required_ings =
     📋 Необходимые ресурсы:
 item_card-pieces =

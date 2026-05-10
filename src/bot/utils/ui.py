@@ -12,6 +12,7 @@ async def render_item_card(
     session: AsyncSession,
     i18n: I18nContext,
     discount: int = 0,
+    task_id: int | None = None,
 ):
     repo = ItemRepo(session)
     rows = await repo.get_item_recipes(item_id)
@@ -39,16 +40,18 @@ async def render_item_card(
     target_name = item.name_ru if i18n.locale == "ru" else item.name_en  # type: ignore
 
     text = f"{i18n.get("item_card-selected_item", item_name=target_name)}\n"
-    text += f"{i18n.get('item_card-selected_offer', offer=offer_idx+1, total_offers=total_offers)}\n\n"
-    text += f"{i18n.get('item_card-required_ings')}\n"
+    text += f"{i18n.get('item_card-selected_offer', offer=offer_idx+1, total_offers=total_offers)}\n"
+    if task_id:
+        text += f"{i18n.get("item_card-selected_discount", discount=discount)}\n"
+    text += f"\n{i18n.get('item_card-required_ings')}\n"
 
     for ing_item, amount in current_ings:
         name = ing_item.name_ru if i18n.locale == "ru" else ing_item.name_en
 
         discount_amount = max(1, round(amount * (1 - discount / 100)))
-        if amount != discount_amount:
+        if amount != discount_amount and not task_id:
             text += f"- {name}: <s>{amount}</s> <code>{discount_amount}</code> {i18n.get('item_card-pieces')}\n"
-        else:
+        if amount == discount_amount and not task_id:
             text += f"- {name}: <code>{amount}</code> {i18n.get('item_card-pieces')}\n"
 
     kb = inline.get_card_nav_kb(offer_idx, total_offers, item_id, i18n)
@@ -76,9 +79,20 @@ async def show_main_menu(
             session,
             i18n,
             discount=current_task.discount,
+            task_id=current_task.id,
         )
 
-        text = i18n.get("main_menu-placeholder") + "\n\n" + card_text
+        text = (
+            i18n.get("main_menu-placeholder")
+            + "\n\n"
+            + i18n.get(
+                "main_menu-pagination",
+                current_task=(task_idx % len(tasks)) + 1,
+                total_tasks=len(tasks),
+            )
+            + "\n\n"
+            + card_text
+        )
         kb = inline.get_main_menu_kb(
             i18n,
             has_tasks=True,

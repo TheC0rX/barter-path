@@ -3,6 +3,10 @@ main_menu-placeholder =
     <b>Main Menu</b>
     ___
 
+main_menu-pagination =
+    Your tasks: { $current_task } of { $total_tasks }
+
+
 add_task-placeholder =
     <b>Additing Task</b>
     ___
@@ -44,9 +48,11 @@ add_task-good_luck =
 
 # --- ITEM CARD
 item_card-selected_item =
-    Selected item: { $item_name }.
+    Selected item: { $item_name }
 item_card-selected_offer =
-    Selected offer: { $offer }/{ $total_offers }.
+    Selected offer: { $offer }/{ $total_offers }
+item_card-selected_discount =
+    Selected discount: { $discount }%
 item_card-required_ings =
     📋 Required resources:
 item_card-pieces =
