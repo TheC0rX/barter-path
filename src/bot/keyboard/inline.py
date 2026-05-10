@@ -138,7 +138,7 @@ def get_delete_task_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
 def get_discount_offers_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
-    discounts = [10, 15, 20, 25, 30, 50, 75, 99]
+    discounts = [0, 10, 15, 20, 25, 30, 50, 75, 99]
     for d in discounts:
         builder.button(
             text=f"{d}%",
