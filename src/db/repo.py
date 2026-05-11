@@ -150,8 +150,10 @@ class ItemRepo:
         result = await self.session.execute(stmt)
         return result.all()
 
-    async def get_item(self, item_id: str) -> Item | None:
-        return await self.session.get(Item, item_id)
+    async def get_item(self, item_id: str) -> Item:
+        stmt = select(Item).where(Item.id == item_id)
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
 
 
 class StalcraftRepo:
