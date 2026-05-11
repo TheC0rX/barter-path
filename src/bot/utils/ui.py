@@ -15,7 +15,12 @@ async def render_item_card(
     task_id: int | None = None,
 ):
     repo = ItemRepo(session)
+    user_repo = UserRepo(session)
     rows = await repo.get_item_recipes(item_id)
+
+    progress_dict = {}
+    if task_id:
+        progress_dict = await user_repo.get_task_progress_dict(task_id)
 
     offers_data = {}
     for recipe, ing_item in rows:
@@ -40,19 +45,31 @@ async def render_item_card(
     target_name = item.name_ru if i18n.locale == "ru" else item.name_en  # type: ignore
 
     text = f"{i18n.get("item_card-selected_item", item_name=target_name)}\n"
-    text += f"{i18n.get('item_card-selected_offer', offer=offer_idx+1, total_offers=total_offers)}\n"
+    text += f"{i18n.get('item_card-selected_offer', offer=offer_idx+1)}{f'/{total_offers}' if not task_id else ""}\n"
     if task_id:
-        text += f"{i18n.get("item_card-selected_discount", discount=discount)}\n"
+        text += f"🎟️ {i18n.get("item_card-selected_discount", discount=discount)}\n"
     text += f"\n{i18n.get('item_card-required_ings')}\n"
 
     for ing_item, amount in current_ings:
         name = ing_item.name_ru if i18n.locale == "ru" else ing_item.name_en
-
         discount_amount = max(1, round(amount * (1 - discount / 100)))
-        if amount != discount_amount and not task_id:
-            text += f"- {name}: <s>{amount}</s> <code>{discount_amount}</code> {i18n.get('item_card-pieces')}\n"
-        if amount == discount_amount and not task_id:
-            text += f"- {name}: <code>{amount}</code> {i18n.get('item_card-pieces')}\n"
+
+        if task_id:
+            collected = progress_dict.get(ing_item.id, 0)
+            remains = max(0, discount_amount - collected)
+            status = "✅" if remains == 0 else "⌛"
+
+            text += f"{status} {name}: <code>{collected}</code>/<code>{discount_amount}</code>\n"
+            if remains > 0:
+                text += f"└ {i18n.get("item_card-remains", amount=remains)}\n"
+
+        else:
+            if amount != discount_amount:
+                text += f"- {name}: <s>{amount}</s> <code>{discount_amount}</code> {i18n.get('item_card-pieces')}\n"
+            else:
+                text += (
+                    f"- {name}: <code>{amount}</code> {i18n.get('item_card-pieces')}\n"
+                )
 
     kb = inline.get_card_nav_kb(offer_idx, total_offers, item_id, i18n)
     return text, kb

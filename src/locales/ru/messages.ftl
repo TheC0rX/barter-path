@@ -50,13 +50,15 @@ add_task-good_luck =
 item_card-selected_item =
     Выбранный предмет: { $item_name }
 item_card-selected_offer =
-    Выбранное предложение: { $offer }/{ $total_offers }
+    Выбранное предложение: { $offer }
 item_card-selected_discount =
     Выбранная скидка: { $discount }%
 item_card-required_ings =
     📋 Необходимые ресурсы:
 item_card-pieces =
     шт.
+item_card-remains =
+    Осталось { $amount }.
 
 # --- DELETING TASK
 delete_task-confirmation =
