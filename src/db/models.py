@@ -100,6 +100,14 @@ class Item(Base):
         back_populates="ingredient_item",
     )
 
+    @property
+    def icon(self) -> str:
+        if self.category.startswith("armor"):
+            return "🎽"
+        if self.category.startswith("weapon"):
+            return "🔫"
+        return "📦"
+
 
 class Recipe(Base):
     __tablename__ = "recipes"
