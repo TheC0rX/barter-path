@@ -44,8 +44,8 @@ async def render_item_card(
     item = await repo.get_item(item_id)
     target_name = item.name_ru if i18n.locale == "ru" else item.name_en  # type: ignore
 
-    text = f"{i18n.get("item_card-selected_item", item_name=target_name)}\n"
-    text += f"{i18n.get('item_card-selected_offer', offer=offer_idx+1)}{f'/{total_offers}' if not task_id else ""}\n"
+    text = f"{item.icon if item is not None else ""} {i18n.get("item_card-selected_item", item_name=target_name)}\n"
+    text += f"{get_nubmer_emoji(offer_idx+1)} {i18n.get('item_card-selected_offer', offer=offer_idx+1)}{f'/{total_offers}' if not task_id else ""}\n"
     if task_id:
         text += f"🎟️ {i18n.get("item_card-selected_discount", discount=discount)}\n"
     text += f"\n{i18n.get('item_card-required_ings')}\n"
@@ -123,3 +123,20 @@ async def show_main_menu(
         await event.answer()
     else:
         await event.answer(text=text, reply_markup=kb)
+
+
+def get_nubmer_emoji(number: int) -> str:
+    emoji_numbers = {
+        0: "0️⃣",
+        1: "1️⃣",
+        2: "2️⃣",
+        3: "3️⃣",
+        4: "4️⃣",
+        5: "5️⃣",
+        6: "6️⃣",
+        7: "7️⃣",
+        8: "8️⃣",
+        9: "9️⃣",
+    }
+
+    return "".join(emoji_numbers[int(char)] for char in str(number))
