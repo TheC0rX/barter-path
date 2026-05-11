@@ -105,6 +105,13 @@ class UserRepo:
         result = await self.session.execute(stmt)
         return result.scalar_one()
 
+    async def get_task_progress_dict(self, task_id: int) -> dict[str, int]:
+        stmt = select(TaskProgress.ingredient_id, TaskProgress.collected_amount).where(
+            TaskProgress.task_id == task_id
+        )
+        result = await self.session.execute(stmt)
+        return dict(result.tuples().all())
+
 
 class ItemRepo:
     def __init__(self, session: AsyncSession):
