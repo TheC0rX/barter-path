@@ -13,20 +13,18 @@ An automated Stalcraft barter tracker providing real-time resource calculations,
 </div>
 
 ## Features
-
 - 🤖 Telegram bot interface
 - 🛠️ Task management system
 - 📊 Real-time barter calculations
 - 🌍 Multi-language support (i18n)
 
 ## Project Structure
-
-```bash
+```text
 ├── migrations/                # Alembic Migrations
 ├── src/
 │   ├── bot/
 │   │   ├── handlers/          # Bot handlers
-│   │   ├── keyboard/          # Inline & callback keyboards
+│   │   ├── keyboard/          # Keyboads & callback factories
 │   │   │   ├── callback_data.py
 │   │   │   ├── inline.py
 │   │   ├── middlewares/       # DB & i18n middlewares
