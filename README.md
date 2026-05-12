@@ -50,26 +50,30 @@ An automated Stalcraft barter tracker providing real-time resource calculations,
 
 ## Getting Started
 ### 1. Clone repository
-
 ```bash
 git clone https://github.com/TheC0rX/barter-path.git
 cd barter-path
 ```
-### 2. Install dependencies
 
+### 2. Install dependencies
 ```bash
 poetry install
 ```
+
 ### 3. Environment setup
 Copy `.env.example` to `.env` and fill in the required values.
-
 ```env
 BOT_TOKEN=your_bot_token_here
 GITHUB_TOKEN=your_pat_token_here
 DB_URL=postgresql+asyncpg://USER:PASS@localhost:5432/barter_path
 ```
-### 4. Run application
 
+### 4. Run database migrations
+```bash
+poetry run alembic upgrade head
+```
+
+### 5. Run application
 ```bash
 poetry run python -m src
 ```
