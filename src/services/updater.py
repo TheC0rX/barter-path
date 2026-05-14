@@ -43,6 +43,10 @@ class StalcraftUpdater:
                 barterable_ids.add(target_id)
 
                 for offer in rec.get("offers", []):
+                    currency_type = offer.get("currency")
+                    if currency_type == "money" and offer.get("cost", 0) > 0:
+                        ingredient_ids.add("money")
+
                     for ing in offer.get("requiredItems", []):
                         ingredient_ids.add(ing["item"])
 
@@ -66,6 +70,16 @@ class StalcraftUpdater:
             parsed_items.extend([r for r in results if r])
             logger.info(f"Loaded: {len(parsed_items)}/{len(tasks_paths)}")
 
+        if "money" in ingredient_ids:
+            parsed_items.append(
+                {
+                    "id": "money",
+                    "name_ru": "Стоимость",
+                    "name_en": "Cost",
+                    "category": "currency",
+                }
+            )
+
         logger.info("Updating data of items...")
         items_to_merge = []
         for item_data in parsed_items:
@@ -80,6 +94,22 @@ class StalcraftUpdater:
                 target_id = rec["item"]
 
                 for offer_idx, offer in enumerate(rec.get("offers", [])):
+                    currency_type = offer.get("currency")
+                    cost_amount = offer.get("cost", 0)
+
+                    if currency_type == "money" and cost_amount > 0:
+                        recipe_key = (target_id, currency_type, offer_idx)
+                        if recipe_key not in seen_recipes:
+                            recipes_to_add.append(
+                                Recipe(
+                                    item_id=target_id,
+                                    ingredient_id=currency_type,
+                                    amount=cost_amount,
+                                    offer_index=offer_idx,
+                                )
+                            )
+                            seen_recipes.add(recipe_key)
+
                     for ing in offer.get("requiredItems", []):
                         ing_id = ing["item"]
                         recipe_key = (target_id, ing_id, offer_idx)
