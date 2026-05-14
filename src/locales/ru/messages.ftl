@@ -89,6 +89,8 @@ btn-cancel =
 btn-back =
     ⬅️ Назад
 
+btn-finish_task =
+    ✅ Завершить задачу
 btn-add_task =
     📝 Добавить задачу
 btn-delete_task =

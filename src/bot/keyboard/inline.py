@@ -21,8 +21,15 @@ def get_main_menu_kb(
     task_idx: int = 0,
     total_tasks: int = 0,
     current_task_id: int = 0,
+    is_finished: bool = False,
 ) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
+
+    if has_tasks and is_finished:
+        builder.button(
+            text=i18n.get("btn-finish_task"),
+            callback_data=MenuClick(target="finish_task", task_id=current_task_id),
+        )
 
     if has_tasks and total_tasks > 1:
         builder.button(text="⬅️", callback_data=MenuTaskNav(task_idx=task_idx - 1))
@@ -51,9 +58,15 @@ def get_main_menu_kb(
     )
 
     if has_tasks and total_tasks > 1:
-        builder.adjust(2, 2, 1)
+        if is_finished:
+            builder.adjust(1, 2, 2, 1)
+        else:
+            builder.adjust(2, 2, 1)
     elif has_tasks:
-        builder.adjust(2, 1)
+        if is_finished:
+            builder.adjust(1, 2, 1)
+        else:
+            builder.adjust(2, 1)
     else:
         builder.adjust(1)
 
