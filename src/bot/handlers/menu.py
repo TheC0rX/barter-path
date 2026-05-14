@@ -33,6 +33,27 @@ async def open_main_menu(
     await show_main_menu(callback, session, i18n)
 
 
+@router.callback_query(MenuClick.filter(F.target == "finish_task"))
+async def open_finish_task(
+    callback: CallbackQuery,
+    callback_data: MenuClick,
+    session: AsyncSession,
+    i18n: I18nContext,
+) -> None:
+    task_id = callback_data.task_id
+
+    repo = UserRepo(session)
+    item_name = await repo.get_item_name_by_task_id(task_id=task_id, locale=i18n.locale)
+
+    await callback.message.edit_text(  # type: ignore
+        text=i18n.get("finish_task-placeholder")
+        + "\n\n"
+        + i18n.get("finish_task-confirmation", item_name=item_name),
+        reply_markup=inline.get_finish_task_kb(task_id=task_id, i18n=i18n),
+    )
+    await callback.answer()
+
+
 @router.callback_query(MenuClick.filter(F.target == "add_task"))
 async def open_add_task(
     callback: CallbackQuery, state: FSMContext, session: AsyncSession, i18n: I18nContext
