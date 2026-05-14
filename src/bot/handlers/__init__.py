@@ -2,11 +2,20 @@ from aiogram import Router
 
 
 def setup_routers() -> Router:
-    from . import start, menu, add_task, delete_task, activate_discount, settings
+    from . import (
+        start,
+        menu,
+        finish_task,
+        add_task,
+        delete_task,
+        activate_discount,
+        settings,
+    )
 
     router = Router()
     router.include_router(start.router)
     router.include_router(menu.router)
+    router.include_router(finish_task.router)
     router.include_router(add_task.router)
     router.include_router(delete_task.router)
     router.include_router(activate_discount.router)

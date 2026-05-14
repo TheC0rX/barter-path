@@ -11,6 +11,10 @@ class MenuTaskNav(CallbackData, prefix="menu_nav"):
     task_idx: int
 
 
+class FinishTaskClick(CallbackData, prefix="finish_task"):
+    task_id: int
+
+
 class AddTaskClick(CallbackData, prefix="add_task"):
     item_id: str
     offer_idx: int
