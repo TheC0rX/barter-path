@@ -39,7 +39,7 @@ async def process_item_searching(
     if len(items) == 1:
         target_item = items[0]
 
-        text, kb = await render_item_card(target_item.id, 0, session, i18n)
+        text, kb, _ = await render_item_card(target_item.id, 0, session, i18n)
         await message.answer(
             text=i18n.get("add_task-placeholder") + "\n\n" + text, reply_markup=kb
         )
@@ -62,7 +62,7 @@ async def process_item_selection(
     i18n: I18nContext,
 ):
     item_id = callback_data.item_id
-    text, kb = await render_item_card(item_id, 0, session, i18n)
+    text, kb, _ = await render_item_card(item_id, 0, session, i18n)
 
     await callback.message.edit_text(text=i18n.get("add_task-placeholder") + "\n\n" + text, reply_markup=kb)  # type: ignore
     await state.clear()
@@ -77,7 +77,7 @@ async def navigate_recipe(
     session: AsyncSession,
     i18n: I18nContext,
 ):
-    text, kb = await render_item_card(
+    text, kb, _ = await render_item_card(
         callback_data.item_id, int(callback_data.idx), session, i18n
     )
 
