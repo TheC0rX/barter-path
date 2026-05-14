@@ -50,6 +50,7 @@ async def render_item_card(
         text += f"🎟️ {i18n.get("item_card-selected_discount", discount=discount)}\n"
     text += f"\n{i18n.get('item_card-required_ings')}\n"
 
+    is_finished = True if task_id else False
     for ing_item, amount in current_ings:
         name = ing_item.name_ru if i18n.locale == "ru" else ing_item.name_en
         discount_amount = max(1, round(amount * (1 - discount / 100)))
@@ -57,7 +58,12 @@ async def render_item_card(
         if task_id:
             collected = progress_dict.get(ing_item.id, 0)
             remains = max(0, discount_amount - collected)
-            status = "✅" if remains == 0 else "⌛"
+
+            if remains == 0:
+                status = "✅"
+            else:
+                status = "⌛"
+                is_finished = False
 
             text += f"{status} {name}: <code>{collected}</code>/<code>{discount_amount}</code>\n"
             if remains > 0:
@@ -71,8 +77,11 @@ async def render_item_card(
                     f"- {name}: <code>{amount}</code> {i18n.get('item_card-pieces')}\n"
                 )
 
+    if task_id:
+        return text, None, is_finished
+
     kb = inline.get_card_nav_kb(offer_idx, total_offers, item_id, i18n)
-    return text, kb
+    return text, kb, False
 
 
 async def show_main_menu(
@@ -90,7 +99,7 @@ async def show_main_menu(
         kb = inline.get_main_menu_kb(i18n, has_tasks=False)
     else:
         current_task = tasks[task_idx % len(tasks)]
-        card_text, _ = await render_item_card(
+        card_text, _, is_finished = await render_item_card(
             current_task.item_id,
             current_task.offer_idx,
             session,
@@ -116,6 +125,7 @@ async def show_main_menu(
             task_idx=task_idx,
             total_tasks=len(tasks),
             current_task_id=current_task.id,
+            is_finished=is_finished,
         )
 
     if isinstance(event, CallbackQuery):
