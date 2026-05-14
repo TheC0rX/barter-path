@@ -52,30 +52,35 @@ async def render_item_card(
 
     is_finished = True if task_id else False
     for ing_item, amount in current_ings:
+        is_money = ing_item.id == "money"
+        min_amount = 0 if is_money else 1
+        discount_amount = max(min_amount, round(amount * (1 - discount / 100)))
         name = ing_item.name_ru if i18n.locale == "ru" else ing_item.name_en
-        discount_amount = max(1, round(amount * (1 - discount / 100)))
+        unit = "₽" if is_money else i18n.get("item_card-pieces")
 
         if task_id:
             collected = progress_dict.get(ing_item.id, 0)
             remains = max(0, discount_amount - collected)
+            display_collected = min(collected, discount_amount)
 
             if remains == 0:
-                status = "✅"
+                icon = "✅"
             else:
-                status = "⌛"
+                icon = "💵" if is_money else "⌛"
                 is_finished = False
 
-            text += f"{status} {name}: <code>{collected}</code>/<code>{discount_amount}</code>\n"
+            text += f"{icon} {name}: <code>{display_collected}</code>/<code>{discount_amount}</code> {unit}\n"
+
             if remains > 0:
                 text += f"└ {i18n.get("item_card-remains", amount=remains)}\n"
 
         else:
             if amount != discount_amount:
-                text += f"- {name}: <s>{amount}</s> <code>{discount_amount}</code> {i18n.get('item_card-pieces')}\n"
-            else:
                 text += (
-                    f"- {name}: <code>{amount}</code> {i18n.get('item_card-pieces')}\n"
+                    f"- {name}: <s>{amount}</s> <code>{discount_amount}</code> {unit}\n"
                 )
+            else:
+                text += f"- {name}: <code>{amount}</code> {unit}\n"
 
     if task_id:
         return text, None, is_finished
