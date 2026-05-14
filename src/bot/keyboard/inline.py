@@ -6,6 +6,7 @@ from src.bot.keyboard.callback_data import (
     MenuClick,
     MenuTaskNav,
     SearchItem,
+    FinishTaskClick,
     AddTaskClick,
     RecipeNav,
     DeleteTaskClick,
@@ -70,6 +71,23 @@ def get_main_menu_kb(
     else:
         builder.adjust(1)
 
+    return builder.as_markup()
+
+
+def get_finish_task_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+
+    builder.button(
+        text=i18n.get("btn-confirm"),
+        callback_data=FinishTaskClick(task_id=task_id),
+    )
+    builder.button(
+        text=i18n.get("btn-cancel"),
+        callback_data=MenuClick(target="main"),
+    )
+    builder.button(text=i18n.get("btn-back"), callback_data=MenuClick(target="main"))
+
+    builder.adjust(2, 1)
     return builder.as_markup()
 
 
