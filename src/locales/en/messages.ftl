@@ -6,6 +6,9 @@ main_menu-placeholder =
 main_menu-pagination =
     Your tasks: { $current_task } of { $total_tasks }
 
+finish_task-placeholder =
+    <b>Finishing Task</b>
+    ___
 
 add_task-placeholder =
     <b>Additing Task</b>
@@ -22,6 +25,13 @@ activate_discount-placeholder =
 settings-placeholder =
     <b>Settings</b>
     ___
+
+# --- FINISHING TASK
+finish_task-confirmation =
+    Do you really want to finish the task to craft { $item_name }?
+
+finish_task-deleted =
+    The task has been successfully finished.
 
 # --- ADITING TASK
 enter-item-name =

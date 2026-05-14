@@ -6,6 +6,10 @@ main_menu-placeholder =
 main_menu-pagination =
     Список задач: { $current_task }/{ $total_tasks }
 
+finish_task-placeholder =
+    <b>Завершение Задачи</b>
+    ___
+
 add_task-placeholder =
     <b>Добавление Задачи</b>
     ___
@@ -18,10 +22,17 @@ activate_discount-placeholder =
     <b>Активация Скидки</b>
     ___
 
-
 settings-placeholder =
     <b>Настройки</b>
     ___
+
+# --- FINISHING TASK
+finish_task-confirmation =
+    Вы действительно хотите завершить задачу на создание { $item_name }?
+
+finish_task-deleted =
+    Задача была успешно завершена.
+
 
 # --- ADITING TASK
 enter-item-name =
