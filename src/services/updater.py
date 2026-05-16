@@ -13,20 +13,23 @@ class StalcraftUpdater:
     def __init__(self):
         self.api = StalcraftAPI()
 
-    async def _fetch_and_parse_item(self, path: str):
-        data = await self.api.fetch_json(path)
-        if not data:
-            return None
+    async def _fetch_and_parse_item(self, path: str, semaphore: asyncio.Semaphore):
+        async with semaphore:
+            try:
+                data = await self.api.fetch_json(path)
+                if not data:
+                    return None
 
-        name_ru = data["name"]["lines"]["ru"]
-        name_en = data["name"]["lines"]["en"]
-
-        return {
-            "id": data["id"],
-            "name_ru": name_ru,
-            "name_en": name_en,
-            "category": data.get("category", "unknown"),
-        }
+                name_data = data.get("name", {}).get("lines", {})
+                return {
+                    "id": data["id"],
+                    "name_ru": name_data.get("ru", "Unknown"),
+                    "name_en": name_data.get("en", "Unknown"),
+                    "category": data.get("category", "unknown"),
+                }
+            except Exception as e:
+                logger.error(f"Error fetching/parsing item from {path}: {e}")
+                return None
 
     async def update_all_data(self, session: AsyncSession):
         logger.info("Updating items database...")
@@ -34,13 +37,18 @@ class StalcraftUpdater:
         paths = await self.api.get_items_tree()
         recipes_data = await self.api.fetch_json("global/barter_recipes.json")
 
+        if not recipes_data:
+            logger.error("Failed to fetch barter recipes.")
+            return
+
         barterable_ids = set()
         ingredient_ids = set()
 
         for location in recipes_data:  # type: ignore
             for rec in location.get("recipes", []):
-                target_id = rec["item"]
-                barterable_ids.add(target_id)
+                target_id = rec.get("item")
+                if target_id:
+                    barterable_ids.add(target_id)
 
                 for offer in rec.get("offers", []):
                     currency_type = offer.get("currency")
@@ -48,27 +56,29 @@ class StalcraftUpdater:
                         ingredient_ids.add("money")
 
                     for ing in offer.get("requiredItems", []):
-                        ingredient_ids.add(ing["item"])
+                        if ing.get("item"):
+                            ingredient_ids.add(ing["item"])
 
         all_needed_ids = barterable_ids | ingredient_ids
 
         path_map = {p.split("/")[-1].replace(".json", ""): p for p in paths}
         tasks_paths = [path_map[i_id] for i_id in all_needed_ids if i_id in path_map]
         logger.info(
-            f"Items to download: {len(all_needed_ids)}\nResources: {len(ingredient_ids)} | Items: {len(barterable_ids)}"
+            f"Items to download: {len(all_needed_ids)}\n"
+            f"Resources: {len(ingredient_ids)} | Items: {len(barterable_ids)}"
         )
-
         logger.info(f"Start downloading {len(tasks_paths)} items...")
 
-        parsed_items = []
-        batch_size = 35
-        for i in range(0, len(tasks_paths), batch_size):
-            batch = tasks_paths[i : i + batch_size]
-            results = await asyncio.gather(
-                *[self._fetch_and_parse_item(p) for p in batch]
-            )
-            parsed_items.extend([r for r in results if r])
-            logger.info(f"Loaded: {len(parsed_items)}/{len(tasks_paths)}")
+        CONCURRENCY_LIMIT = 40
+        semaphore = asyncio.Semaphore(CONCURRENCY_LIMIT)
+
+        tasks = [self._fetch_and_parse_item(p, semaphore) for p in tasks_paths]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+
+        parsed_items: list[dict] = [res for res in results if isinstance(res, dict)]
+        logger.info(
+            f"Successfully loaded {len(parsed_items)}/{len(tasks_paths)} items."
+        )
 
         if "money" in ingredient_ids:
             parsed_items.append(
@@ -91,7 +101,9 @@ class StalcraftUpdater:
         seen_recipes = set()
         for location in recipes_data:  # type: ignore
             for rec in location.get("recipes", []):
-                target_id = rec["item"]
+                target_id = rec.get("item")
+                if not target_id:
+                    continue
 
                 for offer_idx, offer in enumerate(rec.get("offers", [])):
                     currency_type = offer.get("currency")
@@ -111,15 +123,17 @@ class StalcraftUpdater:
                             seen_recipes.add(recipe_key)
 
                     for ing in offer.get("requiredItems", []):
-                        ing_id = ing["item"]
-                        recipe_key = (target_id, ing_id, offer_idx)
+                        ing_id = ing.get("item")
+                        if not ing_id:
+                            continue
 
+                        recipe_key = (target_id, ing_id, offer_idx)
                         if recipe_key not in seen_recipes:
                             recipes_to_add.append(
                                 Recipe(
                                     item_id=target_id,
                                     ingredient_id=ing_id,
-                                    amount=ing["amount"],
+                                    amount=ing.get("amount", 0),
                                     offer_index=offer_idx,
                                 )
                             )
@@ -129,30 +143,37 @@ class StalcraftUpdater:
         await repo.update_items_and_recipes(items_to_merge, recipes_to_add)
 
     async def check_and_update(self):
-        latest_sha = await self.api.get_latest_commit_sha()
+        try:
+            latest_sha = await self.api.get_latest_commit_sha()
 
-        async with async_session_maker() as session:
-            repo = StalcraftRepo(session)
-            current_sha = await repo.get_current_commit_sha()
+            async with async_session_maker() as session:
+                async with session.begin():
+                    repo = StalcraftRepo(session)
+                    current_sha = await repo.get_current_commit_sha()
 
-            if current_sha == latest_sha:
-                logger.info("Database is up to date.")
-                return
+                    if current_sha == latest_sha:
+                        logger.info("Database is up to date.")
+                        return
 
-            logger.info(
-                f"Update required. {current_sha[:7] if current_sha else "None"} -> {latest_sha[:7]}"
-            )
+                    logger.info(
+                        f"Update required. {current_sha[:7] if current_sha else "None"} -> {latest_sha[:7]}"
+                    )
 
-            try:
-                await self.update_all_data(session)
-                await repo.update_commit_sha(sha=latest_sha)
+                    await self.update_all_data(session)
+                    await repo.update_commit_sha(sha=latest_sha)
 
-                logger.success(f"Successfully updated to {latest_sha[:7]}")
-            except Exception as e:
-                await session.rollback()
-                logger.error(f"Update failed: {e}")
+                    logger.success(f"Successfully updated to {latest_sha[:7]}")
+        except Exception as e:
+            logger.error(f"Update failed: {e}")
+
+
+async def main():
+    updater = StalcraftUpdater()
+    try:
+        await updater.check_and_update()
+    finally:
+        await updater.api.close()
 
 
 if __name__ == "__main__":
-    updater = StalcraftUpdater()
-    asyncio.run(updater.check_and_update())
+    asyncio.run(main())
