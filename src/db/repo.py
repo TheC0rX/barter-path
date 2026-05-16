@@ -1,6 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, or_, func, delete, update
 from sqlalchemy.orm import joinedload, selectinload
+from sqlalchemy.dialects.postgresql import insert
 
 from .models import User, Item, Recipe, UserTask, TaskProgress, StalcraftVersion
 
@@ -165,11 +166,24 @@ class StalcraftRepo:
     ):
         await self.session.execute(delete(Recipe))
 
-        for item_data in items_data:
-            await self.session.merge(Item(**item_data))
+        if items_data:
+            stmt = insert(Item).values(items_data)
+            upsert_stmt = stmt.on_conflict_do_update(
+                index_elements=[Item.id],
+                set_={
+                    "name_ru": stmt.excluded.name_ru,
+                    "name_en": stmt.excluded.name_en,
+                    "category": stmt.excluded.category,
+                    "is_barterable": stmt.excluded.is_barterable,
+                },
+            )
 
-        self.session.add_all(recipes_list)
-        await self.session.flush()
+            await self.session.execute(upsert_stmt)
+
+            if recipes_list:
+                self.session.add_all(recipes_list)
+
+            await self.session.flush()
 
     async def get_current_commit_sha(self) -> str | None:
         stmt = select(StalcraftVersion.version_sha).where(
