@@ -27,6 +27,10 @@ class StalcraftAPI:
             http2=True,
         )
 
+    async def close(self):
+        await self.client.aclose()
+        await self.raw_client.aclose()
+
     async def get_latest_commit_sha(self) -> str:
         url = f"/repos/{self.owner}/{self.repo}/commits/main"
         response = await self.client.get(url)

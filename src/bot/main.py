@@ -51,6 +51,12 @@ async def main() -> None:
         scheduler.shutdown()
         logger.info("Scheduler has been stopped.")
 
+        try:
+            await updater.api.close()
+            logger.info("Stalcraft API clients have been closed.")
+        except Exception as e:
+            logger.error(f"Error closing Stalcraft API: {e}")
+
         await engine.dispose()
         await bot.session.close()
         logger.info("The bot has been stopped.")
