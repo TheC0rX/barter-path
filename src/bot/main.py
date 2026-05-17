@@ -34,29 +34,31 @@ async def main() -> None:
 
         scheduler.add_job(updater.check_and_update, "interval", hours=1)
         scheduler.start()
-        logger.info("Scheduler has been started.")
+        logger.success("[bold magenta][BOT][/] Scheduler has been started.")
 
-        logger.info("The bot has been started.")
+        logger.success("[bold magenta][BOT][/] The bot has been started.")
 
     try:
         await bot.delete_webhook(True)
         await dp.start_polling(bot)
 
     except KeyboardInterrupt, SystemExit:
-        logger.warning("The bot is shutting down...")
+        logger.warning("[bold magenta][BOT][/] The bot is shutting down...")
     except Exception as e:
-        logger.exception(e)
+        logger.exception(f"[bold magenta][BOT][/] Exception: \n{e}")
 
     finally:
         scheduler.shutdown()
-        logger.info("Scheduler has been stopped.")
+        logger.info("[bold magenta][BOT][/] Scheduler has been stopped.")
 
         try:
             await updater.api.close()
-            logger.info("Stalcraft API clients have been closed.")
+            logger.info(
+                "[bold magenta][API][/] Stalcraft API clients have been closed."
+            )
         except Exception as e:
-            logger.error(f"Error closing Stalcraft API: {e}")
+            logger.error(f"[bold magenta][API][/] Error closing Stalcraft API: {e}")
 
         await engine.dispose()
         await bot.session.close()
-        logger.info("The bot has been stopped.")
+        logger.info("[bold magenta][BOT][/] The bot has been stopped.")

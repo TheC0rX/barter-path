@@ -28,17 +28,19 @@ class StalcraftUpdater:
                     "category": data.get("category", "unknown"),
                 }
             except Exception as e:
-                logger.error(f"Error fetching/parsing item from {path}: {e}")
+                logger.error(
+                    f"[bold magenta][UPDATER][/] Error fetching/parsing item from [red]{path}[/]: {e}"
+                )
                 return None
 
     async def update_all_data(self, session: AsyncSession):
-        logger.info("Updating items database...")
+        logger.info("[bold magenta][UPDATER][/] Updating items database...")
 
         paths = await self.api.get_items_tree()
         recipes_data = await self.api.fetch_json("global/barter_recipes.json")
 
         if not recipes_data:
-            logger.error("Failed to fetch barter recipes.")
+            logger.error("[bold magenta][UPDATER][/] Failed to fetch barter recipes.")
             return
 
         barterable_ids = set()
@@ -63,11 +65,12 @@ class StalcraftUpdater:
 
         path_map = {p.split("/")[-1].replace(".json", ""): p for p in paths}
         tasks_paths = [path_map[i_id] for i_id in all_needed_ids if i_id in path_map]
-        logger.info(
-            f"Items to download: {len(all_needed_ids)}\n"
-            f"Resources: {len(ingredient_ids)} | Items: {len(barterable_ids)}"
+        logger.success(
+            f"[bold magenta][UPDATER][/] {len(ingredient_ids)} Resources and {len(barterable_ids)} Items were found."
         )
-        logger.info(f"Start downloading {len(tasks_paths)} items...")
+        logger.info(
+            f"[bold magenta][UPDATER][/] Start downloading {len(tasks_paths)} items..."
+        )
 
         CONCURRENCY_LIMIT = 40
         semaphore = asyncio.Semaphore(CONCURRENCY_LIMIT)
@@ -76,8 +79,8 @@ class StalcraftUpdater:
         results = await asyncio.gather(*tasks, return_exceptions=True)
 
         parsed_items: list[dict] = [res for res in results if isinstance(res, dict)]
-        logger.info(
-            f"Successfully loaded {len(parsed_items)}/{len(tasks_paths)} items."
+        logger.success(
+            f"[bold magenta][UPDATER][/] Successfully loaded {len(parsed_items)}/{len(tasks_paths)} items."
         )
 
         if "money" in ingredient_ids:
@@ -90,13 +93,13 @@ class StalcraftUpdater:
                 }
             )
 
-        logger.info("Updating data of items...")
+        logger.info("[bold magenta][UPDATER][/] Updating data of items...")
         items_to_merge = []
         for item_data in parsed_items:
             item_data["is_barterable"] = item_data["id"] in barterable_ids
             items_to_merge.append(item_data)
 
-        logger.info("Updating data of recipes...")
+        logger.info("[bold magenta][UPDATER][/] Updating data of recipes...")
         recipes_to_add = []
         seen_recipes = set()
         for location in recipes_data:  # type: ignore
@@ -152,19 +155,23 @@ class StalcraftUpdater:
                     current_sha = await repo.get_current_commit_sha()
 
                     if current_sha == latest_sha:
-                        logger.info("Database is up to date.")
+                        logger.success(
+                            "[bold magenta][UPDATER][/] Database is up to date."
+                        )
                         return
 
-                    logger.info(
-                        f"Update required. {current_sha[:7] if current_sha else "None"} -> {latest_sha[:7]}"
+                    logger.warning(
+                        f"[bold magenta][UPDATER][/] Update required. [bold yellow]{current_sha[:7] if current_sha else "NONE"}[/] -> [bold cyan]{latest_sha[:7]}[/]"
                     )
 
                     await self.update_all_data(session)
                     await repo.update_commit_sha(sha=latest_sha)
 
-                    logger.success(f"Successfully updated to {latest_sha[:7]}")
+                    logger.success(
+                        f"[bold magenta][UPDATER][/] Successfully updated to [bold cyan]{latest_sha[:7]}[/]"
+                    )
         except Exception as e:
-            logger.error(f"Update failed: {e}")
+            logger.error(f"[bold magenta][UPDATER][/] Update failed: {e}")
 
 
 async def main():
