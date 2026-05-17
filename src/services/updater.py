@@ -1,5 +1,13 @@
 import asyncio
+
 from loguru import logger
+from rich.progress import (
+    Progress,
+    TextColumn,
+    BarColumn,
+    TaskProgressColumn,
+    TimeRemainingColumn,
+)
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -75,13 +83,32 @@ class StalcraftUpdater:
         CONCURRENCY_LIMIT = 40
         semaphore = asyncio.Semaphore(CONCURRENCY_LIMIT)
 
-        tasks = [self._fetch_and_parse_item(p, semaphore) for p in tasks_paths]
-        results = await asyncio.gather(*tasks, return_exceptions=True)
+        progress_columns = [
+            TextColumn("{task.description}"),
+            BarColumn(bar_width=None),
+            TaskProgressColumn(),
+            TimeRemainingColumn(),
+        ]
+        parsed_items: list[dict] = []
 
-        parsed_items: list[dict] = [res for res in results if isinstance(res, dict)]
-        logger.success(
-            f"[bold magenta][UPDATER][/] Successfully loaded {len(parsed_items)}/{len(tasks_paths)} items."
-        )
+        with Progress(*progress_columns, refresh_per_second=10) as progress:
+            task_id = progress.add_task(
+                "[bold magenta][UPDATER][/] Downloading items", total=len(tasks_paths)
+            )
+
+            async def wrapped_fetch(path):
+                res = await self._fetch_and_parse_item(path, semaphore)
+                progress.advance(task_id, advance=1)
+                return res
+
+            tasks = [wrapped_fetch(p) for p in tasks_paths]
+            results = await asyncio.gather(*tasks, return_exceptions=True)
+
+            parsed_items: list[dict] = [res for res in results if isinstance(res, dict)]
+            progress.update(
+                task_id,
+                description=f"[bold magenta][UPDATER][/] Successfully loaded {len(parsed_items)}/{len(tasks_paths)} items.",
+            )
 
         if "money" in ingredient_ids:
             parsed_items.append(
