@@ -1,4 +1,5 @@
 from loguru import logger
+
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
@@ -38,18 +39,13 @@ async def main() -> None:
 
         logger.success("[bold magenta][BOT][/] The bot has been started.")
 
-    try:
-        await bot.delete_webhook(True)
-        await dp.start_polling(bot)
-
-    except KeyboardInterrupt, SystemExit:
+    @dp.shutdown()
+    async def on_shutdown():
         logger.warning("[bold magenta][BOT][/] The bot is shutting down...")
-    except Exception as e:
-        logger.exception(f"[bold magenta][BOT][/] Exception: \n{e}")
 
-    finally:
-        scheduler.shutdown()
-        logger.info("[bold magenta][BOT][/] Scheduler has been stopped.")
+        if scheduler.running:
+            scheduler.shutdown()
+            logger.info("[bold magenta][BOT][/] Scheduler has been stopped.")
 
         try:
             await updater.api.close()
@@ -62,3 +58,10 @@ async def main() -> None:
         await engine.dispose()
         await bot.session.close()
         logger.info("[bold magenta][BOT][/] The bot has been stopped.")
+
+    try:
+        await bot.delete_webhook(True)
+        await dp.start_polling(bot)
+
+    except Exception as e:
+        logger.exception(f"[bold magenta][BOT][/] Exception: \n{e}")
