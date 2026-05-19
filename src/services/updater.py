@@ -1,6 +1,7 @@
 import asyncio
 
 from loguru import logger
+from rich.logging import RichHandler
 from rich.progress import (
     Progress,
     TextColumn,
@@ -201,7 +202,19 @@ class StalcraftUpdater:
             logger.error(f"[bold magenta][UPDATER][/] Update failed: {e}")
 
 
+def setup_logger() -> None:
+    logger.remove()
+
+    logger.add(
+        RichHandler(markup=True, rich_tracebacks=True, tracebacks_show_locals=True),
+        format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {message}",
+        level="DEBUG",
+    )
+
+
 async def main():
+    setup_logger()
+
     updater = StalcraftUpdater()
     try:
         await updater.check_and_update()
