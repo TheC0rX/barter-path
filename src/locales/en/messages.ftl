@@ -107,6 +107,8 @@ btn-delete_task =
     🗑️ Delete task
 btn-activate_discount =
     🎟️ Activate discount
+btn-manage_resources =
+    🛠️ Resource manager
 btn-settings =
     ⚙️ Settings
 

@@ -52,6 +52,10 @@ def get_main_menu_kb(
                 target="activate_discount", task_id=current_task_id
             ),
         )
+        builder.button(
+            text=i18n.get("btn-manage_resources"),
+            callback_data=MenuClick(target="manage_resources", task_id=current_task_id),
+        )
 
     builder.button(
         text=i18n.get("btn-settings"),

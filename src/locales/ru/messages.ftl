@@ -108,6 +108,8 @@ btn-delete_task =
     🗑️ Удалить задачу
 btn-activate_discount =
     🎟️ Применить скидку
+btn-manage_resources =
+    🛠️ Управление ресурсами
 btn-settings =
     ⚙️ Настройки
 
