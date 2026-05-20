@@ -22,6 +22,10 @@ activate_discount-placeholder =
     <b>Активация Скидки</b>
     ___
 
+manage_resources-placeholder =
+    <b>Управление Ресурсами</b>
+    ___
+
 settings-placeholder =
     <b>Настройки</b>
     ___
@@ -84,6 +88,10 @@ select-discount =
 
 activate_discount-activated =
     Скидка { $discount } была успешно применена к задаче на { $item_name }.
+
+# --- RESOURCE MANAGER
+select-ingredient =
+    Выберите ресурс, который хотите редактировать.
 
 # --- SETTINGS
 settings-description-text =

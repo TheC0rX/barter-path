@@ -8,7 +8,7 @@ from src.bot.keyboard import inline
 from src.bot.keyboard.callback_data import MenuClick, MenuTaskNav
 from src.bot.utils.ui import show_main_menu
 from src.bot.utils.states import AddTaskStates
-from src.db.repo import UserRepo
+from src.db.repo import UserRepo, ItemRepo
 
 router = Router()
 
@@ -110,6 +110,43 @@ async def open_activate_discount(
         + "\n\n"
         + i18n.get("select-discount"),
         reply_markup=inline.get_discount_offers_kb(task_id, i18n),
+    )
+    await callback.answer()
+
+
+@router.callback_query(MenuClick.filter(F.target == "manage_resources"))
+async def open_manage_resources(
+    callback: CallbackQuery,
+    callback_data: MenuClick,
+    session: AsyncSession,
+    i18n: I18nContext,
+) -> None:
+    task_id = callback_data.task_id
+
+    user_repo = UserRepo(session)
+    item_repo = ItemRepo(session)
+
+    task = await user_repo.get_task_by_task_id(task_id)
+    rows = await item_repo.get_item_recipes(task.item_id)
+    progress_dict = await user_repo.get_task_progress_dict(task_id)
+
+    current_ings = [
+        (ing_item, recipe.amount)
+        for recipe, ing_item in rows
+        if recipe.offer_index == task.offer_idx
+    ]
+
+    await callback.message.edit_text(  # type: ignore
+        text=i18n.get("manage_resources-placeholder")
+        + "\n\n"
+        + i18n.get("select-ingredient"),
+        reply_markup=inline.get_resources_management_kb(
+            task_id=task_id,
+            current_ings=current_ings,
+            progress_dict=progress_dict,
+            discount=task.discount,
+            i18n=i18n,
+        ),
     )
     await callback.answer()
 

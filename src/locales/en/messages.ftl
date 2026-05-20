@@ -22,6 +22,10 @@ activate_discount-placeholder =
     <b>Activating Discount</b>
     ___
 
+manage_resources-placeholder =
+    <b>Resource Manager</b>
+    ___
+
 settings-placeholder =
     <b>Settings</b>
     ___
@@ -83,6 +87,10 @@ select-discount =
 
 activate_discount-activated =
     Discount { $discount } was successfully applied to task { $item_name }.
+
+# --- RESOURCE MANAGER
+select-ingredient =
+    Choose the ingredient you want to edit.
 
 # --- SETTINGS
 settings-description-text =
