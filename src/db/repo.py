@@ -89,8 +89,12 @@ class UserRepo:
         await self.session.execute(stmt)
         await self.session.commit()
 
-    async def get_task_by_task_id(self, task_id: int):
-        stmt = select(UserTask).where(UserTask.id == task_id)
+    async def get_task_by_task_id(self, task_id: int) -> UserTask:
+        stmt = (
+            select(UserTask)
+            .options(joinedload(UserTask.item))
+            .where(UserTask.id == task_id)
+        )
         result = await self.session.execute(stmt)
 
         return result.scalar_one()
