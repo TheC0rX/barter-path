@@ -115,8 +115,8 @@ class StalcraftUpdater:
             parsed_items.append(
                 {
                     "id": "money",
-                    "name_ru": "Стоимость",
-                    "name_en": "Cost",
+                    "name_ru": "Деньги",
+                    "name_en": "Money",
                     "category": "currency",
                 }
             )

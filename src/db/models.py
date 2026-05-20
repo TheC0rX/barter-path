@@ -106,6 +106,8 @@ class Item(Base):
             return "🎽"
         if self.category.startswith("weapon"):
             return "🔫"
+        if self.category.startswith("currency"):
+            return "💵"
         return "📦"
 
 
