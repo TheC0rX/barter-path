@@ -43,5 +43,11 @@ class RecipeNav(CallbackData, prefix="recipe_nav"):
     idx: str
 
 
+class ResourceClick(CallbackData, prefix="resource"):
+    action: str
+    task_id: int
+    ingredient_id: str
+
+
 class LanguageClick(CallbackData, prefix="lang"):
     locale: str

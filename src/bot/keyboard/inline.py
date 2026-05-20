@@ -12,6 +12,7 @@ from src.bot.keyboard.callback_data import (
     DeleteTaskClick,
     DiscountOfferClick,
     ActivateDiscountClick,
+    ResourceClick,
     LanguageClick,
 )
 
@@ -202,6 +203,40 @@ def get_activate_discount_kb(
     builder.button(text=i18n.get("btn-back"), callback_data=MenuClick(target="main"))
 
     builder.adjust(2, 1)
+    return builder.as_markup()
+
+
+def get_resources_management_kb(
+    task_id: int,
+    current_ings: list,
+    progress_dict: dict,
+    discount: int,
+    i18n: I18nContext,
+) -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+
+    for ing_item, amount in current_ings:
+        is_money = ing_item.id == "money"
+        min_amount = 0 if is_money else 1
+        discount_amount = max(min_amount, round(amount * (1 - discount / 100)))
+
+        collected = progress_dict.get(ing_item.id, 0)
+        display_collected = min(collected, discount_amount)
+
+        name = ing_item.name_ru if i18n.locale == "ru" else ing_item.name_en
+
+        icon = "✅" if display_collected == discount_amount else ing_item.icon
+        button_text = f"{icon} {name} ({display_collected}/{discount_amount})"
+
+        builder.button(
+            text=button_text,
+            callback_data=ResourceClick(
+                action="select", task_id=task_id, ingredient_id=ing_item.id
+            ),
+        )
+    builder.button(text=i18n.get("btn-back"), callback_data=MenuClick(target="main"))
+
+    builder.adjust(1)
     return builder.as_markup()
 
 
