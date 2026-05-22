@@ -36,12 +36,13 @@ class DeleteTaskClick(CallbackData, prefix="delete_task"):
     task_id: int
 
 
-class DiscountOfferClick(CallbackData, prefix="discount_offer"):
-    task_id: int
-    discount: int
+class DiscountAction(StrEnum):
+    OFFER = "offer"
+    ACTIVATE = "activate"
 
 
-class ActivateDiscountClick(CallbackData, prefix="activate_discount"):
+class DiscountClick(CallbackData, prefix="discount"):
+    action: DiscountAction
     task_id: int
     discount: int
 

@@ -1,20 +1,20 @@
-from aiogram import Router
+from aiogram import Router, F
 from aiogram.types import CallbackQuery
 from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.bot.utils.ui import render_item_card
 from src.bot.keyboard import inline
-from src.bot.keyboard.callback_data import DiscountOfferClick, ActivateDiscountClick
+from src.bot.keyboard.callback_data import DiscountClick, DiscountAction
 from src.db.repo import UserRepo
 
 router = Router()
 
 
-@router.callback_query(DiscountOfferClick.filter())
+@router.callback_query(DiscountClick.filter(F.action == DiscountAction.OFFER))
 async def process_discount_selection(
     callback: CallbackQuery,
-    callback_data: DiscountOfferClick,
+    callback_data: DiscountClick,
     session: AsyncSession,
     i18n: I18nContext,
 ) -> None:
@@ -37,10 +37,10 @@ async def process_discount_selection(
     await callback.answer()
 
 
-@router.callback_query(ActivateDiscountClick.filter())
+@router.callback_query(DiscountClick.filter(F.action == DiscountAction.ACTIVATE))
 async def activate_task_discount(
     callback: CallbackQuery,
-    callback_data: ActivateDiscountClick,
+    callback_data: DiscountClick,
     session: AsyncSession,
     i18n: I18nContext,
 ) -> None:

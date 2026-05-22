@@ -9,12 +9,11 @@ from src.bot.keyboard.callback_data import (
     AddTaskClick,
     RecipeNav,
     DeleteTaskClick,
-    DiscountOfferClick,
-    ActivateDiscountClick,
+    DiscountClick,
     ResourceClick,
     LanguageClick,
 )
-from src.bot.keyboard.callback_data import MenuAction
+from src.bot.keyboard.callback_data import MenuAction, DiscountAction
 
 
 def add_back_button(
@@ -185,7 +184,9 @@ def get_discount_offers_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMar
     for d in discounts:
         builder.button(
             text=f"{d}%",
-            callback_data=DiscountOfferClick(task_id=task_id, discount=d),
+            callback_data=DiscountClick(
+                action=DiscountAction.OFFER, task_id=task_id, discount=d
+            ),
         )
 
     builder.adjust(3)
@@ -199,7 +200,9 @@ def get_activate_discount_kb(
 
     builder.button(
         text=i18n.get("btn-confirm"),
-        callback_data=ActivateDiscountClick(task_id=task_id, discount=discount),
+        callback_data=DiscountClick(
+            action=DiscountAction.ACTIVATE, task_id=task_id, discount=discount
+        ),
     )
 
     builder.adjust(1)
