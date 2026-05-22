@@ -2,6 +2,7 @@ from enum import StrEnum
 from aiogram.filters.callback_data import CallbackData
 
 
+# --- ACTIONS
 class MenuAction(StrEnum):
     NAVIGATION = "navigation"
     MENU = "menu"
@@ -13,6 +14,17 @@ class MenuAction(StrEnum):
     SETTINGS = "settings"
 
 
+class DiscountAction(StrEnum):
+    OFFER = "offer"
+    ACTIVATE = "activate"
+
+
+class AddTaskAction(StrEnum):
+    ADD_TASK = "add_task"
+    NAVIGATION = "navigation"
+
+
+# --- MENU
 class MenuClick(CallbackData, prefix="menu"):
     target: MenuAction
     task_id: int = 0
@@ -24,8 +36,10 @@ class FinishTaskClick(CallbackData, prefix="finish_task"):
 
 
 class AddTaskClick(CallbackData, prefix="add_task"):
+    action: AddTaskAction
     item_id: str
-    offer_idx: int
+    offer_idx: int = 0
+    idx: str = ""
 
 
 class SearchItem(CallbackData, prefix="select_task_item"):
@@ -36,20 +50,10 @@ class DeleteTaskClick(CallbackData, prefix="delete_task"):
     task_id: int
 
 
-class DiscountAction(StrEnum):
-    OFFER = "offer"
-    ACTIVATE = "activate"
-
-
 class DiscountClick(CallbackData, prefix="discount"):
     action: DiscountAction
     task_id: int
     discount: int
-
-
-class RecipeNav(CallbackData, prefix="recipe_nav"):
-    item_id: str
-    idx: str
 
 
 class ResourceClick(CallbackData, prefix="resource"):
@@ -58,5 +62,6 @@ class ResourceClick(CallbackData, prefix="resource"):
     ingredient_id: str
 
 
+# --- SETTINGS
 class LanguageClick(CallbackData, prefix="lang"):
     locale: str

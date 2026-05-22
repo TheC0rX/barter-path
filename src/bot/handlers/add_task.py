@@ -1,4 +1,4 @@
-from aiogram import Router
+from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 from aiogram_i18n import I18nContext
@@ -8,10 +8,10 @@ from src.db.repo import UserRepo, ItemRepo
 from src.bot.keyboard import inline
 from src.bot.utils.states import AddTaskStates
 from src.bot.keyboard.callback_data import (
-    RecipeNav,
     SearchItem,
     AddTaskClick,
 )
+from src.bot.keyboard.callback_data import AddTaskAction
 
 from src.bot.utils.ui import render_item_card
 
@@ -70,10 +70,10 @@ async def process_item_selection(
     await callback.answer()
 
 
-@router.callback_query(RecipeNav.filter())
+@router.callback_query(AddTaskClick.filter(F.action == AddTaskAction.NAVIGATION))
 async def navigate_recipe(
     callback: CallbackQuery,
-    callback_data: RecipeNav,
+    callback_data: AddTaskClick,
     session: AsyncSession,
     i18n: I18nContext,
 ):

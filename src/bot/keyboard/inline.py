@@ -7,13 +7,12 @@ from src.bot.keyboard.callback_data import (
     SearchItem,
     FinishTaskClick,
     AddTaskClick,
-    RecipeNav,
     DeleteTaskClick,
     DiscountClick,
     ResourceClick,
     LanguageClick,
 )
-from src.bot.keyboard.callback_data import MenuAction, DiscountAction
+from src.bot.keyboard.callback_data import MenuAction, DiscountAction, AddTaskAction
 
 
 def add_back_button(
@@ -146,15 +145,23 @@ def get_card_nav_kb(
         prev_idx = (offer_idx - 1) % total_offers
         next_idx = (offer_idx + 1) % total_offers
         builder.button(
-            text="⬅️", callback_data=RecipeNav(item_id=item_id, idx=str(prev_idx))
+            text="⬅️",
+            callback_data=AddTaskClick(
+                action=AddTaskAction.NAVIGATION, item_id=item_id, idx=str(prev_idx)
+            ),
         )
         builder.button(
-            text="➡️", callback_data=RecipeNav(item_id=item_id, idx=str(next_idx))
+            text="➡️",
+            callback_data=AddTaskClick(
+                action=AddTaskAction.NAVIGATION, item_id=item_id, idx=str(next_idx)
+            ),
         )
 
     builder.button(
         text=i18n.get("btn-confirm"),
-        callback_data=AddTaskClick(item_id=item_id, offer_idx=offer_idx),
+        callback_data=AddTaskClick(
+            action=AddTaskAction.ADD_TASK, item_id=item_id, offer_idx=offer_idx
+        ),
     )
 
     if total_offers > 1:
