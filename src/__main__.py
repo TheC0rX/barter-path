@@ -11,7 +11,7 @@ def setup_logger() -> None:
 
     logger.add(
         RichHandler(markup=True, rich_tracebacks=True, tracebacks_show_locals=True),
-        format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {message}",
+        format="| {time:YYYY-MM-DD HH:mm:ss} | {message}",
         level="DEBUG",
     )
 
