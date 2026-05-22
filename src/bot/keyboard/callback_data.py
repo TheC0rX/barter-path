@@ -1,8 +1,19 @@
+from enum import StrEnum
 from aiogram.filters.callback_data import CallbackData
 
 
+class MenuAction(StrEnum):
+    MENU = "menu"
+    FINISH_TASK = "finish_task"
+    ADD_TASK = "add_task"
+    DELETE_TASK = "delete_task"
+    ACTIVATE_DISCOUNT = "activate_discount"
+    MANAGE_RESOURCES = "manage_resources"
+    SETTINGS = "settings"
+
+
 class MenuClick(CallbackData, prefix="menu"):
-    target: str
+    target: MenuAction
     task_id: int = 0
     back_to: str = "main"
 

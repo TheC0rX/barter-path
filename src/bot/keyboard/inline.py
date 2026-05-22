@@ -15,6 +15,7 @@ from src.bot.keyboard.callback_data import (
     ResourceClick,
     LanguageClick,
 )
+from src.bot.keyboard.callback_data import MenuAction
 
 
 def get_main_menu_kb(
@@ -30,7 +31,9 @@ def get_main_menu_kb(
     if has_tasks and is_finished:
         builder.button(
             text=i18n.get("btn-finish_task"),
-            callback_data=MenuClick(target="finish_task", task_id=current_task_id),
+            callback_data=MenuClick(
+                target=MenuAction.FINISH_TASK, task_id=current_task_id
+            ),
         )
 
     if has_tasks and total_tasks > 1:
@@ -39,28 +42,32 @@ def get_main_menu_kb(
 
     builder.button(
         text=i18n.get("btn-add_task"),
-        callback_data=MenuClick(target="add_task"),
+        callback_data=MenuClick(target=MenuAction.ADD_TASK),
     )
 
     if has_tasks:
         builder.button(
             text=i18n.get("btn-delete_task"),
-            callback_data=MenuClick(target="delete_task", task_id=current_task_id),
+            callback_data=MenuClick(
+                target=MenuAction.DELETE_TASK, task_id=current_task_id
+            ),
         )
         builder.button(
             text=i18n.get("btn-activate_discount"),
             callback_data=MenuClick(
-                target="activate_discount", task_id=current_task_id
+                target=MenuAction.ACTIVATE_DISCOUNT, task_id=current_task_id
             ),
         )
         builder.button(
             text=i18n.get("btn-manage_resources"),
-            callback_data=MenuClick(target="manage_resources", task_id=current_task_id),
+            callback_data=MenuClick(
+                target=MenuAction.MANAGE_RESOURCES, task_id=current_task_id
+            ),
         )
 
     builder.button(
         text=i18n.get("btn-settings"),
-        callback_data=MenuClick(target="settings"),
+        callback_data=MenuClick(target=MenuAction.SETTINGS),
     )
 
     if has_tasks and total_tasks > 1:
@@ -88,9 +95,11 @@ def get_finish_task_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
     )
     builder.button(
         text=i18n.get("btn-cancel"),
-        callback_data=MenuClick(target="main"),
+        callback_data=MenuClick(target=MenuAction.MENU),
     )
-    builder.button(text=i18n.get("btn-back"), callback_data=MenuClick(target="main"))
+    builder.button(
+        text=i18n.get("btn-back"), callback_data=MenuClick(target=MenuAction.MENU)
+    )
 
     builder.adjust(2, 1)
     return builder.as_markup()
@@ -99,7 +108,9 @@ def get_finish_task_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
 def get_back_button(i18n: I18nContext) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
-    builder.button(text=i18n.get("btn-back"), callback_data=MenuClick(target="main"))
+    builder.button(
+        text=i18n.get("btn-back"), callback_data=MenuClick(target=MenuAction.MENU)
+    )
 
     builder.adjust(1)
     return builder.as_markup()
@@ -112,7 +123,9 @@ def get_found_items_kb(items, i18n: I18nContext) -> InlineKeyboardMarkup:
         display_name = item.name_ru if i18n.locale == "ru" else item.name_en
         builder.button(text=display_name, callback_data=SearchItem(item_id=item.id))
 
-    builder.button(text=i18n.get("btn-back"), callback_data=MenuClick(target="main"))
+    builder.button(
+        text=i18n.get("btn-back"), callback_data=MenuClick(target=MenuAction.MENU)
+    )
     builder.adjust(1)
 
     return builder.as_markup()
@@ -143,7 +156,7 @@ def get_card_nav_kb(
 
     builder.button(
         text=i18n.get("btn-back"),
-        callback_data=MenuClick(target="add_task"),
+        callback_data=MenuClick(target=MenuAction.ADD_TASK),
     )
 
     if total_offers > 1:
@@ -163,9 +176,11 @@ def get_delete_task_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
     )
     builder.button(
         text=i18n.get("btn-cancel"),
-        callback_data=MenuClick(target="main"),
+        callback_data=MenuClick(target=MenuAction.MENU),
     )
-    builder.button(text=i18n.get("btn-back"), callback_data=MenuClick(target="main"))
+    builder.button(
+        text=i18n.get("btn-back"), callback_data=MenuClick(target=MenuAction.MENU)
+    )
 
     builder.adjust(2, 1)
     return builder.as_markup()
@@ -181,7 +196,9 @@ def get_discount_offers_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMar
             callback_data=DiscountOfferClick(task_id=task_id, discount=d),
         )
 
-    builder.button(text=i18n.get("btn-back"), callback_data=MenuClick(target="main"))
+    builder.button(
+        text=i18n.get("btn-back"), callback_data=MenuClick(target=MenuAction.MENU)
+    )
 
     builder.adjust(1)
     return builder.as_markup()
@@ -198,9 +215,11 @@ def get_activate_discount_kb(
     )
     builder.button(
         text=i18n.get("btn-cancel"),
-        callback_data=MenuClick(target="main"),
+        callback_data=MenuClick(target=MenuAction.MENU),
     )
-    builder.button(text=i18n.get("btn-back"), callback_data=MenuClick(target="main"))
+    builder.button(
+        text=i18n.get("btn-back"), callback_data=MenuClick(target=MenuAction.MENU)
+    )
 
     builder.adjust(2, 1)
     return builder.as_markup()
@@ -234,7 +253,9 @@ def get_resources_management_kb(
                 action="select", task_id=task_id, ingredient_id=ing_item.id
             ),
         )
-    builder.button(text=i18n.get("btn-back"), callback_data=MenuClick(target="main"))
+    builder.button(
+        text=i18n.get("btn-back"), callback_data=MenuClick(target=MenuAction.MENU)
+    )
 
     builder.adjust(1)
     return builder.as_markup()
@@ -248,7 +269,9 @@ def get_settings_kb(i18n: I18nContext) -> InlineKeyboardMarkup:
         text=i18n.get("btn-switch_lang"),
         callback_data=LanguageClick(locale=target_locale),
     )
-    builder.button(text=i18n.get("btn-back"), callback_data=MenuClick(target="main"))
+    builder.button(
+        text=i18n.get("btn-back"), callback_data=MenuClick(target=MenuAction.MENU)
+    )
 
     builder.adjust(1)
     return builder.as_markup()

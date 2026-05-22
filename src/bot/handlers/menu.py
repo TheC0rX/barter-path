@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.bot.keyboard import inline
 from src.bot.keyboard.callback_data import MenuClick, MenuTaskNav
+from src.bot.keyboard.callback_data import MenuAction
 from src.bot.utils.ui import show_main_menu
 from src.bot.utils.states import AddTaskStates
 from src.db.repo import UserRepo, ItemRepo
@@ -23,7 +24,7 @@ async def navigate_menu_tasks(
     await show_main_menu(callback, session, i18n, task_idx=callback_data.task_idx)
 
 
-@router.callback_query(MenuClick.filter(F.target == "main"))
+@router.callback_query(MenuClick.filter(F.target == MenuAction.MENU))
 async def open_main_menu(
     callback: CallbackQuery, state: FSMContext, session: AsyncSession, i18n: I18nContext
 ) -> None:
@@ -33,7 +34,7 @@ async def open_main_menu(
     await show_main_menu(callback, session, i18n)
 
 
-@router.callback_query(MenuClick.filter(F.target == "finish_task"))
+@router.callback_query(MenuClick.filter(F.target == MenuAction.FINISH_TASK))
 async def open_finish_task(
     callback: CallbackQuery,
     callback_data: MenuClick,
@@ -54,7 +55,7 @@ async def open_finish_task(
     await callback.answer()
 
 
-@router.callback_query(MenuClick.filter(F.target == "add_task"))
+@router.callback_query(MenuClick.filter(F.target == MenuAction.ADD_TASK))
 async def open_add_task(
     callback: CallbackQuery, state: FSMContext, session: AsyncSession, i18n: I18nContext
 ) -> None:
@@ -78,7 +79,7 @@ async def open_add_task(
     await callback.answer()
 
 
-@router.callback_query(MenuClick.filter(F.target == "delete_task"))
+@router.callback_query(MenuClick.filter(F.target == MenuAction.DELETE_TASK))
 async def open_delete_task(
     callback: CallbackQuery,
     callback_data: MenuClick,
@@ -99,7 +100,7 @@ async def open_delete_task(
     await callback.answer()
 
 
-@router.callback_query(MenuClick.filter(F.target == "activate_discount"))
+@router.callback_query(MenuClick.filter(F.target == MenuAction.ACTIVATE_DISCOUNT))
 async def open_activate_discount(
     callback: CallbackQuery, callback_data: MenuClick, i18n: I18nContext
 ) -> None:
@@ -114,7 +115,7 @@ async def open_activate_discount(
     await callback.answer()
 
 
-@router.callback_query(MenuClick.filter(F.target == "manage_resources"))
+@router.callback_query(MenuClick.filter(F.target == MenuAction.MANAGE_RESOURCES))
 async def open_manage_resources(
     callback: CallbackQuery,
     callback_data: MenuClick,
@@ -151,7 +152,7 @@ async def open_manage_resources(
     await callback.answer()
 
 
-@router.callback_query(MenuClick.filter(F.target == "settings"))
+@router.callback_query(MenuClick.filter(F.target == MenuAction.SETTINGS))
 async def open_settings(callback: CallbackQuery, i18n: I18nContext) -> None:
     await callback.message.edit_text(  # type: ignore
         text=i18n.get("settings-placeholder")
