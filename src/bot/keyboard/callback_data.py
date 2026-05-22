@@ -40,7 +40,7 @@ class AddTaskClick(CallbackData, prefix="add_task"):
     action: AddTaskAction
     item_id: str
     offer_idx: int = 0
-    idx: str = ""
+    idx: int = 0
 
 
 class DeleteTaskClick(CallbackData, prefix="delete_task"):

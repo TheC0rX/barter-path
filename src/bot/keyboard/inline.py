@@ -149,13 +149,13 @@ def get_card_nav_kb(
         builder.button(
             text="⬅️",
             callback_data=AddTaskClick(
-                action=AddTaskAction.NAVIGATION, item_id=item_id, idx=str(prev_idx)
+                action=AddTaskAction.NAVIGATION, item_id=item_id, idx=prev_idx
             ),
         )
         builder.button(
             text="➡️",
             callback_data=AddTaskClick(
-                action=AddTaskAction.NAVIGATION, item_id=item_id, idx=str(next_idx)
+                action=AddTaskAction.NAVIGATION, item_id=item_id, idx=next_idx
             ),
         )
 
