@@ -85,6 +85,9 @@ delete_task-deleted =
 select-discount =
     Select the discount you want to apply.
 
+discount-preview = 
+    🎟️ Preview with { $discount }% discount applied.
+
 activate_discount-activated =
     Discount { $discount } was successfully applied to task { $item_name }.
 

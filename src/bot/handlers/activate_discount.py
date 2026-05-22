@@ -29,7 +29,11 @@ async def process_discount_selection(
     )
 
     await callback.message.edit_text(  # type: ignore
-        text=i18n.get("activate_discount-placeholder") + "\n\n" + card_text,
+        text=i18n.get("activate_discount-placeholder")
+        + "\n\n"
+        + i18n.get("discount-preview", discount=discount)
+        + "\n\n"
+        + card_text,
         reply_markup=inline.get_activate_discount_kb(
             task_id=task_id, discount=discount, i18n=i18n
         ),

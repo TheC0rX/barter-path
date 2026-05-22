@@ -86,6 +86,9 @@ delete_task-deleted =
 select-discount =
     Выберите скидку, которую хотите применить.
 
+discount-preview = 
+    🎟️ Предварительный просмотр с учётом скидки { $discount }%.
+
 activate_discount-activated =
     Скидка { $discount } была успешно применена к задаче на { $item_name }.
 
