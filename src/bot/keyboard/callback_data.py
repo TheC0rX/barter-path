@@ -15,7 +15,6 @@ class MenuAction(StrEnum):
 class MenuClick(CallbackData, prefix="menu"):
     target: MenuAction
     task_id: int = 0
-    back_to: str = "main"
 
 
 class MenuTaskNav(CallbackData, prefix="menu_nav"):
