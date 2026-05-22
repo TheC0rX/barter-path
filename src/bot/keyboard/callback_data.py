@@ -21,6 +21,7 @@ class DiscountAction(StrEnum):
 
 class AddTaskAction(StrEnum):
     ADD_TASK = "add_task"
+    SEARCH = "search"
     NAVIGATION = "navigation"
 
 
@@ -40,10 +41,6 @@ class AddTaskClick(CallbackData, prefix="add_task"):
     item_id: str
     offer_idx: int = 0
     idx: str = ""
-
-
-class SearchItem(CallbackData, prefix="select_task_item"):
-    item_id: str
 
 
 class DeleteTaskClick(CallbackData, prefix="delete_task"):

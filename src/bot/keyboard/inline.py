@@ -4,7 +4,6 @@ from aiogram_i18n import I18nContext
 
 from src.bot.keyboard.callback_data import (
     MenuClick,
-    SearchItem,
     FinishTaskClick,
     AddTaskClick,
     DeleteTaskClick,
@@ -127,7 +126,10 @@ def get_found_items_kb(items, i18n: I18nContext) -> InlineKeyboardMarkup:
 
     for item in items:
         display_name = item.name_ru if i18n.locale == "ru" else item.name_en
-        builder.button(text=display_name, callback_data=SearchItem(item_id=item.id))
+        builder.button(
+            text=display_name,
+            callback_data=AddTaskClick(action=AddTaskAction.SEARCH, item_id=item.id),
+        )
 
     builder.adjust(1)
     return add_back_button(builder, i18n)

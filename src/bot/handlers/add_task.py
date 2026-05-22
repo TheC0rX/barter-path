@@ -7,10 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.repo import UserRepo, ItemRepo
 from src.bot.keyboard import inline
 from src.bot.utils.states import AddTaskStates
-from src.bot.keyboard.callback_data import (
-    SearchItem,
-    AddTaskClick,
-)
+from src.bot.keyboard.callback_data import AddTaskClick
 from src.bot.keyboard.callback_data import AddTaskAction
 
 from src.bot.utils.ui import render_item_card
@@ -53,10 +50,10 @@ async def process_item_searching(
     )
 
 
-@router.callback_query(SearchItem.filter())
+@router.callback_query(AddTaskClick.filter(F.action == AddTaskAction.SEARCH))
 async def process_item_selection(
     callback: CallbackQuery,
-    callback_data: SearchItem,
+    callback_data: AddTaskClick,
     state: FSMContext,
     session: AsyncSession,
     i18n: I18nContext,
@@ -89,7 +86,7 @@ async def navigate_recipe(
     await callback.answer()
 
 
-@router.callback_query(AddTaskClick.filter())
+@router.callback_query(AddTaskClick.filter(F.action == AddTaskAction.ADD_TASK))
 async def add_user_task(
     callback: CallbackQuery,
     callback_data: AddTaskClick,
