@@ -37,7 +37,7 @@ async def process_discount_selection(
     await callback.answer()
 
 
-@router.callback_query(DiscountClick.filter(F.action == DiscountAction.ACTIVATE))
+@router.callback_query(DiscountClick.filter(F.action == DiscountAction.CONFIRM))
 async def activate_task_discount(
     callback: CallbackQuery,
     callback_data: DiscountClick,

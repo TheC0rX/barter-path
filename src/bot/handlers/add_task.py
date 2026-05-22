@@ -86,7 +86,7 @@ async def navigate_recipe(
     await callback.answer()
 
 
-@router.callback_query(AddTaskClick.filter(F.action == AddTaskAction.ADD_TASK))
+@router.callback_query(AddTaskClick.filter(F.action == AddTaskAction.CONFIRM))
 async def add_user_task(
     callback: CallbackQuery,
     callback_data: AddTaskClick,

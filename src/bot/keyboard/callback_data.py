@@ -4,23 +4,23 @@ from aiogram.filters.callback_data import CallbackData
 
 # --- ACTIONS
 class MenuAction(StrEnum):
-    NAVIGATION = "navigation"
+    NAVIGATION = "nav"
     MENU = "menu"
     FINISH_TASK = "finish_task"
     ADD_TASK = "add_task"
     DELETE_TASK = "delete_task"
-    ACTIVATE_DISCOUNT = "activate_discount"
-    MANAGE_RESOURCES = "manage_resources"
+    ACTIVATE_DISCOUNT = "discount"
+    MANAGE_RESOURCES = "resources"
     SETTINGS = "settings"
 
 
 class DiscountAction(StrEnum):
     OFFER = "offer"
-    ACTIVATE = "activate"
+    CONFIRM = "confirm"
 
 
 class AddTaskAction(StrEnum):
-    ADD_TASK = "add_task"
+    CONFIRM = "confirm"
     SEARCH = "search"
     NAVIGATION = "navigation"
 
@@ -56,7 +56,7 @@ class DiscountClick(CallbackData, prefix="discount"):
 class ResourceClick(CallbackData, prefix="resource"):
     action: str
     task_id: int
-    ingredient_id: str
+    ing_id: str
 
 
 # --- SETTINGS

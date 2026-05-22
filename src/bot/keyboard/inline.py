@@ -162,7 +162,7 @@ def get_card_nav_kb(
     builder.button(
         text=i18n.get("btn-confirm"),
         callback_data=AddTaskClick(
-            action=AddTaskAction.ADD_TASK, item_id=item_id, offer_idx=offer_idx
+            action=AddTaskAction.CONFIRM, item_id=item_id, offer_idx=offer_idx
         ),
     )
 
@@ -210,7 +210,7 @@ def get_activate_discount_kb(
     builder.button(
         text=i18n.get("btn-confirm"),
         callback_data=DiscountClick(
-            action=DiscountAction.ACTIVATE, task_id=task_id, discount=discount
+            action=DiscountAction.CONFIRM, task_id=task_id, discount=discount
         ),
     )
 
@@ -243,7 +243,7 @@ def get_resources_management_kb(
         builder.button(
             text=button_text,
             callback_data=ResourceClick(
-                action="select", task_id=task_id, ingredient_id=ing_item.id
+                action="select", task_id=task_id, ing_id=ing_item.id
             ),
         )
 
