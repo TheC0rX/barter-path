@@ -4,7 +4,6 @@ from aiogram.filters.callback_data import CallbackData
 
 # --- ACTIONS
 class MenuAction(StrEnum):
-    NAVIGATION = "nav"
     MENU = "menu"
     FINISH_TASK = "finish_task"
     ADD_TASK = "add_task"
@@ -22,14 +21,17 @@ class DiscountAction(StrEnum):
 class AddTaskAction(StrEnum):
     CONFIRM = "confirm"
     SEARCH = "search"
-    NAVIGATION = "navigation"
+    NAVIGATION = "nav"
 
 
 # --- MENU
 class MenuClick(CallbackData, prefix="menu"):
     target: MenuAction
     task_id: int = 0
-    task_idx: int = 0
+
+
+class MenuNav(CallbackData, prefix="menu_nav"):
+    task_index: int
 
 
 class FinishTaskClick(CallbackData, prefix="finish_task"):

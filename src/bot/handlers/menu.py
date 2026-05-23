@@ -5,7 +5,7 @@ from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.bot.keyboard import inline
-from src.bot.keyboard.callback_data import MenuClick
+from src.bot.keyboard.callback_data import MenuClick, MenuNav
 from src.bot.keyboard.callback_data import MenuAction
 from src.bot.utils.ui import show_main_menu
 from src.bot.utils.states import AddTaskStates
@@ -14,14 +14,14 @@ from src.db.repo import UserRepo, ItemRepo
 router = Router()
 
 
-@router.callback_query(MenuClick.filter(F.target == MenuAction.NAVIGATION))
+@router.callback_query(MenuNav.filter())
 async def navigate_menu_tasks(
     callback: CallbackQuery,
-    callback_data: MenuClick,
+    callback_data: MenuNav,
     session: AsyncSession,
     i18n: I18nContext,
 ):
-    await show_main_menu(callback, session, i18n, task_idx=callback_data.task_idx)
+    await show_main_menu(callback, session, i18n, task_idx=callback_data.task_index)
 
 
 @router.callback_query(MenuClick.filter(F.target == MenuAction.MENU))

@@ -4,6 +4,7 @@ from aiogram_i18n import I18nContext
 
 from src.bot.keyboard.callback_data import (
     MenuClick,
+    MenuNav,
     FinishTaskClick,
     AddTaskClick,
     DeleteTaskClick,
@@ -48,15 +49,11 @@ def get_main_menu_kb(
     if has_tasks and total_tasks > 1:
         builder.button(
             text="⬅️",
-            callback_data=MenuClick(
-                target=MenuAction.NAVIGATION, task_idx=task_idx - 1
-            ),
+            callback_data=MenuNav(task_index=task_idx - 1),
         )
         builder.button(
             text="➡️",
-            callback_data=MenuClick(
-                target=MenuAction.NAVIGATION, task_idx=task_idx + 1
-            ),
+            callback_data=MenuNav(task_index=task_idx + 1),
         )
 
     builder.button(
