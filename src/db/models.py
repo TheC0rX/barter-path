@@ -48,7 +48,10 @@ class UserTask(Base):
     user: Mapped["User"] = relationship("User", back_populates="tasks")
     item: Mapped["Item"] = relationship("Item", back_populates="user_tasks")
     progress: Mapped[List["TaskProgress"]] = relationship(
-        "TaskProgress", back_populates="task", cascade="all, delete-orphan"
+        "TaskProgress",
+        back_populates="task",
+        cascade="all, delete-orphan",
+        order_by="TaskProgress.id",
     )
 
     __table_args__ = (
@@ -125,6 +128,7 @@ class Recipe(Base):
     )
     amount: Mapped[int] = mapped_column(INTEGER)
     offer_index: Mapped[int] = mapped_column(INTEGER, default=0)
+    ingredient_index: Mapped[int] = mapped_column(INTEGER, default=0)
 
     result_item: Mapped["Item"] = relationship(
         "Item", foreign_keys=[item_id], back_populates="recipe_results"
