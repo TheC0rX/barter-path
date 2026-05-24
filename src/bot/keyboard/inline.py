@@ -154,6 +154,10 @@ def get_card_nav_kb(
             ),
         )
         builder.button(
+            text=f"{offer_idx + 1}/{total_offers}",
+            callback_data="ignore",
+        )
+        builder.button(
             text="➡️",
             callback_data=AddTaskClick(
                 action=AddTaskAction.NAVIGATION, item_id=item_id, idx=next_idx
@@ -168,7 +172,7 @@ def get_card_nav_kb(
     )
 
     if total_offers > 1:
-        builder.adjust(2, 1)
+        builder.adjust(3, 1)
     else:
         builder.adjust(1)
 
