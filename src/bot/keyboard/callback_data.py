@@ -24,6 +24,11 @@ class AddTaskAction(StrEnum):
     NAVIGATION = "nav"
 
 
+class ResourceCalcAction(StrEnum):
+    ADD = "add"
+    RESET = "reset"
+
+
 # --- MENU
 class MenuClick(CallbackData, prefix="menu"):
     target: MenuAction
@@ -56,9 +61,15 @@ class DiscountClick(CallbackData, prefix="discount"):
 
 
 class ResourceClick(CallbackData, prefix="resource"):
-    action: str
     task_id: int
     ing_id: str
+
+
+class ResourceCalc(CallbackData, prefix="res_calc"):
+    action: ResourceCalcAction
+    task_id: int
+    ing_id: str
+    value: int
 
 
 # --- SETTINGS

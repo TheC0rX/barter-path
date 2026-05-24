@@ -239,9 +239,7 @@ def get_resources_management_kb(
 
         builder.button(
             text=button_text,
-            callback_data=ResourceClick(
-                action="select", task_id=task_id, ing_id=ing_item.id
-            ),
+            callback_data=ResourceClick(task_id=task_id, ing_id=ing_item.id),
         )
 
     builder.adjust(1)
