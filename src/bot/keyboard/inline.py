@@ -52,6 +52,10 @@ def get_main_menu_kb(
             callback_data=MenuNav(task_index=task_idx - 1),
         )
         builder.button(
+            text=f"{task_idx + 1}/{total_tasks}",
+            callback_data="ignore",
+        )
+        builder.button(
             text="➡️",
             callback_data=MenuNav(task_index=task_idx + 1),
         )
@@ -88,9 +92,9 @@ def get_main_menu_kb(
 
     if has_tasks and total_tasks > 1:
         if is_finished:
-            builder.adjust(1, 2, 2, 1)
+            builder.adjust(1, 3, 2, 1)
         else:
-            builder.adjust(2, 2, 1)
+            builder.adjust(3, 2, 1)
     elif has_tasks:
         if is_finished:
             builder.adjust(1, 2, 1)

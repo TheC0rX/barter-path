@@ -127,7 +127,7 @@ async def show_main_menu(
         kb = inline.get_main_menu_kb(
             i18n,
             has_tasks=True,
-            task_idx=task_idx,
+            task_idx=task_idx % len(tasks),
             total_tasks=len(tasks),
             current_task_id=current_task.id,
             is_finished=is_finished,
