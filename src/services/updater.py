@@ -149,11 +149,14 @@ class StalcraftUpdater:
                                     ingredient_id=currency_type,
                                     amount=cost_amount,
                                     offer_index=offer_idx,
+                                    ingredient_index=999,
                                 )
                             )
                             seen_recipes.add(recipe_key)
 
-                    for ing in offer.get("requiredItems", []):
+                    for ing_idx, ing in enumerate(offer.get("requiredItems", [])):
+                        if not isinstance(ing, dict):
+                            continue
                         ing_id = ing.get("item")
                         if not ing_id:
                             continue
@@ -166,6 +169,7 @@ class StalcraftUpdater:
                                     ingredient_id=ing_id,
                                     amount=ing.get("amount", 0),
                                     offer_index=offer_idx,
+                                    ingredient_index=ing_idx,
                                 )
                             )
                             seen_recipes.add(recipe_key)

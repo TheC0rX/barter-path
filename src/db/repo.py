@@ -53,7 +53,7 @@ class UserRepo:
                 ),
             )
             .where(UserTask.user_id == user_id)
-            .order_by(UserTask.id)
+            .order_by(UserTask.id.asc())
         )
         result = await self.session.execute(stmt)
         return result.scalars().all()
@@ -63,8 +63,10 @@ class UserRepo:
         self.session.add(new_task)
         await self.session.flush()
 
-        recipe_stmt = select(Recipe).where(
-            Recipe.item_id == item_id, Recipe.offer_index == offer_idx
+        recipe_stmt = (
+            select(Recipe)
+            .where(Recipe.item_id == item_id, Recipe.offer_index == offer_idx)
+            .order_by(Recipe.ingredient_index.asc())
         )
         recipe_result = await self.session.execute(recipe_stmt)
         ingredients = recipe_result.scalars().all()
@@ -111,8 +113,10 @@ class UserRepo:
         return result.scalar_one()
 
     async def get_task_progress_dict(self, task_id: int) -> dict[str, int]:
-        stmt = select(TaskProgress.ingredient_id, TaskProgress.collected_amount).where(
-            TaskProgress.task_id == task_id
+        stmt = (
+            select(TaskProgress.ingredient_id, TaskProgress.collected_amount)
+            .where(TaskProgress.task_id == task_id)
+            .order_by(TaskProgress.id.asc())
         )
         result = await self.session.execute(stmt)
         return dict(result.tuples().all())
@@ -167,7 +171,7 @@ class ItemRepo:
             select(Recipe, Item)
             .join(Item, Recipe.ingredient_id == Item.id)
             .where(Recipe.item_id == item_id)
-            .order_by(Recipe.offer_index)
+            .order_by(Recipe.offer_index.asc(), Recipe.ingredient_index.asc())
         )
 
         result = await self.session.execute(stmt)
