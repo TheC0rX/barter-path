@@ -69,7 +69,7 @@ class ResourceCalc(CallbackData, prefix="res_calc"):
     action: ResourceCalcAction
     task_id: int
     ing_id: str
-    value: int
+    value: int = 0
 
 
 # --- SETTINGS
