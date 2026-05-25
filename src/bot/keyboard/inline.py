@@ -144,6 +144,13 @@ def get_card_nav_kb(
 ) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
+    builder.button(
+        text=i18n.get("btn-confirm"),
+        callback_data=AddTaskClick(
+            action=AddTaskAction.CONFIRM, item_id=item_id, offer_idx=offer_idx
+        ),
+    )
+
     if total_offers > 1:
         prev_idx = (offer_idx - 1) % total_offers
         next_idx = (offer_idx + 1) % total_offers
@@ -164,15 +171,8 @@ def get_card_nav_kb(
             ),
         )
 
-    builder.button(
-        text=i18n.get("btn-confirm"),
-        callback_data=AddTaskClick(
-            action=AddTaskAction.CONFIRM, item_id=item_id, offer_idx=offer_idx
-        ),
-    )
-
     if total_offers > 1:
-        builder.adjust(3, 1)
+        builder.adjust(1, 3, 1)
     else:
         builder.adjust(1)
 
