@@ -95,6 +95,19 @@ activate_discount-activated =
 select-ingredient =
     Choose the ingredient you want to edit.
 
+type-resources =
+    📝 Type the amount of resource to add it.
+
+reset-description =
+    🔄️ You can also reset the progress of collecting, clicking reset button.
+
+resource-already-finished =
+    The resource was already collected.
+
+# --- INGREDIENT CARD
+ing_card-ing_progress =
+    Collected { $collected_amount } of { $required_amount }
+
 # --- SETTINGS
 settings-description-text =
     Here you can switch the language.
@@ -103,6 +116,9 @@ settings-language_changed =
     The language has been successfully changed.
 
 # --- BUTTONS
+btn-reset =
+    🔄️ Reset
+
 btn-confirm =
     ✅ Confirm
 btn-cancel =

@@ -96,6 +96,19 @@ activate_discount-activated =
 select-ingredient =
     Выберите ресурс, который хотите редактировать.
 
+type-resources =
+    📝 Введите количество ресурсов для добавления.
+
+reset-description =
+    🔄️ Вы также можете сбросить прогресс сбора до нуля, нажав на кнопку сброса.
+
+resource-already-finished =
+    Данный ресурс был уже собран.
+
+# --- INGREDIENT CARD
+ing_card-ing_progress =
+    Собранно { $collected_amount } из { $required_amount }
+
 # --- SETTINGS
 settings-description-text =
     Здесь Вы можете поменять язык.
@@ -104,6 +117,9 @@ settings-language_changed =
     Язык был успешно изменен.
 
 # --- BUTTONS
+btn-reset =
+    🔄️ Сбросить
+
 btn-confirm =
     ✅ Подтвердить
 btn-cancel =
