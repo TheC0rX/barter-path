@@ -10,9 +10,15 @@ from src.bot.keyboard.callback_data import (
     DeleteTaskClick,
     DiscountClick,
     ResourceClick,
+    ResourceCalc,
     LanguageClick,
 )
-from src.bot.keyboard.callback_data import MenuAction, DiscountAction, AddTaskAction
+from src.bot.keyboard.callback_data import (
+    MenuAction,
+    DiscountAction,
+    AddTaskAction,
+    ResourceCalcAction,
+)
 
 
 def add_back_button(
@@ -251,6 +257,21 @@ def get_resources_management_kb(
         )
 
     builder.adjust(1)
+    return add_back_button(builder, i18n)
+
+
+def get_resource_calc_kb(
+    task_id: int, ing_id: str, i18n: I18nContext
+) -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+
+    builder.button(
+        text=i18n.get("btn-reset"),
+        callback_data=ResourceCalc(
+            action=ResourceCalcAction.RESET, task_id=task_id, ing_id=ing_id
+        ),
+    )
+
     return add_back_button(builder, i18n)
 
 
