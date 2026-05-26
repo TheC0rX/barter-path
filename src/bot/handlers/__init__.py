@@ -9,6 +9,7 @@ def setup_routers() -> Router:
         add_task,
         delete_task,
         activate_discount,
+        manage_resources,
         settings,
     )
 
@@ -19,5 +20,6 @@ def setup_routers() -> Router:
     router.include_router(add_task.router)
     router.include_router(delete_task.router)
     router.include_router(activate_discount.router)
+    router.include_router(manage_resources.router)
     router.include_router(settings.router)
     return router
