@@ -104,7 +104,15 @@ reset-description =
 resource-already-finished =
     The resource was already collected.
 
+reset_resources-confirmation =
+    Are you sure you want to reset progress of { $ing_name } for { $item_name }?
+
+update_resources-updated =
+    Resources have been successfully updated.
+
 # --- INGREDIENT CARD
+ing_card-selected_item =
+    Selected resource: { $ing_name }
 ing_card-ing_progress =
     Collected { $collected_amount } of { $required_amount }
 

@@ -105,7 +105,15 @@ reset-description =
 resource-already-finished =
     Данный ресурс был уже собран.
 
+reset_resources-confirmation =
+    Вы уверены, что хотите сбросить прогресс { $ing_name } для { $item_name }?
+
+update_resources-updated =
+    Ресурсы были успешно обновлены.
+
 # --- INGREDIENT CARD
+ing_card-selected_item =
+    Выбранный ресурс: { $ing_name }
 ing_card-ing_progress =
     Собранно { $collected_amount } из { $required_amount }
 
