@@ -92,6 +92,29 @@ async def reset_resources(
     await callback.answer()
 
 
+@router.callback_query(ResourceCalc.filter(F.action == ResourceCalcAction.CONFIRM))
+async def update_resources(
+    callback: CallbackQuery,
+    callback_data: ResourceCalc,
+    session: AsyncSession,
+    i18n: I18nContext,
+) -> None:
+    task_id = callback_data.task_id
+    ing_id = callback_data.ing_id
+    value = callback_data.value
+
+    user_repo = UserRepo(session)
+    await user_repo.update_resource_amount(task_id, ing_id, value)
+
+    await callback.message.edit_text(  # type: ignore
+        text=i18n.get("manage_resources-placeholder")
+        + "\n\n"
+        + i18n.get("update_resources-updated"),
+        reply_markup=inline.get_back_button(i18n),
+    )
+    await callback.answer()
+
+
 async def get_resource_stats(
     task_id: int, ing_id: str, user_repo: UserRepo, item_repo: ItemRepo
 ) -> tuple[int, int]:
