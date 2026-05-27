@@ -121,20 +121,15 @@ class UserRepo:
         result = await self.session.execute(stmt)
         return dict(result.tuples().all())
 
-    async def increment_resource_amount(
-        self, task_id: int, ing_id: str, value: int, is_reset: bool = False
+    async def update_resource_amount(
+        self, task_id: int, ing_id: str, value: int
     ) -> None:
-        if is_reset:
-            new_value = 0
-        else:
-            new_value = TaskProgress.collected_amount + value
-
         stmt = (
             update(TaskProgress)
             .where(
                 TaskProgress.task_id == task_id, TaskProgress.ingredient_id == ing_id
             )
-            .values(collected_amount=new_value)
+            .values(collected_amount=value)
         )
         await self.session.execute(stmt)
         await self.session.commit()
