@@ -272,6 +272,26 @@ def get_resource_calc_kb(
         ),
     )
 
+    builder.adjust(1)
+    return add_back_button(builder, i18n)
+
+
+def get_update_resources_kb(
+    task_id: int, ing_id: str, value: int, i18n: I18nContext
+) -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+
+    builder.button(
+        text=i18n.get("btn-confirm"),
+        callback_data=ResourceCalc(
+            action=ResourceCalcAction.CONFIRM,
+            task_id=task_id,
+            ing_id=ing_id,
+            value=value,
+        ),
+    )
+
+    builder.adjust(1)
     return add_back_button(builder, i18n)
 
 
