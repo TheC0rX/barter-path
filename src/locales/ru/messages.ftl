@@ -111,6 +111,15 @@ reset_resources-confirmation =
 update_resources-updated =
     Ресурсы были успешно обновлены.
 
+must-be-number =
+    Количество ресурсов должно быть написано цифрами.
+
+must-be-more-zero =
+    Количество ресурсов должно быть больше нуля.
+
+additing_resources-confirmation =
+    Вы уверены, что хотите добавить { $amount } { $ing_name } для { $item_name }?
+
 # --- INGREDIENT CARD
 ing_card-selected_item =
     Выбранный ресурс: { $ing_name }
