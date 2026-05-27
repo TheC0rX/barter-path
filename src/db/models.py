@@ -82,7 +82,7 @@ class TaskProgress(Base):
 class Item(Base):
     __tablename__ = "items"
 
-    id: Mapped[str] = mapped_column(VARCHAR(8), primary_key=True)
+    id: Mapped[str] = mapped_column(VARCHAR(5), primary_key=True)
     category: Mapped[str] = mapped_column(VARCHAR(64), index=True)
     name_ru: Mapped[str] = mapped_column(VARCHAR(128))
     name_en: Mapped[str] = mapped_column(VARCHAR(128))
