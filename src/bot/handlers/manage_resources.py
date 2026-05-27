@@ -1,5 +1,5 @@
 from aiogram import Router, F
-from aiogram.types.callback_query import CallbackQuery
+from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -65,13 +65,81 @@ async def process_resource_selection(
     await callback.answer()
 
 
+@router.message(ResourceCalcStates.wait_for_amount)
+async def additing_resources(
+    message: Message, state: FSMContext, session: AsyncSession, i18n: I18nContext
+) -> None:
+    text = message.text.strip() if message.text else ""
+    if not text.isdigit():
+        await message.answer(
+            text=i18n.get("manage_resources-placeholder")
+            + "\n\n"
+            + i18n.get("must-be-number"),
+            reply_markup=inline.get_back_button(i18n),
+        )
+        return
+
+    value_to_add = int(text)
+    if value_to_add <= 0:
+        await message.answer(
+            text=i18n.get("manage_resources-placeholder")
+            + "\n\n"
+            + i18n.get("must-be-more-zero"),
+            reply_markup=inline.get_back_button(i18n),
+        )
+        return
+
+    data = await state.get_data()
+    task_id = data.get("task_id", 0)
+    ing_id = data.get("ing_id", "")
+    remains = data.get("remains", 0)
+
+    if remains == 0:
+        await message.answer(
+            text=i18n.get("manage_resources-placeholder")
+            + "\n\n"
+            + i18n.get("resource-already-finished"),
+            reply_markup=inline.get_back_button(i18n),
+        )
+        await state.clear()
+        return
+
+    user_repo = UserRepo(session)
+    item_repo = ItemRepo(session)
+
+    ingredient = await item_repo.get_item(ing_id)
+    ing_name = ingredient.name_ru if i18n.locale == "ru" else ingredient.name_en  # type: ignore
+    item_name = await user_repo.get_item_name_by_task_id(task_id, i18n.locale)
+
+    collected, _ = await get_resource_stats(task_id, ing_id, user_repo, item_repo)
+
+    await message.answer(
+        text=i18n.get("manage_resources-placeholder")
+        + "\n\n"
+        + i18n.get(
+            "additing_resources-confirmation",
+            amount=value_to_add,
+            ing_name=ing_name,
+            item_name=item_name,
+        ),
+        reply_markup=inline.get_update_resources_kb(
+            task_id, ing_id, collected + value_to_add, i18n
+        ),
+    )
+    await state.clear()
+
+
 @router.callback_query(ResourceCalc.filter(F.action == ResourceCalcAction.RESET))
 async def reset_resources(
     callback: CallbackQuery,
     callback_data: ResourceCalc,
+    state: FSMContext,
     session: AsyncSession,
     i18n: I18nContext,
 ) -> None:
+    if await state.get_state():
+        await state.clear()
+
     task_id = callback_data.task_id
     ing_id = callback_data.ing_id
 
@@ -116,7 +184,10 @@ async def update_resources(
 
 
 async def get_resource_stats(
-    task_id: int, ing_id: str, user_repo: UserRepo, item_repo: ItemRepo
+    task_id: int,
+    ing_id: str,
+    user_repo: UserRepo,
+    item_repo: ItemRepo,
 ) -> tuple[int, int]:
     task = await user_repo.get_task_by_task_id(task_id)
     rows = await item_repo.get_item_recipes(task.item_id)
@@ -124,19 +195,20 @@ async def get_resource_stats(
 
     found_ing = next(
         (
-            (ing, r.amount)
-            for r, ing in rows
-            if r.offer_index == task.offer_idx and ing.id == ing_id
+            (recipe, ing)
+            for recipe, ing in rows
+            if recipe.offer_index == task.offer_idx and ing.id == ing_id
         ),
         None,
     )
     if not found_ing:
         return 0, 0
 
-    ing_item, base_amount = found_ing
+    recipe, ing_item = found_ing
     is_money = ing_item.id == "money"
-    discount_amount = max(
-        0 if is_money else 1, round(base_amount * (1 - task.discount / 100))
-    )
+    min_amount = 0 if is_money else 1
 
-    return min(progress_dict.get(ing_id, 0), discount_amount), discount_amount
+    discount_amount = max(min_amount, round(recipe.amount * (1 - task.discount / 100)))
+    display_collected = min(progress_dict.get(ing_id, 0), discount_amount)
+
+    return display_collected, discount_amount
