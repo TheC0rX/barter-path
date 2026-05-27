@@ -27,6 +27,7 @@ class AddTaskAction(StrEnum):
 class ResourceCalcAction(StrEnum):
     ADD = "add"
     RESET = "reset"
+    CONFIRM = "confirm"
 
 
 # --- MENU
