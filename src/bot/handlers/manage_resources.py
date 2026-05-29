@@ -30,9 +30,7 @@ async def process_resource_selection(
     user_repo = UserRepo(session)
     item_repo = ItemRepo(session)
 
-    collected, discount_amount = await get_resource_stats(
-        task_id, ing_id, user_repo, item_repo
-    )
+    collected, discount_amount = await user_repo.get_resource_stats(task_id, ing_id)
     ing_remaining = max(0, discount_amount - collected)
 
     ingredient = await item_repo.get_item(ing_id)
@@ -42,7 +40,9 @@ async def process_resource_selection(
     is_money = ingredient.id == "money"
     icon = "💵" if is_money else "⌛"
 
-    await state.update_data(task_id=task_id, ing_id=ing_id, remains=ing_remaining)
+    await state.update_data(
+        task_id=task_id, ing_id=ing_id, remains=ing_remaining, collected=collected
+    )
     await state.set_state(ResourceCalcStates.wait_for_amount)
 
     await callback.message.edit_text(  # type: ignore
@@ -51,7 +51,7 @@ async def process_resource_selection(
         + i18n.get("type-resources")
         + "\n\n"
         + f"{i18n.get("item_card-selected_item", item_name=item_name)}\n"
-        + f"{ingredient.icon if ingredient is not None else ""} {i18n.get("ing_card-selected_item", ing_name=ing_name)}\n"
+        + f"{ingredient.icon} {i18n.get("ing_card-selected_item", ing_name=ing_name)}\n"
         + f"{icon} {i18n.get(
             "ing_card-ing_progress",
             collected_amount=collected,
@@ -66,7 +66,7 @@ async def process_resource_selection(
 
 
 @router.message(ResourceCalcStates.wait_for_amount)
-async def additing_resources(
+async def adding_resources(
     message: Message, state: FSMContext, session: AsyncSession, i18n: I18nContext
 ) -> None:
     text = message.text.strip() if message.text else ""
@@ -74,6 +74,8 @@ async def additing_resources(
         await message.answer(
             text=i18n.get("manage_resources-placeholder")
             + "\n\n"
+            + i18n.get("type-resources")
+            + "\n"
             + i18n.get("must-be-number"),
             reply_markup=inline.get_back_button(i18n),
         )
@@ -84,6 +86,8 @@ async def additing_resources(
         await message.answer(
             text=i18n.get("manage_resources-placeholder")
             + "\n\n"
+            + i18n.get("type-resources")
+            + "\n"
             + i18n.get("must-be-more-zero"),
             reply_markup=inline.get_back_button(i18n),
         )
@@ -93,6 +97,7 @@ async def additing_resources(
     task_id = data.get("task_id", 0)
     ing_id = data.get("ing_id", "")
     remains = data.get("remains", 0)
+    collected = data.get("collected", 0)
 
     if remains == 0:
         await message.answer(
@@ -110,8 +115,6 @@ async def additing_resources(
     ingredient = await item_repo.get_item(ing_id)
     ing_name = ingredient.name_ru if i18n.locale == "ru" else ingredient.name_en  # type: ignore
     item_name = await user_repo.get_item_name_by_task_id(task_id, i18n.locale)
-
-    collected, _ = await get_resource_stats(task_id, ing_id, user_repo, item_repo)
 
     await message.answer(
         text=i18n.get("manage_resources-placeholder")
@@ -137,8 +140,7 @@ async def reset_resources(
     session: AsyncSession,
     i18n: I18nContext,
 ) -> None:
-    if await state.get_state():
-        await state.clear()
+    await state.clear()
 
     task_id = callback_data.task_id
     ing_id = callback_data.ing_id
@@ -181,34 +183,3 @@ async def update_resources(
         reply_markup=inline.get_back_button(i18n),
     )
     await callback.answer()
-
-
-async def get_resource_stats(
-    task_id: int,
-    ing_id: str,
-    user_repo: UserRepo,
-    item_repo: ItemRepo,
-) -> tuple[int, int]:
-    task = await user_repo.get_task_by_task_id(task_id)
-    rows = await item_repo.get_item_recipes(task.item_id)
-    progress_dict = await user_repo.get_task_progress_dict(task_id)
-
-    found_ing = next(
-        (
-            (recipe, ing)
-            for recipe, ing in rows
-            if recipe.offer_index == task.offer_idx and ing.id == ing_id
-        ),
-        None,
-    )
-    if not found_ing:
-        return 0, 0
-
-    recipe, ing_item = found_ing
-    is_money = ing_item.id == "money"
-    min_amount = 0 if is_money else 1
-
-    discount_amount = max(min_amount, round(recipe.amount * (1 - task.discount / 100)))
-    display_collected = min(progress_dict.get(ing_id, 0), discount_amount)
-
-    return display_collected, discount_amount
