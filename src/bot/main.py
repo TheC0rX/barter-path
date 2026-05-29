@@ -16,16 +16,17 @@ from src.config import config
 
 async def check_db_connection() -> bool:
     try:
-        async with engine.connect() as conn:
-            await conn.execute(text("SELECT 1"))
+        async with async_session_maker() as session:
+            await session.execute(text("SELECT 1"))
         return True
-    except:
+    except Exception:
         return False
 
 
 async def main() -> None:
     if not await check_db_connection():
         logger.critical(f"[bold magenta][DB][/] Database is unavailable.")
+        await engine.dispose()
         return
 
     bot = Bot(
