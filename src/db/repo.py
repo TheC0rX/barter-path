@@ -134,6 +134,36 @@ class UserRepo:
         await self.session.execute(stmt)
         await self.session.commit()
 
+    async def get_resource_stats(self, task_id: int, ing_id: str) -> tuple[int, int]:
+        stmt = (
+            select(UserTask.discount, Recipe.amount, TaskProgress.collected_amount)
+            .join(Recipe, Recipe.item_id == UserTask.item_id)
+            .join(
+                TaskProgress,
+                (TaskProgress.task_id == UserTask.id)
+                & (TaskProgress.ingredient_id == Recipe.ingredient_id),
+            )
+            .where(
+                UserTask.id == task_id,
+                Recipe.ingredient_id == ing_id,
+                Recipe.offer_index == UserTask.offer_idx,
+            )
+        )
+
+        result = await self.session.execute(stmt)
+        row = result.tuples().first()
+
+        if not row:
+            return 0, 0
+
+        discount, recipe_amount, collected_amount = row
+        min_amount = 0 if ing_id == "money" else 1
+
+        discount_amount = max(min_amount, round(recipe_amount * (1 - discount / 100)))
+        display_collected = min(collected_amount, discount_amount)
+
+        return display_collected, discount_amount
+
 
 class ItemRepo:
     def __init__(self, session: AsyncSession):
@@ -176,6 +206,21 @@ class ItemRepo:
         stmt = select(Item).where(Item.id == item_id)
         result = await self.session.execute(stmt)
         return result.scalar_one()
+
+    async def get_grouped_offers(
+        self, item_id: str
+    ) -> dict[int, list[tuple[Item, int]]]:
+        rows = await self.get_item_recipes(item_id)
+        offers_data = {}
+
+        for recipe, ing_item in rows:
+            ing_tuple = (ing_item, recipe.amount)
+            offers_data.setdefault(recipe.offer_index, [])
+
+            if ing_tuple not in offers_data[recipe.offer_index]:
+                offers_data[recipe.offer_index].append(ing_tuple)
+
+        return offers_data
 
 
 class StalcraftRepo:
