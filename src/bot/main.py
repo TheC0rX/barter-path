@@ -4,6 +4,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from sqlalchemy import text
 
 from src.bot import middlewares
 from src.bot.handlers import setup_routers
@@ -13,7 +14,20 @@ from src.db.base import engine, async_session_maker
 from src.config import config
 
 
+async def check_db_connection() -> bool:
+    try:
+        async with engine.connect() as conn:
+            await conn.execute(text("SELECT 1"))
+        return True
+    except:
+        return False
+
+
 async def main() -> None:
+    if not await check_db_connection():
+        logger.critical(f"[bold magenta][DB][/] Database is unavailable.")
+        return
+
     bot = Bot(
         token=config.BOT_TOKEN.get_secret_value(),
         default=DefaultBotProperties(parse_mode=ParseMode.HTML),
