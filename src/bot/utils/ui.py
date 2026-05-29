@@ -6,6 +6,23 @@ from src.db.repo import UserRepo, ItemRepo
 from src.bot.keyboard import inline
 
 
+def get_nubmer_emoji(number: int) -> str:
+    emoji_numbers = {
+        0: "0️⃣",
+        1: "1️⃣",
+        2: "2️⃣",
+        3: "3️⃣",
+        4: "4️⃣",
+        5: "5️⃣",
+        6: "6️⃣",
+        7: "7️⃣",
+        8: "8️⃣",
+        9: "9️⃣",
+    }
+
+    return "".join(emoji_numbers[int(char)] for char in str(number))
+
+
 async def render_item_card(
     item_id: str,
     offer_idx: int,
@@ -14,24 +31,10 @@ async def render_item_card(
     discount: int = 0,
     task_id: int | None = None,
 ):
-    repo = ItemRepo(session)
+    item_repo = ItemRepo(session)
     user_repo = UserRepo(session)
-    rows = await repo.get_item_recipes(item_id)
 
-    progress_dict = {}
-    if task_id:
-        progress_dict = await user_repo.get_task_progress_dict(task_id)
-
-    offers_data = {}
-    for recipe, ing_item in rows:
-        ing_tuple = (ing_item, recipe.amount)
-
-        if recipe.offer_index not in offers_data:
-            offers_data[recipe.offer_index] = []
-
-        if ing_tuple not in offers_data[recipe.offer_index]:
-            offers_data[recipe.offer_index].append(ing_tuple)
-
+    offers_data = await item_repo.get_grouped_offers(item_id)
     sorted_offer_indices = sorted(offers_data.keys())
     total_offers = len(sorted_offer_indices)
 
@@ -41,16 +44,25 @@ async def render_item_card(
     actual_offer_key = sorted_offer_indices[offer_idx]
     current_ings = offers_data[actual_offer_key]
 
-    item = await repo.get_item(item_id)
-    target_name = item.name_ru if i18n.locale == "ru" else item.name_en  # type: ignore
+    item = await item_repo.get_item(item_id)
+    target_name = item.name_ru if i18n.locale == "ru" else item.name_en
 
-    text = f"{item.icon if item is not None else ""} {i18n.get("item_card-selected_item", item_name=target_name)}\n"
-    text += f"{get_nubmer_emoji(offer_idx+1)} {i18n.get('item_card-selected_offer', offer=offer_idx+1)}{f'/{total_offers}' if not task_id else ""}\n"
+    offer_suffix = "" if task_id else f"/{total_offers}"
+    text_lines = [
+        f"{item.icon} {i18n.get("item_card-selected_item", item_name=target_name)}",
+        f"{get_nubmer_emoji(offer_idx+1)} {i18n.get('item_card-selected_offer', offer=offer_idx+1)}{offer_suffix}",
+    ]
+
     if task_id:
-        text += f"🎟️ {i18n.get("item_card-selected_discount", discount=discount)}\n"
-    text += f"\n{i18n.get('item_card-required_ings')}\n"
+        text_lines.append(
+            f"🎟️ {i18n.get("item_card-selected_discount", discount=discount)}"
+        )
 
-    is_finished = True if task_id else False
+    text_lines.append(f"\n{i18n.get('item_card-required_ings')}")
+
+    is_finished = bool(task_id)
+    progress_dict = await user_repo.get_task_progress_dict(task_id) if task_id else {}
+
     for ing_item, amount in current_ings:
         is_money = ing_item.id == "money"
         min_amount = 0 if is_money else 1
@@ -69,18 +81,21 @@ async def render_item_card(
                 icon = "💵" if is_money else "⌛"
                 is_finished = False
 
-            text += f"{icon} {name}: <code>{display_collected}</code>/<code>{discount_amount}</code> {unit}\n"
-
+            text_lines.append(
+                f"{icon} {name}: <code>{display_collected}</code>/<code>{discount_amount}</code> {unit}"
+            )
             if remains > 0:
-                text += f"└ {i18n.get("item_card-remains", amount=remains)}\n"
+                text_lines.append(f"└ {i18n.get("item_card-remains", amount=remains)}")
 
         else:
             if amount != discount_amount:
-                text += (
-                    f"- {name}: <s>{amount}</s> <code>{discount_amount}</code> {unit}\n"
+                text_lines.append(
+                    f"- {name}: <s>{amount}</s> <code>{discount_amount}</code> {unit}"
                 )
             else:
-                text += f"- {name}: <code>{amount}</code> {unit}\n"
+                text_lines.append(f"- {name}: <code>{amount}</code> {unit}")
+
+    text = "\n".join(text_lines) + "\n"
 
     if task_id:
         return text, None, is_finished
@@ -95,39 +110,35 @@ async def show_main_menu(
     i18n: I18nContext,
     task_idx: int = 0,
 ) -> None:
-    repo = UserRepo(session)
+    user_repo = UserRepo(session)
     user_id = event.from_user.id  # type: ignore
-    tasks = await repo.get_user_tasks(user_id)
+    tasks = await user_repo.get_user_tasks(user_id)
 
     if not tasks:
-        text = i18n.get("main_menu-placeholder") + "\n\n" + i18n.get("no-tasks")  # type: ignore
+        text = f"{i18n.get("main_menu-placeholder")}\n\n{i18n.get("no-tasks")}"
         kb = inline.get_main_menu_kb(i18n, has_tasks=False)
     else:
-        current_task = tasks[task_idx % len(tasks)]
+        current_task_idx = task_idx % len(tasks)
+        current_task = tasks[current_task_idx]
+
         card_text, _, is_finished = await render_item_card(
-            current_task.item_id,
-            current_task.offer_idx,
-            session,
-            i18n,
+            item_id=current_task.item_id,
+            offer_idx=current_task.offer_idx,
+            session=session,
+            i18n=i18n,
             discount=current_task.discount,
             task_id=current_task.id,
         )
 
         text = (
-            i18n.get("main_menu-placeholder")
-            + "\n\n"
-            + i18n.get(
-                "main_menu-pagination",
-                current_task=(task_idx % len(tasks)) + 1,
-                total_tasks=len(tasks),
-            )
-            + "\n\n"
-            + card_text
+            f"{i18n.get("main_menu-placeholder")}\n\n"
+            f"{i18n.get("main_menu-pagination", current_task=current_task_idx + 1, total_tasks=len(tasks))}\n\n"
+            f"{card_text}"
         )
         kb = inline.get_main_menu_kb(
-            i18n,
+            i18n=i18n,
             has_tasks=True,
-            task_idx=task_idx % len(tasks),
+            task_idx=current_task_idx,
             total_tasks=len(tasks),
             current_task_id=current_task.id,
             is_finished=is_finished,
@@ -138,20 +149,3 @@ async def show_main_menu(
         await event.answer()
     else:
         await event.answer(text=text, reply_markup=kb)
-
-
-def get_nubmer_emoji(number: int) -> str:
-    emoji_numbers = {
-        0: "0️⃣",
-        1: "1️⃣",
-        2: "2️⃣",
-        3: "3️⃣",
-        4: "4️⃣",
-        5: "5️⃣",
-        6: "6️⃣",
-        7: "7️⃣",
-        8: "8️⃣",
-        9: "9️⃣",
-    }
-
-    return "".join(emoji_numbers[int(char)] for char in str(number))
