@@ -48,6 +48,7 @@ async def process_item_searching(
         text=i18n.get("add_task-placeholder") + "\n\n" + i18n.get("search-results"),
         reply_markup=inline.get_found_items_kb(items, i18n),
     )
+    await state.clear()
 
 
 @router.callback_query(AddTaskClick.filter(F.action == AddTaskAction.SEARCH))
