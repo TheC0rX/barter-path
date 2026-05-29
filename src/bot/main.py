@@ -1,3 +1,4 @@
+import asyncio
 from loguru import logger
 
 from aiogram import Bot, Dispatcher
@@ -46,12 +47,12 @@ async def main() -> None:
 
     @dp.startup()
     async def on_startup():
-        await updater.check_and_update()
+        task = asyncio.create_task(updater.check_and_update())
+        dp["update_task"] = task
 
         scheduler.add_job(updater.check_and_update, "interval", hours=1)
         scheduler.start()
         logger.success("[bold magenta][BOT][/] Scheduler has been started.")
-
         logger.success("[bold magenta][BOT][/] The bot has been started.")
 
     @dp.shutdown()
@@ -70,13 +71,14 @@ async def main() -> None:
         except Exception as e:
             logger.error(f"[bold magenta][API][/] Error closing Stalcraft API: {e}")
 
-        await engine.dispose()
-        await bot.session.close()
-        logger.info("[bold magenta][BOT][/] The bot has been stopped.")
-
     try:
-        await bot.delete_webhook(True)
+        await bot.delete_webhook(drop_pending_updates=True)
         await dp.start_polling(bot)
 
     except Exception as e:
         logger.exception(f"[bold magenta][BOT][/] Exception: \n{e}")
+
+    finally:
+        await engine.dispose()
+        await bot.session.close()
+        logger.info("[bold magenta][BOT][/] The bot has been stopped.")
