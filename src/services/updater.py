@@ -204,27 +204,3 @@ class StalcraftUpdater:
                     )
         except Exception as e:
             logger.error(f"[bold magenta][UPDATER][/] Update failed: {e}")
-
-
-def setup_logger() -> None:
-    logger.remove()
-
-    logger.add(
-        RichHandler(markup=True, rich_tracebacks=True, tracebacks_show_locals=True),
-        format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {message}",
-        level="DEBUG",
-    )
-
-
-async def main():
-    setup_logger()
-
-    updater = StalcraftUpdater()
-    try:
-        await updater.check_and_update()
-    finally:
-        await updater.api.close()
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
