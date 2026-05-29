@@ -15,8 +15,14 @@ class UserRepo:
         return result.scalar_one_or_none()
 
     async def add_user(self, user_id: int, locale: str) -> None:
-        user = User(user_id=user_id, locale=locale)  # type: ignore
-        await self.session.merge(user)
+        stmt = (
+            insert(User)
+            .values(user_id=user_id, locale=locale)
+            .on_conflict_do_update(
+                index_elements=[User.user_id], set_=dict(locale=locale)
+            )
+        )
+        await self.session.execute(stmt)
         await self.session.commit()
 
     async def get_user_tasks_count(self, user_id: int) -> int:
