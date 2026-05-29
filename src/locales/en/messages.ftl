@@ -111,10 +111,10 @@ update_resources-updated =
     Resources have been successfully updated.
 
 must-be-number =
-    Resources amount must be written by numbers.
+    ⚠️ Resources amount must be written by numbers.
 
 must-be-more-zero =
-    Resources amount must be more than 0.
+    ⚠️ Resources amount must be more than 0.
 
 additing_resources-confirmation =
     Are you sure you want to add { $amount } { $ing_name } for { $item_name }?
