@@ -28,8 +28,7 @@ async def navigate_menu_tasks(
 async def open_main_menu(
     callback: CallbackQuery, state: FSMContext, session: AsyncSession, i18n: I18nContext
 ) -> None:
-    if state.get_state:
-        await state.clear()
+    await state.clear()
 
     await show_main_menu(callback, session, i18n)
 
