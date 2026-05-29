@@ -130,11 +130,7 @@ async def show_main_menu(
             task_id=current_task.id,
         )
 
-        text = (
-            f"{i18n.get("main_menu-placeholder")}\n\n"
-            f"{i18n.get("main_menu-pagination", current_task=current_task_idx + 1, total_tasks=len(tasks))}\n\n"
-            f"{card_text}"
-        )
+        text = f"{i18n.get("main_menu-placeholder")}\n\n" f"{card_text}"
         kb = inline.get_main_menu_kb(
             i18n=i18n,
             has_tasks=True,

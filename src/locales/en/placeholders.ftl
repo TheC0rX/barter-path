@@ -3,9 +3,6 @@ main_menu-placeholder =
     <b>Main Menu</b>
     ___
 
-main_menu-pagination =
-    Your tasks: { $current_task } of { $total_tasks }
-
 finish_task-placeholder =
     <b>Finishing Task</b>
     ___
