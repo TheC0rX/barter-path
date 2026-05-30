@@ -46,7 +46,7 @@ async def open_finish_task(
     item_name = await repo.get_item_name_by_task_id(task_id=task_id, locale=i18n.locale)
 
     await callback.message.edit_text(  # type: ignore
-        text=i18n.get("finish_task-placeholder")
+        text=f"{i18n.get("finish_task-placeholder")}\n___"
         + "\n\n"
         + i18n.get("finish_task-confirmation", item_name=item_name),
         reply_markup=inline.get_finish_task_kb(task_id=task_id, i18n=i18n),
@@ -63,7 +63,7 @@ async def open_add_task(
 
     if user_tasks_count >= 3:
         await callback.message.edit_text(  # type: ignore
-            text=i18n.get("main_menu-placeholder")
+            text=f"{i18n.get("main_menu-placeholder")}\n___"
             + "\n\n"
             + i18n.get("too-many-tasks"),
             reply_markup=inline.get_back_button(i18n),
@@ -72,7 +72,9 @@ async def open_add_task(
 
     await state.set_state(AddTaskStates.wait_for_item_name)
     await callback.message.edit_text(  # type: ignore
-        text=i18n.get("add_task-placeholder") + "\n\n" + i18n.get("enter-item-name"),
+        text=f"{i18n.get("add_task-placeholder")}\n___"
+        + "\n\n"
+        + i18n.get("enter-item-name"),
         reply_markup=inline.get_back_button(i18n),
     )
     await callback.answer()
@@ -91,7 +93,7 @@ async def open_delete_task(
     item_name = await repo.get_item_name_by_task_id(task_id=task_id, locale=i18n.locale)
 
     await callback.message.edit_text(  # type: ignore
-        text=i18n.get("delete_task-placeholder")
+        text=f"{i18n.get("delete_task-placeholder")}\n___"
         + "\n\n"
         + i18n.get("delete_task-confirmation", item_name=item_name),
         reply_markup=inline.get_delete_task_kb(task_id=task_id, i18n=i18n),
@@ -106,7 +108,7 @@ async def open_activate_discount(
     task_id = callback_data.task_id
 
     await callback.message.edit_text(  # type: ignore
-        text=i18n.get("activate_discount-placeholder")
+        text=f"{i18n.get("activate_discount-placeholder")}\n___"
         + "\n\n"
         + i18n.get("select-discount"),
         reply_markup=inline.get_discount_offers_kb(task_id, i18n),
@@ -137,7 +139,7 @@ async def open_manage_resources(
     ]
 
     await callback.message.edit_text(  # type: ignore
-        text=i18n.get("manage_resources-placeholder")
+        text=f"{i18n.get("manage_resources-placeholder")}\n___"
         + "\n\n"
         + i18n.get("select-ingredient"),
         reply_markup=inline.get_resources_management_kb(
@@ -154,7 +156,7 @@ async def open_manage_resources(
 @router.callback_query(MenuClick.filter(F.target == MenuAction.SETTINGS))
 async def open_settings(callback: CallbackQuery, i18n: I18nContext) -> None:
     await callback.message.edit_text(  # type: ignore
-        text=i18n.get("settings-placeholder")
+        text=f"{i18n.get("settings-placeholder")}\n___"
         + "\n\n"
         + i18n.get("settings-description-text"),
         reply_markup=inline.get_settings_kb(i18n),

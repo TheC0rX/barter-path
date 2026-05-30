@@ -23,7 +23,7 @@ async def delete_user_task(
     await repo.drop_task(task_id)
 
     await callback.message.edit_text(  # type: ignore
-        text=i18n.get("delete_task-placeholder")
+        text=f"{i18n.get("delete_task-placeholder")}\n___"
         + "\n\n"
         + i18n.get("delete_task-deleted"),
         reply_markup=inline.get_back_button(i18n),

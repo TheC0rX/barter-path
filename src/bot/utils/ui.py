@@ -116,7 +116,7 @@ async def show_main_menu(
     tasks = await user_repo.get_user_tasks(user_id)
 
     if not tasks:
-        text = f"{i18n.get("main_menu-placeholder")}\n\n{i18n.get("no-tasks")}"
+        text = f"{i18n.get("main_menu-placeholder")}\n___\n\n{i18n.get("no-tasks")}"
         kb = inline.get_main_menu_kb(i18n, has_tasks=False)
     else:
         current_task_idx = task_idx % len(tasks)
@@ -131,7 +131,7 @@ async def show_main_menu(
             task_id=current_task.id,
         )
 
-        text = f"{i18n.get("main_menu-placeholder")}\n\n" f"{card_text}"
+        text = f"{i18n.get("main_menu-placeholder")}\n___\n\n" f"{card_text}"
         kb = inline.get_main_menu_kb(
             i18n=i18n,
             has_tasks=True,

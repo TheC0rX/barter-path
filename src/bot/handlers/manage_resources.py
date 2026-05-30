@@ -46,7 +46,7 @@ async def process_resource_selection(
     await state.set_state(ResourceCalcStates.wait_for_amount)
 
     await callback.message.edit_text(  # type: ignore
-        text=f"{i18n.get("manage_resources-placeholder")} | {item_name}"
+        text=f"{i18n.get("manage_resources-placeholder")} | {item_name}\n___"
         + "\n\n"
         + i18n.get("type-resources")
         + "\n\n"
@@ -72,7 +72,7 @@ async def adding_resources(
     text = message.text.strip() if message.text else ""
     if not text.isdigit():
         await message.answer(
-            text=i18n.get("manage_resources-placeholder")
+            text=f"{i18n.get("manage_resources-placeholder")}\n___"
             + "\n\n"
             + i18n.get("type-resources")
             + "\n"
@@ -84,7 +84,7 @@ async def adding_resources(
     value_to_add = int(text)
     if value_to_add <= 0:
         await message.answer(
-            text=i18n.get("manage_resources-placeholder")
+            text=f"{i18n.get("manage_resources-placeholder")}\n___"
             + "\n\n"
             + i18n.get("type-resources")
             + "\n"
@@ -101,7 +101,7 @@ async def adding_resources(
 
     if remains == 0:
         await message.answer(
-            text=i18n.get("manage_resources-placeholder")
+            text=f"{i18n.get("manage_resources-placeholder")}\n___"
             + "\n\n"
             + i18n.get("resource-already-finished"),
             reply_markup=inline.get_back_button(i18n),
@@ -117,7 +117,7 @@ async def adding_resources(
     item_name = await user_repo.get_item_name_by_task_id(task_id, i18n.locale)
 
     await message.answer(
-        text=i18n.get("manage_resources-placeholder")
+        text=f"{i18n.get("manage_resources-placeholder")}\n___"
         + "\n\n"
         + i18n.get(
             "additing_resources-confirmation",
@@ -152,7 +152,7 @@ async def reset_resources(
     item_name = await user_repo.get_item_name_by_task_id(task_id, i18n.locale)
 
     await callback.message.edit_text(  # type: ignore
-        text=i18n.get("manage_resources-placeholder")
+        text=f"{i18n.get("manage_resources-placeholder")}\n___"
         + "\n\n"
         + i18n.get(
             "reset_resources-confirmation", ing_name=ing_name, item_name=item_name
@@ -177,7 +177,7 @@ async def update_resources(
     await user_repo.update_resource_amount(task_id, ing_id, value)
 
     await callback.message.edit_text(  # type: ignore
-        text=i18n.get("manage_resources-placeholder")
+        text=f"{i18n.get("manage_resources-placeholder")}\n___"
         + "\n\n"
         + i18n.get("update_resources-updated"),
         reply_markup=inline.get_back_button(i18n),

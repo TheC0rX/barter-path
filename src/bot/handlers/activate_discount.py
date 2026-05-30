@@ -29,7 +29,7 @@ async def process_discount_selection(
     )
 
     await callback.message.edit_text(  # type: ignore
-        text=i18n.get("activate_discount-placeholder")
+        text=f"{i18n.get("activate_discount-placeholder")}\n___"
         + "\n\n"
         + i18n.get("discount-preview", discount=discount)
         + "\n\n"
@@ -57,7 +57,7 @@ async def activate_task_discount(
     await repo.activate_discount(task_id, discount)
 
     await callback.message.edit_text(  # type: ignore
-        text=i18n.get("activate_discount-placeholder")
+        text=f"{i18n.get("activate_discount-placeholder")}\n___"
         + "\n\n"
         + i18n.get(
             "activate_discount-activated", discount=discount, item_name=item_name

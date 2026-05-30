@@ -24,7 +24,7 @@ async def process_item_searching(
 
     if not items:
         await message.answer(
-            text=i18n.get("add_task-placeholder")
+            text=f"{i18n.get("add_task-placeholder")}\n___"
             + "\n\n"
             + i18n.get("search-empty")
             + "\n"
@@ -38,14 +38,17 @@ async def process_item_searching(
 
         text, kb, _ = await render_item_card(target_item.id, 0, session, i18n)
         await message.answer(
-            text=i18n.get("add_task-placeholder") + "\n\n" + text, reply_markup=kb
+            text=f"{i18n.get("add_task-placeholder")}\n___" + "\n\n" + text,
+            reply_markup=kb,
         )
 
         await state.clear()
         return
 
     await message.answer(
-        text=i18n.get("add_task-placeholder") + "\n\n" + i18n.get("search-results"),
+        text=f"{i18n.get("add_task-placeholder")}\n___"
+        + "\n\n"
+        + i18n.get("search-results"),
         reply_markup=inline.get_found_items_kb(items, i18n),
     )
     await state.clear()
@@ -62,7 +65,7 @@ async def process_item_selection(
     item_id = callback_data.item_id
     text, kb, _ = await render_item_card(item_id, 0, session, i18n)
 
-    await callback.message.edit_text(text=i18n.get("add_task-placeholder") + "\n\n" + text, reply_markup=kb)  # type: ignore
+    await callback.message.edit_text(text=f"{i18n.get("add_task-placeholder")}\n___" + "\n\n" + text, reply_markup=kb)  # type: ignore
     await state.clear()
 
     await callback.answer()
@@ -80,7 +83,7 @@ async def navigate_recipe(
     )
 
     try:
-        await callback.message.edit_text(text=i18n.get("add_task-placeholder") + "\n\n" + text, reply_markup=kb)  # type: ignore
+        await callback.message.edit_text(text=f"{i18n.get("add_task-placeholder")}\n___" + "\n\n" + text, reply_markup=kb)  # type: ignore
     except Exception:
         pass
 
@@ -102,7 +105,7 @@ async def add_user_task(
 
     if is_task_exist:
         await callback.message.edit_text(  # type: ignore
-            text=i18n.get("add_task-placeholder")
+            text=f"{i18n.get("add_task-placeholder")}\n___"
             + "\n\n"
             + i18n.get("task-already-exist"),
             reply_markup=inline.get_back_button(i18n),
@@ -114,7 +117,7 @@ async def add_user_task(
     )
 
     await callback.message.edit_text(  # type: ignore
-        text=i18n.get("add_task-placeholder")
+        text=f"{i18n.get("add_task-placeholder")}\n___"
         + "\n\n"
         + i18n.get("add_task-created")
         + "\n"
