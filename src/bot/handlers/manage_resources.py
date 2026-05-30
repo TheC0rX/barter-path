@@ -46,11 +46,10 @@ async def process_resource_selection(
     await state.set_state(ResourceCalcStates.wait_for_amount)
 
     await callback.message.edit_text(  # type: ignore
-        text=i18n.get("manage_resources-placeholder")
+        text=f"{i18n.get("manage_resources-placeholder")} | {item_name}"
         + "\n\n"
         + i18n.get("type-resources")
         + "\n\n"
-        + f"{i18n.get("item_card-selected_item", icon="", item_name=item_name)}\n"
         + f"{i18n.get("ing_card-selected_item", icon=ingredient.icon, ing_name=ing_name)}\n"
         + f"{i18n.get(
             "ing_card-ing_progress",
