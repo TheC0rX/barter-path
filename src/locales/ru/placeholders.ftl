@@ -26,3 +26,6 @@ manage_resources-placeholder =
 settings-placeholder =
     <b>Настройки</b>
     ___
+
+throttling-warning =
+    ⌛ Не спамьте! Подождите немного.
