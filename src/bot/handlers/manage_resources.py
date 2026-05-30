@@ -50,14 +50,15 @@ async def process_resource_selection(
         + "\n\n"
         + i18n.get("type-resources")
         + "\n\n"
-        + f"{i18n.get("item_card-selected_item", item_name=item_name)}\n"
-        + f"{ingredient.icon} {i18n.get("ing_card-selected_item", ing_name=ing_name)}\n"
-        + f"{icon} {i18n.get(
+        + f"{i18n.get("item_card-selected_item", icon="", item_name=item_name)}\n"
+        + f"{i18n.get("ing_card-selected_item", icon=ingredient.icon, ing_name=ing_name)}\n"
+        + f"{i18n.get(
             "ing_card-ing_progress",
+            icon=icon,
             collected_amount=collected,
             required_amount=discount_amount,
         )}\n"
-        + f"└ {i18n.get("item_card-remains", amount=ing_remaining)}"
+        + f"{i18n.get("item_card-remains", amount=ing_remaining)}"
         + "\n\n"
         + i18n.get("reset-description"),
         reply_markup=inline.get_resource_calc_kb(task_id, ing_id, i18n),

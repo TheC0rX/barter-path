@@ -46,16 +46,17 @@ async def render_item_card(
 
     item = await item_repo.get_item(item_id)
     target_name = item.name_ru if i18n.locale == "ru" else item.name_en
+    offer_icon = get_nubmer_emoji(offer_idx + 1)
 
     offer_suffix = "" if task_id else f"/{total_offers}"
     text_lines = [
-        f"{item.icon} {i18n.get("item_card-selected_item", item_name=target_name)}",
-        f"{get_nubmer_emoji(offer_idx+1)} {i18n.get('item_card-selected_offer', offer=offer_idx+1)}{offer_suffix}",
+        f"{i18n.get("item_card-selected_item", icon=item.icon, item_name=target_name)}",
+        f"{i18n.get('item_card-selected_offer', icon=offer_icon, offer=offer_idx+1)}{offer_suffix}",
     ]
 
     if task_id:
         text_lines.append(
-            f"🎟️ {i18n.get("item_card-selected_discount", discount=discount)}"
+            f"{i18n.get("item_card-selected_discount", discount=discount)}"
         )
 
     text_lines.append(f"\n{i18n.get('item_card-required_ings')}")
@@ -85,7 +86,7 @@ async def render_item_card(
                 f"{icon} {name}: <code>{display_collected}</code>/<code>{discount_amount}</code> {unit}"
             )
             if remains > 0:
-                text_lines.append(f"└ {i18n.get("item_card-remains", amount=remains)}")
+                text_lines.append(f"{i18n.get("item_card-remains", amount=remains)}")
 
         else:
             if amount != discount_amount:
