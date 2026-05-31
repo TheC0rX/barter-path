@@ -1,9 +1,12 @@
+from datetime import datetime, timezone
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, or_, func, delete, update
 from sqlalchemy.orm import joinedload, selectinload
 from sqlalchemy.dialects.postgresql import insert
 
-from .models import User, Item, Recipe, UserTask, TaskProgress, StalcraftVersion
+from src.db.models import TaskStatus
+from src.db.models import User, Item, Recipe, UserTask, TaskProgress, StalcraftVersion
 
 
 class UserRepo:
@@ -29,7 +32,10 @@ class UserRepo:
         stmt = (
             select(func.count())
             .select_from(UserTask)
-            .where(UserTask.user_id == user_id)
+            .where(
+                UserTask.user_id == user_id,
+                UserTask.status == TaskStatus.IN_PROGRESS,
+            )
         )
         result = await self.session.execute(stmt)
 
@@ -37,14 +43,23 @@ class UserRepo:
 
     async def check_task_exists(self, user_id: int, item_id: str) -> bool:
         stmt = select(UserTask).where(
-            UserTask.user_id == user_id, UserTask.item_id == item_id
+            UserTask.user_id == user_id,
+            UserTask.item_id == item_id,
+            UserTask.status == TaskStatus.IN_PROGRESS,
         )
         result = await self.session.execute(stmt)
 
         return result.scalar_one_or_none() is not None
 
     async def has_tasks(self, user_id: int) -> bool:
-        stmt = select(UserTask).where(UserTask.user_id == user_id).limit(1)
+        stmt = (
+            select(UserTask)
+            .where(
+                UserTask.user_id == user_id,
+                UserTask.status == TaskStatus.IN_PROGRESS,
+            )
+            .limit(1)
+        )
         result = await self.session.execute(stmt)
 
         return result.scalar_one_or_none() is not None
@@ -58,7 +73,10 @@ class UserRepo:
                     TaskProgress.ingredient_item
                 ),
             )
-            .where(UserTask.user_id == user_id)
+            .where(
+                UserTask.user_id == user_id,
+                UserTask.status == TaskStatus.IN_PROGRESS,
+            )
             .order_by(UserTask.id.asc())
         )
         result = await self.session.execute(stmt)
@@ -87,9 +105,33 @@ class UserRepo:
 
         await self.session.commit()
 
-    async def drop_task(self, task_id: int):
-        stmt = delete(UserTask).where(UserTask.id == task_id)
+    async def complete_task(self, task_id: int) -> None:
+        stmt = (
+            update(UserTask)
+            .where(UserTask.id == task_id)
+            .values(
+                status=TaskStatus.COMPLETED,
+                completed_at=datetime.now(timezone.utc),
+            )
+        )
+
         await self.session.execute(stmt)
+        await self.session.commit()
+
+    async def abondon_task(self, task_id: int):
+        stmt = (
+            update(UserTask)
+            .where(UserTask.id == task_id)
+            .values(
+                status=TaskStatus.ABANDONED,
+                completed_at=datetime.now(timezone.utc),
+            )
+        )
+        await self.session.execute(stmt)
+
+        progress_stmt = delete(TaskProgress).where(TaskProgress.task_id == task_id)
+        await self.session.execute(progress_stmt)
+
         await self.session.commit()
 
     async def activate_discount(self, task_id: int, discount: int):
