@@ -20,7 +20,7 @@ async def delete_user_task(
     task_id = callback_data.task_id
 
     repo = UserRepo(session)
-    await repo.drop_task(task_id)
+    await repo.abondon_task(task_id)
 
     await callback.message.edit_text(  # type: ignore
         text=f"{i18n.get("delete_task-placeholder")}\n___"
