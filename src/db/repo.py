@@ -107,15 +107,42 @@ class UserRepo:
 
     async def complete_task(self, task_id: int) -> None:
         stmt = (
+            select(Recipe.ingredient_id, Recipe.amount, UserTask.discount)
+            .join(UserTask, UserTask.item_id == Recipe.item_id)
+            .where(UserTask.id == task_id, Recipe.offer_index == UserTask.offer_idx)
+        )
+        result = await self.session.execute(stmt)
+        rows = result.all()
+
+        discount_applied = 0
+        resources_dict = {}
+
+        for ing_id, recipe_amount, discount in rows:
+            discount_applied = discount
+            min_amount = 0 if ing_id == "money" else 1
+
+            final_amount = max(min_amount, round(recipe_amount * (1 - discount / 100)))
+            resources_dict[ing_id] = final_amount
+
+        snapshot_data = {
+            "discount_applied": discount_applied,
+            "resources": resources_dict,
+        }
+
+        update_stmt = (
             update(UserTask)
             .where(UserTask.id == task_id)
             .values(
                 status=TaskStatus.COMPLETED,
                 completed_at=datetime.now(timezone.utc),
+                craft_snapshot=snapshot_data,
             )
         )
+        await self.session.execute(update_stmt)
 
-        await self.session.execute(stmt)
+        progress_stmt = delete(TaskProgress).where(TaskProgress.task_id == task_id)
+        await self.session.execute(progress_stmt)
+
         await self.session.commit()
 
     async def abondon_task(self, task_id: int):
