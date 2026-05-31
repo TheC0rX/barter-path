@@ -5,7 +5,7 @@ from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.ext.asyncio import AsyncAttrs
 
 from datetime import datetime
-from sqlalchemy import func, ForeignKey, UniqueConstraint, Enum
+from sqlalchemy import func, ForeignKey, UniqueConstraint, Enum, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import (
     INTEGER,
@@ -103,12 +103,13 @@ class UserTask(Base):
     )
 
     __table_args__ = (
-        UniqueConstraint(
+        Index(
+            "uq_user_item_offer_active",
             "user_id",
             "item_id",
             "offer_idx",
-            "status",
-            name="uq_user_item_offer_status",
+            unique=True,
+            postgresql_where=(status == TaskStatus.IN_PROGRESS),
         ),
     )
 
