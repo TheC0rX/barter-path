@@ -2,10 +2,10 @@
 finish_task-confirmation =
     ❓ Do you really want to finish the task to craft { $item_name }?
 
-finish_task-deleted =
+finish_task-finished =
     ✅ The task has been successfully finished.
 
-# --- ADITING TASK
+# --- ADDING TASK
 enter-item-name =
     📝 Type an item name you want to craft.
 
@@ -13,7 +13,7 @@ enter-item-name-again =
     📝 Try to type the full item name you want to craft.
 
 search-empty =
-    😵 No item was found with this name.
+    🤷 No items found with this name.
 
 search-results =
     🔍 A few items were found:

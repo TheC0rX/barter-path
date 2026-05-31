@@ -120,7 +120,7 @@ async def adding_resources(
         text=f"{i18n.get("manage_resources-placeholder")}\n___"
         + "\n\n"
         + i18n.get(
-            "additing_resources-confirmation",
+            "adding_resources-confirmation",
             amount=value_to_add,
             ing_name=ing_name,
             item_name=item_name,

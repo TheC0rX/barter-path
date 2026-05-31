@@ -6,7 +6,7 @@ finish_task-placeholder =
     <b>Finishing Task</b>
 
 add_task-placeholder =
-    <b>Additing Task</b>
+    <b>Adding Task</b>
 
 delete_task-placeholder =
     <b>Deleting Task</b>
@@ -21,4 +21,4 @@ settings-placeholder =
     <b>Settings</b>
 
 throttling-warning =
-    ⌛ Don't spam. Wait a moment.
+    ⌛ Slow down. Please wait a moment.

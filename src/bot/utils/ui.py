@@ -69,7 +69,7 @@ async def render_item_card(
         min_amount = 0 if is_money else 1
         discount_amount = max(min_amount, round(amount * (1 - discount / 100)))
         name = ing_item.name_ru if i18n.locale == "ru" else ing_item.name_en
-        unit = "₽" if is_money else i18n.get("item_card-pieces")
+        unit = "₽" if is_money else i18n.get("item_card-pieces", amount=discount_amount)
 
         if task_id:
             collected = progress_dict.get(ing_item.id, 0)

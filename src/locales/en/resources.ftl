@@ -12,7 +12,10 @@ item_card-required_ings =
     📋 Required resources:
 
 item_card-pieces =
-    pcs.
+    { $amount ->
+        [one] pc.
+       *[other] pcs.
+    }
 
 item_card-remains =
     └ { $amount } Remaining.
@@ -25,32 +28,32 @@ discount-preview =
     🎟️ Preview with { $discount }% discount applied.
 
 activate_discount-activated =
-    ✅ Discount { $discount } was successfully applied to task { $item_name }.
+    ✅ Discount { $discount }% was successfully applied to task { $item_name }.
 
 # --- RESOURCE MANAGER
 select-ingredient =
     🎯 Select the ingredient you want to edit.
 
 type-resources =
-    📝 Type the amount of resource to add it.
+    📝 Type the amount of resources to add them.
 
 reset-description =
-    🔄️ You can also reset the progress of collecting, clicking reset button.
+    🔄️ You can also reset the progress of collecting, by clicking reset button.
 
 resource-already-finished =
     ⚠️ The resource was already collected.
 
 must-be-number =
-    ⚠️ Resources amount must be written by numbers.
+    ⚠️ Resource amount must be a number.
 
 must-be-more-zero =
-    ⚠️ Resources amount must be more than 0.
+    ⚠️ Resource amount must be greater than 0.
 
-additing_resources-confirmation =
+adding_resources-confirmation =
     ❓ Are you sure you want to add { $amount } { $ing_name } for { $item_name }?
 
 reset_resources-confirmation =
-    ❓ Are you sure you want to reset progress of { $ing_name } for { $item_name }?
+    ❓ Are you sure you want to reset the progress of { $ing_name } for { $item_name }?
 
 update_resources-updated =
     ✅ Resources have been successfully updated.

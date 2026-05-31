@@ -11,8 +11,7 @@ item_card-selected_discount =
 item_card-required_ings =
     📋 Необходимые ресурсы:
 
-item_card-pieces =
-    шт.
+item_card-pieces = шт.
 
 item_card-remains =
     └ Осталось { $amount }.
@@ -25,7 +24,7 @@ discount-preview =
     🎟️ Предварительный просмотр с учётом скидки { $discount }%.
 
 activate_discount-activated =
-    ✅ Скидка { $discount } была успешно применена к задаче на { $item_name }.
+    ✅ Скидка { $discount }% была успешно применена к задаче на { $item_name }.
 
 # --- RESOURCE MANAGER
 select-ingredient =
@@ -46,7 +45,7 @@ must-be-number =
 must-be-more-zero =
     ⚠️ Количество ресурсов должно быть больше нуля.
 
-additing_resources-confirmation =
+adding_resources-confirmation =
     ❓ Вы уверены, что хотите добавить { $amount } { $ing_name } для { $item_name }?
 
 reset_resources-confirmation =
