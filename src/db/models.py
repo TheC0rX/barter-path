@@ -1,10 +1,10 @@
 import enum
 from typing import List
+from datetime import datetime
 
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.ext.asyncio import AsyncAttrs
 
-from datetime import datetime
 from sqlalchemy import func, ForeignKey, UniqueConstraint, Enum, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import (
@@ -13,6 +13,7 @@ from sqlalchemy.dialects.postgresql import (
     VARCHAR,
     BOOLEAN,
     TIMESTAMP,
+    JSONB,
 )
 
 
@@ -84,6 +85,10 @@ class UserTask(Base):
     )
     completed_at: Mapped[datetime | None] = mapped_column(
         TIMESTAMP(timezone=True),
+        nullable=True,
+    )
+    craft_snapshot: Mapped[dict | None] = mapped_column(
+        JSONB,
         nullable=True,
     )
 
