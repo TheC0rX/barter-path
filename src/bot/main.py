@@ -47,8 +47,7 @@ async def main() -> None:
 
     @dp.startup()
     async def on_startup():
-        task = asyncio.create_task(updater.check_and_update())
-        dp["update_task"] = task
+        await updater.check_and_update()
 
         scheduler.add_job(updater.check_and_update, "interval", hours=1)
         scheduler.start()
