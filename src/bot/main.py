@@ -9,9 +9,13 @@ from aiogram.client.default import DefaultBotProperties
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from sqlalchemy import text
 
-from src.bot import middlewares
-from src.bot.handlers import setup_routers
 from src.services.updater import StalcraftUpdater
+
+from src.bot.middlewares.throttling import ThrottlingMiddleware
+from src.bot.middlewares.db import DbSessionMiddleware
+from src.bot.middlewares.registration import RegistrationMiddleware
+from src.bot.middlewares.i18n import UserLocaleManager
+from src.bot.handlers import setup_routers
 
 from src.db.base import engine, async_session_maker
 from src.config import config
@@ -44,18 +48,19 @@ async def main() -> None:
     i18n_middleware = I18nMiddleware(
         core=core,
         default_locale="en",
-        manager=middlewares.UserLocaleManager(),
+        manager=UserLocaleManager(),
     )
 
-    dp.message.outer_middleware(
-        middlewares.DbSessionMiddleware(session_pool=async_session_maker)
-    )
+    dp.message.outer_middleware(ThrottlingMiddleware(i18n_middleware))
+    dp.callback_query.outer_middleware(ThrottlingMiddleware(i18n_middleware))
+
+    dp.message.outer_middleware(DbSessionMiddleware(session_pool=async_session_maker))
     dp.callback_query.outer_middleware(
-        middlewares.DbSessionMiddleware(session_pool=async_session_maker)
+        DbSessionMiddleware(session_pool=async_session_maker)
     )
 
-    dp.message.outer_middleware(middlewares.RegistrationMiddleware())
-    dp.callback_query.outer_middleware(middlewares.RegistrationMiddleware())
+    dp.message.outer_middleware(RegistrationMiddleware())
+    dp.callback_query.outer_middleware(RegistrationMiddleware())
 
     i18n_middleware.setup(dp)
 
