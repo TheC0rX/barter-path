@@ -1,2 +1,3 @@
 from .db import DbSessionMiddleware
-from .i18n import setup_i18n
+from .registration import RegistrationMiddleware
+from .i18n import UserLocaleManager
