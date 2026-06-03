@@ -1,4 +1,4 @@
-from typing import Any, Dict, Callable, Awaitable
+from typing import Any, Dict, Callable, Awaitable, cast
 
 from aiogram import BaseMiddleware
 from aiogram_i18n import I18nMiddleware
@@ -16,7 +16,7 @@ class ThrottlingMiddleware(BaseMiddleware):
     ) -> None:
         super().__init__()
         self.i18n = i18n_middleware
-        self.locale_manager: UserLocaleManager = i18n_middleware.manager  # type: ignore
+        self.locale_manager = cast(UserLocaleManager, i18n_middleware.manager)
         self.cache: Any = TTLCache(maxsize=10_000, ttl=rate_limit)
 
     async def __call__(

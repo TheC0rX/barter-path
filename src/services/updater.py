@@ -55,7 +55,7 @@ class StalcraftUpdater:
         barterable_ids = set()
         ingredient_ids = set()
 
-        for location in recipes_data:  # type: ignore
+        for location in recipes_data:
             for rec in location.get("recipes", []):
                 target_id = rec.get("item")
                 if target_id:
@@ -130,7 +130,7 @@ class StalcraftUpdater:
         logger.info("[bold magenta][UPDATER][/] Updating data of recipes...")
         recipes_to_add = []
         seen_recipes = set()
-        for location in recipes_data:  # type: ignore
+        for location in recipes_data:
             for rec in location.get("recipes", []):
                 target_id = rec.get("item")
                 if not target_id:

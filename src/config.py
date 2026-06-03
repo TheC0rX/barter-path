@@ -1,11 +1,11 @@
-from pydantic import SecretStr
+from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Config(BaseSettings):
-    BOT_TOKEN: SecretStr
-    GITHUB_TOKEN: SecretStr
-    DB_URL: SecretStr
+    BOT_TOKEN: SecretStr = Field(init=False)
+    GITHUB_TOKEN: SecretStr = Field(init=False)
+    DB_URL: SecretStr = Field(init=False)
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -14,4 +14,4 @@ class Config(BaseSettings):
     )
 
 
-config = Config()  # type: ignore
+config = Config()

@@ -24,6 +24,10 @@ async def process_resource_selection(
     session: AsyncSession,
     i18n: I18nContext,
 ) -> None:
+    if not isinstance(callback.message, Message):
+        await callback.answer()
+        return
+
     task_id = callback_data.task_id
     ing_id = callback_data.ing_id
 
@@ -45,7 +49,7 @@ async def process_resource_selection(
     )
     await state.set_state(ResourceCalcStates.wait_for_amount)
 
-    await callback.message.edit_text(  # type: ignore
+    await callback.message.edit_text(
         text=f"{i18n.get("manage_resources-placeholder")} | {item_name}\n___"
         + "\n\n"
         + i18n.get("type-resources")
@@ -113,7 +117,7 @@ async def adding_resources(
     item_repo = ItemRepo(session)
 
     ingredient = await item_repo.get_item(ing_id)
-    ing_name = ingredient.name_ru if i18n.locale == "ru" else ingredient.name_en  # type: ignore
+    ing_name = ingredient.name_ru if i18n.locale == "ru" else ingredient.name_en
     item_name = await user_repo.get_item_name_by_task_id(task_id, i18n.locale)
 
     await message.answer(
@@ -140,6 +144,10 @@ async def reset_resources(
     session: AsyncSession,
     i18n: I18nContext,
 ) -> None:
+    if not isinstance(callback.message, Message):
+        await callback.answer()
+        return
+
     await state.clear()
 
     task_id = callback_data.task_id
@@ -151,7 +159,7 @@ async def reset_resources(
     ing_name = ingredient.name_ru if i18n.locale == "ru" else ingredient.name_en
     item_name = await user_repo.get_item_name_by_task_id(task_id, i18n.locale)
 
-    await callback.message.edit_text(  # type: ignore
+    await callback.message.edit_text(
         text=f"{i18n.get("manage_resources-placeholder")}\n___"
         + "\n\n"
         + i18n.get(
@@ -169,6 +177,10 @@ async def update_resources(
     session: AsyncSession,
     i18n: I18nContext,
 ) -> None:
+    if not isinstance(callback.message, Message):
+        await callback.answer()
+        return
+
     task_id = callback_data.task_id
     ing_id = callback_data.ing_id
     value = callback_data.value
@@ -176,7 +188,7 @@ async def update_resources(
     user_repo = UserRepo(session)
     await user_repo.update_resource_amount(task_id, ing_id, value)
 
-    await callback.message.edit_text(  # type: ignore
+    await callback.message.edit_text(
         text=f"{i18n.get("manage_resources-placeholder")}\n___"
         + "\n\n"
         + i18n.get("update_resources-updated"),

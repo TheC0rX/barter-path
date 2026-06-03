@@ -62,10 +62,17 @@ async def process_item_selection(
     session: AsyncSession,
     i18n: I18nContext,
 ):
+    if not isinstance(callback.message, Message):
+        await callback.answer()
+        return
+
     item_id = callback_data.item_id
     text, kb, _ = await render_item_card(item_id, 0, session, i18n)
 
-    await callback.message.edit_text(text=f"{i18n.get("add_task-placeholder")}\n___" + "\n\n" + text, reply_markup=kb)  # type: ignore
+    await callback.message.edit_text(
+        text=f"{i18n.get("add_task-placeholder")}\n___" + "\n\n" + text,
+        reply_markup=kb,
+    )
     await state.clear()
 
     await callback.answer()
@@ -78,12 +85,19 @@ async def navigate_recipe(
     session: AsyncSession,
     i18n: I18nContext,
 ):
+    if not isinstance(callback.message, Message):
+        await callback.answer()
+        return
+
     text, kb, _ = await render_item_card(
         callback_data.item_id, int(callback_data.idx), session, i18n
     )
 
     try:
-        await callback.message.edit_text(text=f"{i18n.get("add_task-placeholder")}\n___" + "\n\n" + text, reply_markup=kb)  # type: ignore
+        await callback.message.edit_text(
+            text=f"{i18n.get("add_task-placeholder")}\n___" + "\n\n" + text,
+            reply_markup=kb,
+        )
     except Exception:
         pass
 
@@ -97,6 +111,10 @@ async def add_user_task(
     session: AsyncSession,
     i18n: I18nContext,
 ) -> None:
+    if not isinstance(callback.message, Message):
+        await callback.answer()
+        return
+
     item_id = callback_data.item_id
     offer_idx = callback_data.offer_idx
 
@@ -104,7 +122,7 @@ async def add_user_task(
     is_task_exist = await repo.check_task_exists(callback.from_user.id, item_id)
 
     if is_task_exist:
-        await callback.message.edit_text(  # type: ignore
+        await callback.message.edit_text(
             text=f"{i18n.get("add_task-placeholder")}\n___"
             + "\n\n"
             + i18n.get("task-already-exist"),
@@ -116,7 +134,7 @@ async def add_user_task(
         user_id=callback.from_user.id, item_id=item_id, offer_idx=int(offer_idx)
     )
 
-    await callback.message.edit_text(  # type: ignore
+    await callback.message.edit_text(
         text=f"{i18n.get("add_task-placeholder")}\n___"
         + "\n\n"
         + i18n.get("add_task-created")

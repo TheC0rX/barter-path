@@ -111,8 +111,11 @@ async def show_main_menu(
     i18n: I18nContext,
     task_idx: int = 0,
 ) -> None:
+    if not event.from_user:
+        return
+
     user_repo = UserRepo(session)
-    user_id = event.from_user.id  # type: ignore
+    user_id = event.from_user.id
     tasks = await user_repo.get_user_tasks(user_id)
 
     if not tasks:
@@ -142,7 +145,11 @@ async def show_main_menu(
         )
 
     if isinstance(event, CallbackQuery):
-        await event.message.edit_text(text=text, reply_markup=kb)  # type: ignore
+        if not isinstance(event.message, Message):
+            await event.answer()
+            return
+
+        await event.message.edit_text(text=text, reply_markup=kb)
         await event.answer()
     else:
         await event.answer(text=text, reply_markup=kb)

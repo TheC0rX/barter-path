@@ -1,5 +1,5 @@
 from aiogram import Router, F
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, Message
 from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -18,6 +18,10 @@ async def process_discount_selection(
     session: AsyncSession,
     i18n: I18nContext,
 ) -> None:
+    if not isinstance(callback.message, Message):
+        await callback.answer()
+        return
+
     task_id = callback_data.task_id
     discount = callback_data.discount
 
@@ -28,7 +32,7 @@ async def process_discount_selection(
         current_task.item_id, current_task.offer_idx, session, i18n, discount=discount
     )
 
-    await callback.message.edit_text(  # type: ignore
+    await callback.message.edit_text(
         text=f"{i18n.get("activate_discount-placeholder")}\n___"
         + "\n\n"
         + i18n.get("discount-preview", discount=discount)
@@ -48,6 +52,10 @@ async def activate_task_discount(
     session: AsyncSession,
     i18n: I18nContext,
 ) -> None:
+    if not isinstance(callback.message, Message):
+        await callback.answer()
+        return
+
     task_id = callback_data.task_id
     discount = callback_data.discount
 
@@ -56,7 +64,7 @@ async def activate_task_discount(
 
     await repo.activate_discount(task_id, discount)
 
-    await callback.message.edit_text(  # type: ignore
+    await callback.message.edit_text(
         text=f"{i18n.get("activate_discount-placeholder")}\n___"
         + "\n\n"
         + i18n.get(

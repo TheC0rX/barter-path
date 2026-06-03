@@ -54,10 +54,8 @@ async def main() -> None:
     dp.message.outer_middleware(ThrottlingMiddleware(i18n_middleware))
     dp.callback_query.outer_middleware(ThrottlingMiddleware(i18n_middleware))
 
-    dp.message.outer_middleware(DbSessionMiddleware(session_pool=async_session_maker))
-    dp.callback_query.outer_middleware(
-        DbSessionMiddleware(session_pool=async_session_maker)
-    )
+    dp.message.outer_middleware(DbSessionMiddleware(async_session_maker))
+    dp.callback_query.outer_middleware(DbSessionMiddleware(async_session_maker))
 
     dp.message.outer_middleware(RegistrationMiddleware())
     dp.callback_query.outer_middleware(RegistrationMiddleware())
