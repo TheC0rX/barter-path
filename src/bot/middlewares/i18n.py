@@ -1,41 +1,32 @@
-from pathlib import Path
+from typing import Any
 
 from aiogram.types import User
-
-from aiogram_i18n import I18nMiddleware
 from aiogram_i18n.managers import BaseManager
-from aiogram_i18n.cores import FluentRuntimeCore
+from cachetools import TTLCache
 
 from src.db.repo import UserRepo
 from src.db.base import async_session_maker
 
 
-class UserManager(BaseManager):
+class UserLocaleManager(BaseManager):
+    def __init__(self):
+        super().__init__()
+        self.locale_cache: Any = TTLCache(maxsize=20_000, ttl=3600)
+
     async def get_locale(self, event_from_user: User) -> str:
-        async with async_session_maker() as session:
-            repo = UserRepo(session)
-            user = await repo.get_user(event_from_user.id)
+        user_id = event_from_user.id
 
-            if user:
-                return user.locale
+        if user_id in self.locale_cache:
+            return str(self.locale_cache[user_id])
 
-        return (
-            event_from_user.language_code
-            if event_from_user.language_code in ["ru", "en"]
-            else "en"
-        )
+        user_lang = event_from_user.language_code or "en"
+
+        self.locale_cache[user_id] = user_lang
+        return user_lang
 
     async def set_locale(self, locale: str, event_from_user: User) -> None:
         async with async_session_maker() as session:
             repo = UserRepo(session)
-            await repo.add_user(user_id=event_from_user.id, locale=locale)
+            await repo.update_user_locale(user_id=event_from_user.id, locale=locale)
 
-
-def setup_i18n(dp) -> I18nMiddleware:
-    locales_path = Path(__file__).parent.parent.parent / "locales"
-
-    core = FluentRuntimeCore(path=str(locales_path / "{locale}"))
-    middleware = I18nMiddleware(core=core, default_locale="en", manager=UserManager())
-
-    middleware.setup(dp)
-    return middleware
+        self.locale_cache[event_from_user.id] = locale
