@@ -1,8 +1,10 @@
-import asyncio
+from pathlib import Path
 from loguru import logger
 
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
+from aiogram_i18n import I18nMiddleware
+from aiogram_i18n.cores import FluentRuntimeCore
 from aiogram.client.default import DefaultBotProperties
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from sqlalchemy import text
@@ -36,10 +38,27 @@ async def main() -> None:
     )
     dp = Dispatcher()
 
-    dp.update.outer_middleware(
+    locales_path = Path(__file__).parent.parent / "locales"
+    core = FluentRuntimeCore(path=str(locales_path / "{locale}"))
+
+    i18n_middleware = I18nMiddleware(
+        core=core,
+        default_locale="en",
+        manager=middlewares.UserLocaleManager(),
+    )
+
+    dp.message.outer_middleware(
         middlewares.DbSessionMiddleware(session_pool=async_session_maker)
     )
-    middlewares.setup_i18n(dp)
+    dp.callback_query.outer_middleware(
+        middlewares.DbSessionMiddleware(session_pool=async_session_maker)
+    )
+
+    dp.message.outer_middleware(middlewares.RegistrationMiddleware())
+    dp.callback_query.outer_middleware(middlewares.RegistrationMiddleware())
+
+    i18n_middleware.setup(dp)
+
     dp.include_router(setup_routers())
 
     updater = StalcraftUpdater()
