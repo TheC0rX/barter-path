@@ -22,6 +22,11 @@ class UserRepo:
         await self.session.execute(stmt)
         await self.session.commit()
 
+    async def update_user_locale(self, user_id: int, locale: str) -> None:
+        stmt = update(User).where(User.user_id == user_id).values(locale=locale)
+        await self.session.execute(stmt)
+        await self.session.commit()
+
     async def get_user_tasks_count(self, user_id: int) -> int:
         stmt = (
             select(func.count())
