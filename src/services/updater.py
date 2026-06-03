@@ -1,7 +1,6 @@
 import asyncio
 
 from loguru import logger
-from rich.logging import RichHandler
 from rich.progress import (
     Progress,
     TextColumn,
