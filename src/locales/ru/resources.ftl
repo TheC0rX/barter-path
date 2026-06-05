@@ -45,6 +45,9 @@ must-be-number =
 must-be-more-zero =
     ⚠️ Количество ресурсов должно быть больше нуля.
 
+must-be-less-limit =
+    ⚠️ Количество ресурсов должно быть меньше 100 миллионов.
+
 adding_resources-confirmation =
     ❓ Вы уверены, что хотите добавить { $amount } { $ing_name } для { $item_name }?
 

@@ -49,6 +49,9 @@ must-be-number =
 must-be-more-zero =
     ⚠️ Resource amount must be greater than 0.
 
+must-be-less-limit =
+    ⚠️ Resource amount must be less than 100 million.
+
 adding_resources-confirmation =
     ❓ Are you sure you want to add { $amount } { $ing_name } for { $item_name }?
 

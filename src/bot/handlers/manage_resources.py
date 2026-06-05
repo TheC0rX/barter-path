@@ -100,6 +100,17 @@ async def adding_resources(
         )
         return
 
+    if value_to_add >= 100_000_000:
+        await message.answer(
+            text=f"{i18n.get("manage_resources-placeholder")}\n___"
+            + "\n\n"
+            + i18n.get("type-resources")
+            + "\n"
+            + i18n.get("must-be-less-limit"),
+            reply_markup=inline.get_resource_calc_kb(task_id, ing_id, i18n),
+        )
+        return
+
     await state.clear()
 
     if remains == 0:
