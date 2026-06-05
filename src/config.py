@@ -1,11 +1,16 @@
-from pydantic import Field, SecretStr
+from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Config(BaseSettings):
-    BOT_TOKEN: SecretStr = Field(init=False)
-    GITHUB_TOKEN: SecretStr = Field(init=False)
-    DB_URL: SecretStr = Field(init=False)
+    BOT_TOKEN: SecretStr
+    GITHUB_TOKEN: SecretStr
+
+    DB_USER: str = "postgres"
+    DB_PASSWORD: SecretStr
+    DB_HOST: str = "localhost"
+    DB_PORT: int = 5432
+    DB_NAME: str
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -13,5 +18,13 @@ class Config(BaseSettings):
         extra="ignore",
     )
 
+    @property
+    def DB_URL(self) -> SecretStr:
+        url = (
+            f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD.get_secret_value()}"
+            f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+        )
+        return SecretStr(url)
 
-config = Config()
+
+config = Config(**{})
