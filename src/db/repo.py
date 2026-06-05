@@ -133,7 +133,7 @@ class UserRepo:
             .where(UserTask.id == task_id)
             .values(
                 status=TaskStatus.COMPLETED,
-                completed_at=datetime.now(timezone.utc),
+                finished_at=datetime.now(timezone.utc),
                 craft_snapshot=snapshot_data,
             )
         )
@@ -150,7 +150,7 @@ class UserRepo:
             .where(UserTask.id == task_id)
             .values(
                 status=TaskStatus.ABANDONED,
-                completed_at=datetime.now(timezone.utc),
+                finished_at=datetime.now(timezone.utc),
             )
         )
         await self.session.execute(stmt)

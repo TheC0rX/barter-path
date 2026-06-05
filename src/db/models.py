@@ -83,7 +83,7 @@ class UserTask(Base):
         TIMESTAMP(timezone=True),
         server_default=func.now(),
     )
-    completed_at: Mapped[datetime | None] = mapped_column(
+    finished_at: Mapped[datetime | None] = mapped_column(
         TIMESTAMP(timezone=True),
         nullable=True,
     )
