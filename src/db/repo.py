@@ -6,7 +6,14 @@ from sqlalchemy.orm import joinedload, selectinload
 from sqlalchemy.dialects.postgresql import insert
 
 from src.db.models import TaskStatus
-from src.db.models import User, Item, Recipe, UserTask, TaskProgress, StalcraftVersion
+from src.db.models import (
+    User,
+    Item,
+    Recipe,
+    UserTask,
+    TaskProgress,
+    StalcraftVersion,
+)
 
 
 class UserRepo:
@@ -198,17 +205,57 @@ class UserRepo:
         result = await self.session.execute(stmt)
         return dict(result.tuples().all())
 
-    async def update_resource_amount(
-        self, task_id: int, ing_id: str, value: int
+    async def add_resource_amount(
+        self, user_id: int, task_id: int, ing_id: str, delta_value: int
     ) -> None:
         stmt = (
+            select(TaskProgress.collected_amount)
+            .join(UserTask, TaskProgress.task_id == UserTask.id)
+            .where(
+                UserTask.id == task_id,
+                UserTask.user_id == user_id,
+                TaskProgress.ingredient_id == ing_id,
+            )
+            .with_for_update()
+        )
+        res = await self.session.execute(stmt)
+        old_amount = res.scalar_one()
+        new_amount = old_amount + delta_value
+
+        update_stmt = (
             update(TaskProgress)
             .where(
                 TaskProgress.task_id == task_id, TaskProgress.ingredient_id == ing_id
             )
-            .values(collected_amount=value)
+            .values(collected_amount=new_amount)
         )
-        await self.session.execute(stmt)
+        await self.session.execute(update_stmt)
+        await self.session.commit()
+
+    async def reset_resource_amount(
+        self, user_id: int, task_id: int, ing_id: str
+    ) -> None:
+        stmt = (
+            select(TaskProgress.collected_amount)
+            .join(UserTask, TaskProgress.task_id == UserTask.id)
+            .where(
+                UserTask.id == task_id,
+                UserTask.user_id == user_id,
+                TaskProgress.ingredient_id == ing_id,
+            )
+            .with_for_update()
+        )
+        res = await self.session.execute(stmt)
+        old_amount = res.scalar_one()
+
+        update_stmt = (
+            update(TaskProgress)
+            .where(
+                TaskProgress.task_id == task_id, TaskProgress.ingredient_id == ing_id
+            )
+            .values(collected_amount=0)
+        )
+        await self.session.execute(update_stmt)
         await self.session.commit()
 
     async def get_resource_stats(self, task_id: int, ing_id: str) -> tuple[int, int]:

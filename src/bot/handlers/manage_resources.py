@@ -71,6 +71,11 @@ async def process_resource_selection(
 async def adding_resources(
     message: Message, state: FSMContext, session: AsyncSession, i18n: I18nContext
 ) -> None:
+    data = await state.get_data()
+    task_id = data.get("task_id", 0)
+    ing_id = data.get("ing_id", "")
+    remains = data.get("remains", 0)
+
     text = message.text.strip() if message.text else ""
     if not text.isdigit():
         await message.answer(
@@ -79,7 +84,7 @@ async def adding_resources(
             + i18n.get("type-resources")
             + "\n"
             + i18n.get("must-be-number"),
-            reply_markup=inline.get_back_button(i18n),
+            reply_markup=inline.get_resource_calc_kb(task_id, ing_id, i18n),
         )
         return
 
@@ -91,24 +96,19 @@ async def adding_resources(
             + i18n.get("type-resources")
             + "\n"
             + i18n.get("must-be-more-zero"),
-            reply_markup=inline.get_back_button(i18n),
+            reply_markup=inline.get_resource_calc_kb(task_id, ing_id, i18n),
         )
         return
 
-    data = await state.get_data()
-    task_id = data.get("task_id", 0)
-    ing_id = data.get("ing_id", "")
-    remains = data.get("remains", 0)
-    collected = data.get("collected", 0)
+    await state.clear()
 
     if remains == 0:
         await message.answer(
             text=f"{i18n.get("manage_resources-placeholder")}\n___"
             + "\n\n"
             + i18n.get("resource-already-finished"),
-            reply_markup=inline.get_back_button(i18n),
+            reply_markup=inline.get_resource_calc_kb(task_id, ing_id, i18n),
         )
-        await state.clear()
         return
 
     user_repo = UserRepo(session)
@@ -128,10 +128,9 @@ async def adding_resources(
             item_name=item_name,
         ),
         reply_markup=inline.get_update_resources_kb(
-            task_id, ing_id, collected + value_to_add, i18n
+            task_id, ing_id, value_to_add, i18n
         ),
     )
-    await state.clear()
 
 
 @router.callback_query(ResourceCalc.filter(F.action == ResourceCalcAction.RESET))
@@ -163,7 +162,7 @@ async def reset_resources(
         + i18n.get(
             "reset_resources-confirmation", ing_name=ing_name, item_name=item_name
         ),
-        reply_markup=inline.get_update_resources_kb(task_id, ing_id, 0, i18n),
+        reply_markup=inline.get_update_resources_kb(task_id, ing_id, -1, i18n),
     )
     await callback.answer()
 
@@ -179,12 +178,17 @@ async def update_resources(
         await callback.answer()
         return
 
+    user_id = callback.from_user.id
     task_id = callback_data.task_id
     ing_id = callback_data.ing_id
     value = callback_data.value
 
     user_repo = UserRepo(session)
-    await user_repo.update_resource_amount(task_id, ing_id, value)
+
+    if value == -1:
+        await user_repo.reset_resource_amount(user_id, task_id, ing_id)
+    else:
+        await user_repo.add_resource_amount(user_id, task_id, ing_id, value)
 
     await callback.message.edit_text(
         text=f"{i18n.get("manage_resources-placeholder")}\n___"
