@@ -12,6 +12,8 @@ from src.db.models import (
     Recipe,
     UserTask,
     TaskProgress,
+    ResourceLog,
+    ResourceActionType,
     StalcraftVersion,
 )
 
@@ -230,6 +232,17 @@ class UserRepo:
             .values(collected_amount=new_amount)
         )
         await self.session.execute(update_stmt)
+
+        log_entry = ResourceLog(
+            user_id=user_id,
+            task_id=task_id,
+            ingredient_id=ing_id,
+            action_type=ResourceActionType.ADD,
+            delta_value=delta_value,
+            old_amount=old_amount,
+            new_amount=new_amount,
+        )
+        self.session.add(log_entry)
         await self.session.commit()
 
     async def reset_resource_amount(
@@ -256,6 +269,17 @@ class UserRepo:
             .values(collected_amount=0)
         )
         await self.session.execute(update_stmt)
+
+        log_entry = ResourceLog(
+            user_id=user_id,
+            task_id=task_id,
+            ingredient_id=ing_id,
+            action_type=ResourceActionType.RESET,
+            delta_value=0,
+            old_amount=old_amount,
+            new_amount=0,
+        )
+        self.session.add(log_entry)
         await self.session.commit()
 
     async def get_resource_stats(self, task_id: int, ing_id: str) -> tuple[int, int]:
