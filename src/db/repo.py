@@ -120,8 +120,10 @@ class UserRepo:
             .where(
                 UserTask.id == task_id,
                 UserTask.user_id == user_id,
+                UserTask.status == TaskStatus.IN_PROGRESS,
                 Recipe.offer_index == UserTask.offer_idx,
             )
+            .with_for_update(of=UserTask)
         )
         result = await self.session.execute(stmt)
         rows = result.all()
