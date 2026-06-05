@@ -1,12 +1,12 @@
 <div align="center">
 
 # Barter PATH
-[![Python](https://img.shields.io/badge/Python-1F2937?style=for-the-badge&logo=python&logoColor=FFFFFF)](#)
-[![Aiogram](https://img.shields.io/badge/aiogram-1F2937?style=for-the-badge&logo=telegram&logoColor=FFFFFF)](#)
-[![Aiogram-i18n](https://img.shields.io/badge/aiogram--i18n-1F2937?style=for-the-badge&logo=googletranslate&logoColor=FFFFFF)](#)
-[![SqlAlchemy](https://img.shields.io/badge/SQLAlchemy-1F2937?style=for-the-badge&logo=sqlalchemy&logoColor=FFFFFF)](#)
-[![PostgreSQL](https://img.shields.io/badge/Postgres-1F2937?style=for-the-badge&logo=postgresql&logoColor=FFFFFF)](#)
-[![Alembic](https://img.shields.io/badge/Alembic-1F2937?style=for-the-badge)](#)
+[![Python](https://img.shields.io/badge/Python-1F2937?style=for-the-badge&logo=python&logoColor=FFFFFF)](https://www.python.org/)
+[![Aiogram](https://img.shields.io/badge/aiogram-1F2937?style=for-the-badge&logo=telegram&logoColor=FFFFFF)](https://aiogram.dev/)
+[![Aiogram-i18n](https://img.shields.io/badge/aiogram--i18n-1F2937?style=for-the-badge&logo=googletranslate&logoColor=FFFFFF)](https://github.com/aiogram/i18n)
+[![SqlAlchemy](https://img.shields.io/badge/SQLAlchemy-1F2937?style=for-the-badge&logo=sqlalchemy&logoColor=FFFFFF)](https://www.sqlalchemy.org/)
+[![PostgreSQL](https://img.shields.io/badge/Postgres-1F2937?style=for-the-badge&logo=postgresql&logoColor=FFFFFF)](https://www.postgresql.org/)
+[![Alembic](https://img.shields.io/badge/Alembic-1F2937?style=for-the-badge)](https://github.com/sqlalchemy/alembic)
 
 An automated Stalcraft barter tracker providing real-time resource calculations, discount management, and progression monitoring via official database.
 
