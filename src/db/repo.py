@@ -122,7 +122,9 @@ class UserRepo:
         for ing_id, recipe_amount, _ in rows:
             min_amount = 0 if ing_id == "money" else 1
 
-            final_amount = max(min_amount, round(recipe_amount * (1 - task_discount / 100)))
+            final_amount = max(
+                min_amount, round(recipe_amount * (1 - task_discount / 100))
+            )
             resources_dict[ing_id] = final_amount
 
         snapshot_data = {
@@ -145,7 +147,7 @@ class UserRepo:
 
         await self.session.commit()
 
-    async def abondon_task(self, task_id: int):
+    async def abandon_task(self, task_id: int):
         stmt = (
             update(UserTask)
             .where(UserTask.id == task_id)
