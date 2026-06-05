@@ -44,10 +44,11 @@ async def open_finish_task(
         await callback.answer()
         return
 
+    user_id = callback.from_user.id
     task_id = callback_data.task_id
 
-    repo = UserRepo(session)
-    item_name = await repo.get_item_name_by_task_id(task_id=task_id, locale=i18n.locale)
+    user_repo = UserRepo(session)
+    item_name = await user_repo.get_item_name_by_task_id(user_id, task_id, i18n.locale)
 
     await callback.message.edit_text(
         text=f"{i18n.get("finish_task-placeholder")}\n___"
@@ -99,10 +100,11 @@ async def open_delete_task(
         await callback.answer()
         return
 
+    user_id = callback.from_user.id
     task_id = callback_data.task_id
 
-    repo = UserRepo(session)
-    item_name = await repo.get_item_name_by_task_id(task_id=task_id, locale=i18n.locale)
+    user_repo = UserRepo(session)
+    item_name = await user_repo.get_item_name_by_task_id(user_id, task_id, i18n.locale)
 
     await callback.message.edit_text(
         text=f"{i18n.get("delete_task-placeholder")}\n___"
@@ -143,14 +145,15 @@ async def open_manage_resources(
         await callback.answer()
         return
 
+    user_id = callback.from_user.id
     task_id = callback_data.task_id
 
     user_repo = UserRepo(session)
     item_repo = ItemRepo(session)
 
-    task = await user_repo.get_task_by_task_id(task_id)
+    task = await user_repo.get_task_by_task_id(user_id, task_id)
     rows = await item_repo.get_item_recipes(task.item_id)
-    progress_dict = await user_repo.get_task_progress_dict(task_id)
+    progress_dict = await user_repo.get_task_progress_dict(user_id, task_id)
 
     current_ings = [
         (ing_item, recipe.amount)

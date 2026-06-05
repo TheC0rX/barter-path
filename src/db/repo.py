@@ -113,11 +113,15 @@ class UserRepo:
 
         await self.session.commit()
 
-    async def complete_task(self, task_id: int) -> None:
+    async def complete_task(self, user_id: int, task_id: int) -> None:
         stmt = (
             select(Recipe.ingredient_id, Recipe.amount, UserTask.discount)
             .join(UserTask, UserTask.item_id == Recipe.item_id)
-            .where(UserTask.id == task_id, Recipe.offer_index == UserTask.offer_idx)
+            .where(
+                UserTask.id == task_id,
+                UserTask.user_id == user_id,
+                Recipe.offer_index == UserTask.offer_idx,
+            )
         )
         result = await self.session.execute(stmt)
         rows = result.all()
@@ -156,7 +160,18 @@ class UserRepo:
 
         await self.session.commit()
 
-    async def abandon_task(self, task_id: int):
+    async def abandon_task(self, user_id: int, task_id: int):
+        check_stmt = select(UserTask.id).where(
+            UserTask.id == task_id,
+            UserTask.user_id == user_id,
+            UserTask.status == TaskStatus.IN_PROGRESS,
+        )
+        check_result = await self.session.execute(check_stmt)
+        rows = check_result.scalar_one_or_none()
+
+        if not rows:
+            return
+
         stmt = (
             update(UserTask)
             .where(UserTask.id == task_id)
@@ -172,36 +187,59 @@ class UserRepo:
 
         await self.session.commit()
 
-    async def activate_discount(self, task_id: int, discount: int):
-        stmt = update(UserTask).where(UserTask.id == task_id).values(discount=discount)
+    async def activate_discount(self, user_id: int, task_id: int, discount: int):
+        stmt = (
+            update(UserTask)
+            .where(
+                UserTask.id == task_id,
+                UserTask.user_id == user_id,
+            )
+            .values(discount=discount)
+        )
         await self.session.execute(stmt)
         await self.session.commit()
 
-    async def get_task_by_task_id(self, task_id: int) -> UserTask:
+    async def get_task_by_task_id(self, user_id: int, task_id: int) -> UserTask:
         stmt = (
             select(UserTask)
             .options(joinedload(UserTask.item))
-            .where(UserTask.id == task_id)
+            .where(
+                UserTask.id == task_id,
+                UserTask.user_id == user_id,
+            )
         )
         result = await self.session.execute(stmt)
 
         return result.scalar_one()
 
-    async def get_item_name_by_task_id(self, task_id: int, locale: str) -> str:
+    async def get_item_name_by_task_id(
+        self, user_id: int, task_id: int, locale: str
+    ) -> str:
         name_col = Item.name_ru if locale == "ru" else Item.name_en
         stmt = (
             select(name_col)
             .join(UserTask, UserTask.item_id == Item.id)
-            .where(UserTask.id == task_id)
+            .where(
+                UserTask.id == task_id,
+                UserTask.user_id == user_id,
+            )
         )
 
         result = await self.session.execute(stmt)
         return result.scalar_one()
 
-    async def get_task_progress_dict(self, task_id: int) -> dict[str, int]:
+    async def get_task_progress_dict(
+        self,
+        user_id: int,
+        task_id: int,
+    ) -> dict[str, int]:
         stmt = (
             select(TaskProgress.ingredient_id, TaskProgress.collected_amount)
-            .where(TaskProgress.task_id == task_id)
+            .join(UserTask, TaskProgress.task_id == UserTask.id)
+            .where(
+                TaskProgress.task_id == task_id,
+                UserTask.user_id == user_id,
+            )
             .order_by(TaskProgress.id.asc())
         )
         result = await self.session.execute(stmt)
@@ -282,7 +320,9 @@ class UserRepo:
         self.session.add(log_entry)
         await self.session.commit()
 
-    async def get_resource_stats(self, task_id: int, ing_id: str) -> tuple[int, int]:
+    async def get_resource_stats(
+        self, user_id: int, task_id: int, ing_id: str
+    ) -> tuple[int, int]:
         stmt = (
             select(UserTask.discount, Recipe.amount, TaskProgress.collected_amount)
             .join(Recipe, Recipe.item_id == UserTask.item_id)
@@ -293,6 +333,7 @@ class UserRepo:
             )
             .where(
                 UserTask.id == task_id,
+                UserTask.user_id == user_id,
                 Recipe.ingredient_id == ing_id,
                 Recipe.offer_index == UserTask.offer_idx,
             )

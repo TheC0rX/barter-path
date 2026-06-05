@@ -21,10 +21,11 @@ async def finish_user_task(
         await callback.answer()
         return
 
+    user_id = callback.from_user.id
     task_id = callback_data.task_id
 
     repo = UserRepo(session)
-    await repo.complete_task(task_id)
+    await repo.complete_task(user_id, task_id)
 
     await callback.message.edit_text(
         text=f"{i18n.get("finish_task-placeholder")}\n___"

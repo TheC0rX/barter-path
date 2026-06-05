@@ -24,6 +24,7 @@ def get_nubmer_emoji(number: int) -> str:
 
 
 async def render_item_card(
+    user_id: int,
     item_id: str,
     offer_idx: int,
     session: AsyncSession,
@@ -62,7 +63,9 @@ async def render_item_card(
     text_lines.append(f"\n{i18n.get('item_card-required_ings')}")
 
     is_finished = bool(task_id)
-    progress_dict = await user_repo.get_task_progress_dict(task_id) if task_id else {}
+    progress_dict = (
+        await user_repo.get_task_progress_dict(user_id, task_id) if task_id else {}
+    )
 
     for ing_item, amount in current_ings:
         is_money = ing_item.id == "money"
@@ -126,12 +129,13 @@ async def show_main_menu(
         current_task = tasks[current_task_idx]
 
         card_text, _, is_finished = await render_item_card(
-            item_id=current_task.item_id,
-            offer_idx=current_task.offer_idx,
-            session=session,
-            i18n=i18n,
-            discount=current_task.discount,
-            task_id=current_task.id,
+            user_id,
+            current_task.item_id,
+            current_task.offer_idx,
+            session,
+            i18n,
+            current_task.discount,
+            current_task.id,
         )
 
         text = f"{i18n.get("main_menu-placeholder")}\n___\n\n" f"{card_text}"

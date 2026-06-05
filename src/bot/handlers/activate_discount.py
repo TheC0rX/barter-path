@@ -22,14 +22,20 @@ async def process_discount_selection(
         await callback.answer()
         return
 
+    user_id = callback.from_user.id
     task_id = callback_data.task_id
     discount = callback_data.discount
 
     repo = UserRepo(session)
-    current_task = await repo.get_task_by_task_id(task_id)
+    current_task = await repo.get_task_by_task_id(user_id, task_id)
 
     card_text, _, _ = await render_item_card(
-        current_task.item_id, current_task.offer_idx, session, i18n, discount=discount
+        user_id,
+        current_task.item_id,
+        current_task.offer_idx,
+        session,
+        i18n,
+        discount=discount,
     )
 
     await callback.message.edit_text(
@@ -56,13 +62,14 @@ async def activate_task_discount(
         await callback.answer()
         return
 
+    user_id = callback.from_user.id
     task_id = callback_data.task_id
     discount = callback_data.discount
 
-    repo = UserRepo(session)
-    item_name = await repo.get_item_name_by_task_id(task_id, i18n.locale)
+    user_repo = UserRepo(session)
+    item_name = await user_repo.get_item_name_by_task_id(user_id, task_id, i18n.locale)
 
-    await repo.activate_discount(task_id, discount)
+    await user_repo.activate_discount(user_id, task_id, discount)
 
     await callback.message.edit_text(
         text=f"{i18n.get("activate_discount-placeholder")}\n___"

@@ -19,6 +19,9 @@ router = Router()
 async def process_item_searching(
     message: Message, state: FSMContext, session: AsyncSession, i18n: I18nContext
 ) -> None:
+    if not message.from_user:
+        return
+
     repo = ItemRepo(session)
     items = await repo.search_items(str(message.text))
 
@@ -36,7 +39,13 @@ async def process_item_searching(
     if len(items) == 1:
         target_item = items[0]
 
-        text, kb, _ = await render_item_card(target_item.id, 0, session, i18n)
+        text, kb, _ = await render_item_card(
+            message.from_user.id,
+            target_item.id,
+            0,
+            session,
+            i18n,
+        )
         await message.answer(
             text=f"{i18n.get("add_task-placeholder")}\n___" + "\n\n" + text,
             reply_markup=kb,
@@ -66,8 +75,9 @@ async def process_item_selection(
         await callback.answer()
         return
 
+    user_id = callback.from_user.id
     item_id = callback_data.item_id
-    text, kb, _ = await render_item_card(item_id, 0, session, i18n)
+    text, kb, _ = await render_item_card(user_id, item_id, 0, session, i18n)
 
     await callback.message.edit_text(
         text=f"{i18n.get("add_task-placeholder")}\n___" + "\n\n" + text,
@@ -89,8 +99,15 @@ async def navigate_recipe(
         await callback.answer()
         return
 
+    user_id = callback.from_user.id
+    item_id = callback_data.item_id
+
     text, kb, _ = await render_item_card(
-        callback_data.item_id, int(callback_data.idx), session, i18n
+        user_id,
+        item_id,
+        int(callback_data.idx),
+        session,
+        i18n,
     )
 
     try:

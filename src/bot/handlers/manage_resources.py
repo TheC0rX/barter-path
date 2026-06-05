@@ -28,18 +28,23 @@ async def process_resource_selection(
         await callback.answer()
         return
 
+    user_id = callback.from_user.id
     task_id = callback_data.task_id
     ing_id = callback_data.ing_id
 
     user_repo = UserRepo(session)
     item_repo = ItemRepo(session)
 
-    collected, discount_amount = await user_repo.get_resource_stats(task_id, ing_id)
+    collected, discount_amount = await user_repo.get_resource_stats(
+        user_id,
+        task_id,
+        ing_id,
+    )
     remains = max(0, discount_amount - collected)
 
     ingredient = await item_repo.get_item(ing_id)
     ing_name = ingredient.name_ru if i18n.locale == "ru" else ingredient.name_en
-    item_name = await user_repo.get_item_name_by_task_id(task_id, i18n.locale)
+    item_name = await user_repo.get_item_name_by_task_id(user_id, task_id, i18n.locale)
 
     icon = "✅" if remains == 0 else "⌛"
 
@@ -71,6 +76,9 @@ async def process_resource_selection(
 async def adding_resources(
     message: Message, state: FSMContext, session: AsyncSession, i18n: I18nContext
 ) -> None:
+    if not message.from_user:
+        return
+
     data = await state.get_data()
     task_id = data.get("task_id", 0)
     ing_id = data.get("ing_id", "")
@@ -127,7 +135,11 @@ async def adding_resources(
 
     ingredient = await item_repo.get_item(ing_id)
     ing_name = ingredient.name_ru if i18n.locale == "ru" else ingredient.name_en
-    item_name = await user_repo.get_item_name_by_task_id(task_id, i18n.locale)
+    item_name = await user_repo.get_item_name_by_task_id(
+        message.from_user.id,
+        task_id,
+        i18n.locale,
+    )
 
     await message.answer(
         text=f"{i18n.get("manage_resources-placeholder")}\n___"
@@ -158,6 +170,7 @@ async def reset_resources(
 
     await state.clear()
 
+    user_id = callback.from_user.id
     task_id = callback_data.task_id
     ing_id = callback_data.ing_id
 
@@ -165,7 +178,7 @@ async def reset_resources(
     item_repo = ItemRepo(session)
     ingredient = await item_repo.get_item(ing_id)
     ing_name = ingredient.name_ru if i18n.locale == "ru" else ingredient.name_en
-    item_name = await user_repo.get_item_name_by_task_id(task_id, i18n.locale)
+    item_name = await user_repo.get_item_name_by_task_id(user_id, task_id, i18n.locale)
 
     await callback.message.edit_text(
         text=f"{i18n.get("manage_resources-placeholder")}\n___"
