@@ -63,9 +63,14 @@ poetry install
 ### 3. Environment setup
 Copy `.env.example` to `.env` and fill in the required values.
 ```env
+DB_USER=DATABASE_USER
+DB_PASSWORD=DATABASE_PASSWORD
+DB_HOST=DATABASE_HOST
+DB_PORT=DATABASE_PORT
+DB_NAME=DATABASE_NAME
+
 BOT_TOKEN=BOT_TOKEN
 GITHUB_TOKEN=PAT_TOKEN
-DB_URL=postgresql+asyncpg://DB_USER:DB_PASSWORD@DB_HOST:DB_PORT/DB_NAME
 ```
 
 ### 4. Run database migrations
