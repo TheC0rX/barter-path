@@ -113,18 +113,19 @@ class UserRepo:
         result = await self.session.execute(stmt)
         rows = result.all()
 
-        discount_applied = 0
-        resources_dict = {}
+        if not rows:
+            return
 
-        for ing_id, recipe_amount, discount in rows:
-            discount_applied = discount
+        resources_dict = {}
+        task_discount = rows[0][2]
+
+        for ing_id, recipe_amount, _ in rows:
             min_amount = 0 if ing_id == "money" else 1
 
-            final_amount = max(min_amount, round(recipe_amount * (1 - discount / 100)))
+            final_amount = max(min_amount, round(recipe_amount * (1 - task_discount / 100)))
             resources_dict[ing_id] = final_amount
 
         snapshot_data = {
-            "discount_applied": discount_applied,
             "resources": resources_dict,
         }
 
