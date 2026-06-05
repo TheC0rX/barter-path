@@ -254,10 +254,57 @@ class Recipe(Base):
     )
 
 
+class ResourceActionType(enum.Enum):
+    ADD = "add"
+    RESET = "reset"
+
+
+class ResourceLog(Base):
+    __tablename__ = "resource_logs"
+
+    id: Mapped[int] = mapped_column(
+        primary_key=True,
+    )
+    user_id: Mapped[int] = mapped_column(
+        BIGINT,
+        ForeignKey("users.user_id", ondelete="CASCADE"),
+        index=True,
+    )
+    task_id: Mapped[int] = mapped_column(
+        INTEGER,
+        index=True,
+    )
+    ingredient_id: Mapped[str] = mapped_column(
+        VARCHAR(5),
+        index=True,
+    )
+
+    action_type: Mapped[ResourceActionType] = mapped_column(
+        Enum(ResourceActionType),
+        index=True,
+    )
+    delta_value: Mapped[int] = mapped_column(
+        INTEGER,
+        default=0,
+    )
+    old_amount: Mapped[int] = mapped_column(INTEGER)
+    new_amount: Mapped[int] = mapped_column(INTEGER)
+
+    created_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True),
+        server_default=func.now(),
+        index=True,
+    )
+
+
 class StalcraftVersion(Base):
     __tablename__ = "stalcraft_version"
 
-    id: Mapped[str] = mapped_column(VARCHAR(6), primary_key=True, default="latest")
+    id: Mapped[str] = mapped_column(
+        VARCHAR(6),
+        primary_key=True,
+        default="latest",
+    )
 
     version_sha: Mapped[str] = mapped_column(
         VARCHAR(40),
