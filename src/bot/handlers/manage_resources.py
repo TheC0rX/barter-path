@@ -35,17 +35,16 @@ async def process_resource_selection(
     item_repo = ItemRepo(session)
 
     collected, discount_amount = await user_repo.get_resource_stats(task_id, ing_id)
-    ing_remaining = max(0, discount_amount - collected)
+    remains = max(0, discount_amount - collected)
 
     ingredient = await item_repo.get_item(ing_id)
     ing_name = ingredient.name_ru if i18n.locale == "ru" else ingredient.name_en
     item_name = await user_repo.get_item_name_by_task_id(task_id, i18n.locale)
 
-    is_money = ingredient.id == "money"
-    icon = "💵" if is_money else "⌛"
+    icon = "✅" if remains == 0 else "⌛"
 
     await state.update_data(
-        task_id=task_id, ing_id=ing_id, remains=ing_remaining, collected=collected
+        task_id=task_id, ing_id=ing_id, remains=remains, collected=collected
     )
     await state.set_state(ResourceCalcStates.wait_for_amount)
 
@@ -61,8 +60,7 @@ async def process_resource_selection(
             collected_amount=collected,
             required_amount=discount_amount,
         )}\n"
-        + f"{i18n.get("item_card-remains", amount=ing_remaining)}"
-        + "\n\n"
+        + f"{i18n.get("item_card-remains", amount=remains) + "\n\n" if remains > 0 else "\n"}"
         + i18n.get("reset-description"),
         reply_markup=inline.get_resource_calc_kb(task_id, ing_id, i18n),
     )
