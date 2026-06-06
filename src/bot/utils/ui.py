@@ -3,7 +3,7 @@ from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.repo import UserRepo, ItemRepo
-from src.bot.keyboard import inline
+from src.bot.keyboards import inline
 
 
 def get_nubmer_emoji(number: int) -> str:

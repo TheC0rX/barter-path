@@ -5,10 +5,10 @@ from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.repo import UserRepo, ItemRepo
-from src.bot.keyboard import inline
+from src.bot.keyboards import inline
 from src.bot.utils.states import AddTaskStates
-from src.bot.keyboard.callback_data import AddTaskClick
-from src.bot.keyboard.callback_data import AddTaskAction
+from src.bot.keyboards.callback_data import AddTaskClick
+from src.bot.keyboards.callback_data import AddTaskAction
 
 from src.bot.utils.ui import render_item_card
 

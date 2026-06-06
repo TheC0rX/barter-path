@@ -4,8 +4,8 @@ from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.bot.utils.ui import render_item_card
-from src.bot.keyboard import inline
-from src.bot.keyboard.callback_data import DiscountClick, DiscountAction
+from src.bot.keyboards import inline
+from src.bot.keyboards.callback_data import DiscountClick, DiscountAction
 from src.db.repo import UserRepo
 
 router = Router()

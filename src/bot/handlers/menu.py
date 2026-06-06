@@ -4,9 +4,9 @@ from aiogram.fsm.context import FSMContext
 from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.bot.keyboard import inline
-from src.bot.keyboard.callback_data import MenuClick, MenuNav
-from src.bot.keyboard.callback_data import MenuAction
+from src.bot.keyboards import inline
+from src.bot.keyboards.callback_data import MenuClick, MenuNav
+from src.bot.keyboards.callback_data import MenuAction
 from src.bot.utils.ui import show_main_menu
 from src.bot.utils.states import AddTaskStates
 from src.db.repo import UserRepo, ItemRepo

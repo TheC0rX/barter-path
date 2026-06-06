@@ -2,7 +2,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram_i18n import I18nContext
 
-from src.bot.keyboard.callback_data import (
+from src.bot.keyboards.callback_data import (
     MenuClick,
     MenuNav,
     FinishTaskClick,
@@ -13,7 +13,7 @@ from src.bot.keyboard.callback_data import (
     ResourceCalc,
     LanguageClick,
 )
-from src.bot.keyboard.callback_data import (
+from src.bot.keyboards.callback_data import (
     MenuAction,
     DiscountAction,
     AddTaskAction,

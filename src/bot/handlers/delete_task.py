@@ -4,8 +4,8 @@ from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.repo import UserRepo
-from src.bot.keyboard import inline
-from src.bot.keyboard.callback_data import DeleteTaskClick
+from src.bot.keyboards import inline
+from src.bot.keyboards.callback_data import DeleteTaskClick
 
 router = Router()
 
