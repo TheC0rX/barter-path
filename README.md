@@ -1,9 +1,9 @@
 <div align="center">
 
-# Barter PATH
+# Barter Path
 [![Python](https://img.shields.io/badge/Python-1F2937?style=for-the-badge&logo=python&logoColor=FFFFFF)](https://www.python.org/)
 [![Aiogram](https://img.shields.io/badge/aiogram-1F2937?style=for-the-badge&logo=telegram&logoColor=FFFFFF)](https://aiogram.dev/)
-[![Aiogram-i18n](https://img.shields.io/badge/aiogram--i18n-1F2937?style=for-the-badge&logo=googletranslate&logoColor=FFFFFF)](https://github.com/aiogram/i18n)
+[![I18n](https://img.shields.io/badge/aiogram--i18n-1F2937?style=for-the-badge&logo=googletranslate&logoColor=FFFFFF)](https://github.com/aiogram/i18n)
 [![SqlAlchemy](https://img.shields.io/badge/SQLAlchemy-1F2937?style=for-the-badge&logo=sqlalchemy&logoColor=FFFFFF)](https://www.sqlalchemy.org/)
 [![PostgreSQL](https://img.shields.io/badge/Postgres-1F2937?style=for-the-badge&logo=postgresql&logoColor=FFFFFF)](https://www.postgresql.org/)
 [![Alembic](https://img.shields.io/badge/Alembic-1F2937?style=for-the-badge)](https://github.com/sqlalchemy/alembic)
@@ -20,32 +20,17 @@ An automated Stalcraft barter tracker providing real-time resource calculations,
 
 ## Project Structure
 ```text
-├── migrations/                # Alembic Migrations
-├── src/
-│   ├── bot/
-│   │   ├── handlers/          # Bot handlers
-│   │   ├── keyboard/          # Keyboads & callback factories
-│   │   │   ├── callback_data.py
-│   │   │   ├── inline.py
-│   │   ├── middlewares/       # DB & i18n middlewares
-│   │   │   ├── db.py
-│   │   │   ├── i18n.py
-│   │   ├── utils/             # States, UI helpers
-│   │   │   ├── states.py
-│   │   │   ├── ui.py
-│   │   ├── main.py            # Bot entry point
-│   ├── db/
-│   │   ├── base.py
-│   │   ├── models.py
-│   │   ├── repo.py
-│   ├── locales/               # Translations
-│   │   ├── ru/
-│   │   ├── en/
-│   ├── services/
-│   │   ├── stalcraft_api.py
-│   │   ├── updater.py
-│   ├── __main__.py            # Application launcher
-│   ├── config.py              # Environment config loader
+├── logs/                             # App logs
+├── migrations/                       # DB migrations (Alembic)
+├── src/                              # Source code
+│   ├── bot/                          # Telegram bot core (aiogram)
+│   ├── db/                           # Database module
+│   ├── locales/                      # Localization (en/ru)
+│   ├── services/                     # External APIs & background updating
+│   ├── config.py                     # Config loader
+│   └── __main__.py                   # Main entry point
+├── .env.example                      # Env template
+└── pyproject.toml                    # Dependencies
 ```
 
 ## Getting Started
