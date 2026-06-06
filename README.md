@@ -13,10 +13,11 @@ An automated Stalcraft barter tracker providing real-time resource calculations,
 </div>
 
 ## Features
-- 🤖 Telegram bot interface
-- 🛠️ Task management system
-- 📊 Real-time barter calculations
-- 🌍 Multi-language support (i18n)
+- 🤖 **Interactive Bot Control** — Easy navigation via inline keyboards.
+- 🎒 **Stalcraft Barter Tracker** — Add crafting goals (e.g., A-545) and track your progress.
+- 📊 **Dynamic Loot Logging** — Log successfully extracted resources to instantly recalculate what is left.
+- 🌍 **Multi-Language Support** — Full English and Russian localization via Fluent.
+
 
 ## Project Structure
 ```text
