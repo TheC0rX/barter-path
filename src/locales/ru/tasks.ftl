@@ -5,6 +5,12 @@ finish_task-confirmation =
 finish_task-finished =
     ✅ Задача была успешно завершена.
 
+finish_task-next_tasks =
+    🔔 Этот предмет участвует в создании других предметов.
+
+finish_task-next_tasks_list =
+    👇 Нажмите на предмет ниже, чтобы создать новую задачу.
+
 # --- ADDING TASK
 enter-item-name =
     📝 Введите название предмета, который желаете сделать.

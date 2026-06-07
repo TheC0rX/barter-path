@@ -5,6 +5,12 @@ finish_task-confirmation =
 finish_task-finished =
     ✅ The task has been successfully finished.
 
+finish_task-next_tasks =
+    🔔 This item is used to craft other items.
+
+finish_task-next_tasks_list =
+    👇 Click an item below to start a new task.
+
 # --- ADDING TASK
 enter-item-name =
     📝 Type an item name you want to craft.
