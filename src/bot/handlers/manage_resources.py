@@ -56,8 +56,6 @@ async def process_resource_selection(
     await callback.message.edit_text(
         text=f"{i18n.get("manage_resources-placeholder")} | {item_name}\n___"
         + "\n\n"
-        + i18n.get("type-resources")
-        + "\n\n"
         + f"{i18n.get("ing_card-selected_item", icon=ingredient.icon, ing_name=ing_name)}\n"
         + f"{i18n.get(
             "ing_card-ing_progress",
@@ -66,6 +64,7 @@ async def process_resource_selection(
             required_amount=discount_amount,
         )}\n"
         + f"{i18n.get("item_card-remains", amount=remains) + "\n\n" if remains > 0 else "\n"}"
+        + f"{i18n.get("type-resources") + "\n" if remains > 1 else ""}"
         + i18n.get("reset-description"),
         reply_markup=inline.get_resource_calc_kb(task_id, ing_id, i18n),
     )
