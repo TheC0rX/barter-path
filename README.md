@@ -33,7 +33,7 @@ An automated Stalcraft barter tracker providing real-time resource calculations,
 │   ├── config.py                     # Config loader
 │   └── __main__.py                   # Main entry point
 ├── .env.example                      # Env template
-└── poetry.lock                       # Frozen dependencies log
+├── poetry.lock                       # Frozen dependencies log
 └── pyproject.toml                    # Dependencies
 ```
 
