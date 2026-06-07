@@ -1,6 +1,6 @@
 <div align="center">
 
-# Barter Path
+# <img src="https://github.com/user-attachments/assets/94d05b4e-2eb3-4863-8a52-77a9954c6b86" width="38" height="38" align="center" style="vertical-align: middle; margin-right: 8px; border-radius: 6px;" alt="Barter Path Logo"> Barter Path
 
 [![Python](https://img.shields.io/badge/Python-1F2937?style=for-the-badge&logo=python&logoColor=FFFFFF)](https://www.python.org/)
 [![Aiogram](https://img.shields.io/badge/aiogram-1F2937?style=for-the-badge&logo=telegram&logoColor=FFFFFF)](https://aiogram.dev/)
