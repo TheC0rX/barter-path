@@ -48,14 +48,14 @@ def get_main_menu_kb(
         builder.button(
             text=i18n.get("btn-finish_task"),
             callback_data=MenuClick(
-                target=MenuAction.FINISH_TASK, task_id=current_task_id
+                target=MenuAction.FINISH_TASK, t_id=current_task_id
             ),
         )
 
     if has_tasks and total_tasks > 1:
         builder.button(
             text="⬅️",
-            callback_data=MenuNav(task_index=task_idx - 1),
+            callback_data=MenuNav(idx=task_idx - 1),
         )
         builder.button(
             text=f"{task_idx + 1}/{total_tasks}",
@@ -63,7 +63,7 @@ def get_main_menu_kb(
         )
         builder.button(
             text="➡️",
-            callback_data=MenuNav(task_index=task_idx + 1),
+            callback_data=MenuNav(idx=task_idx + 1),
         )
 
     builder.button(
@@ -75,19 +75,19 @@ def get_main_menu_kb(
         builder.button(
             text=i18n.get("btn-delete_task"),
             callback_data=MenuClick(
-                target=MenuAction.DELETE_TASK, task_id=current_task_id
+                target=MenuAction.DELETE_TASK, t_id=current_task_id
             ),
         )
         builder.button(
             text=i18n.get("btn-activate_discount"),
             callback_data=MenuClick(
-                target=MenuAction.ACTIVATE_DISCOUNT, task_id=current_task_id
+                target=MenuAction.ACTIVATE_DISCOUNT, t_id=current_task_id
             ),
         )
         builder.button(
             text=i18n.get("btn-manage_resources"),
             callback_data=MenuClick(
-                target=MenuAction.MANAGE_RESOURCES, task_id=current_task_id
+                target=MenuAction.MANAGE_RESOURCES, t_id=current_task_id
             ),
         )
 
@@ -117,7 +117,7 @@ def get_finish_task_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
 
     builder.button(
         text=i18n.get("btn-confirm"),
-        callback_data=FinishTaskClick(task_id=task_id),
+        callback_data=FinishTaskClick(t_id=task_id),
     )
 
     builder.adjust(1)
@@ -162,7 +162,7 @@ def get_card_nav_kb(
         callback_data=AddTaskClick(
             action=AddTaskAction.CONFIRM,
             item_id=item_id,
-            offer_idx=offer_idx,
+            o_idx=offer_idx,
             prev_id=prev_id,
         ),
     )
@@ -210,7 +210,7 @@ def get_delete_task_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
 
     builder.button(
         text=i18n.get("btn-confirm"),
-        callback_data=DeleteTaskClick(task_id=task_id),
+        callback_data=DeleteTaskClick(t_id=task_id),
     )
 
     builder.adjust(1)
@@ -225,7 +225,9 @@ def get_discount_offers_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMar
         builder.button(
             text=f"{d}%",
             callback_data=DiscountClick(
-                action=DiscountAction.OFFER, task_id=task_id, discount=d
+                action=DiscountAction.OFFER,
+                t_id=task_id,
+                dc=d,
             ),
         )
 
@@ -241,7 +243,9 @@ def get_activate_discount_kb(
     builder.button(
         text=i18n.get("btn-confirm"),
         callback_data=DiscountClick(
-            action=DiscountAction.CONFIRM, task_id=task_id, discount=discount
+            action=DiscountAction.CONFIRM,
+            t_id=task_id,
+            dc=discount,
         ),
     )
 
@@ -273,7 +277,7 @@ def get_resources_management_kb(
 
         builder.button(
             text=button_text,
-            callback_data=ResourceClick(task_id=task_id, ing_id=ing_item.id),
+            callback_data=ResourceClick(t_id=task_id, ing_id=ing_item.id),
         )
 
     builder.adjust(1)
@@ -288,7 +292,9 @@ def get_resource_calc_kb(
     builder.button(
         text=i18n.get("btn-reset"),
         callback_data=ResourceCalc(
-            action=ResourceCalcAction.RESET, task_id=task_id, ing_id=ing_id
+            action=ResourceCalcAction.RESET,
+            t_id=task_id,
+            ing_id=ing_id,
         ),
     )
 
@@ -305,9 +311,9 @@ def get_update_resources_kb(
         text=i18n.get("btn-confirm"),
         callback_data=ResourceCalc(
             action=ResourceCalcAction.CONFIRM,
-            task_id=task_id,
+            t_id=task_id,
             ing_id=ing_id,
-            value=value,
+            val=value,
         ),
     )
 
@@ -321,7 +327,7 @@ def get_settings_kb(i18n: I18nContext) -> InlineKeyboardMarkup:
     target_locale = "en" if i18n.locale == "ru" else "ru"
     builder.button(
         text=i18n.get("btn-switch_lang"),
-        callback_data=LanguageClick(locale=target_locale),
+        callback_data=LanguageClick(loc=target_locale),
     )
 
     builder.adjust(1)

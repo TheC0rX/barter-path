@@ -29,7 +29,7 @@ async def process_resource_selection(
         return
 
     user_id = callback.from_user.id
-    task_id = callback_data.task_id
+    task_id = callback_data.t_id
     ing_id = callback_data.ing_id
 
     user_repo = UserRepo(session)
@@ -170,7 +170,7 @@ async def reset_resources(
     await state.clear()
 
     user_id = callback.from_user.id
-    task_id = callback_data.task_id
+    task_id = callback_data.t_id
     ing_id = callback_data.ing_id
 
     user_repo = UserRepo(session)
@@ -202,9 +202,9 @@ async def update_resources(
         return
 
     user_id = callback.from_user.id
-    task_id = callback_data.task_id
+    task_id = callback_data.t_id
     ing_id = callback_data.ing_id
-    value = callback_data.value
+    value = callback_data.val
 
     user_repo = UserRepo(session)
 

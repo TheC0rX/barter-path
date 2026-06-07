@@ -142,7 +142,7 @@ async def add_user_task(
 
     user_id = callback.from_user.id
     item_id = callback_data.item_id
-    offer_idx = callback_data.offer_idx
+    offer_idx = callback_data.o_idx
     prev_id = callback_data.prev_id
 
     repo = UserRepo(session)

@@ -22,7 +22,7 @@ async def delete_user_task(
         return
 
     user_id = callback.from_user.id
-    task_id = callback_data.task_id
+    task_id = callback_data.t_id
 
     repo = UserRepo(session)
     await repo.abandon_task(user_id, task_id)

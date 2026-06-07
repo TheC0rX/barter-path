@@ -22,7 +22,7 @@ async def finish_user_task(
         return
 
     user_id = callback.from_user.id
-    task_id = callback_data.task_id
+    task_id = callback_data.t_id
 
     user_repo = UserRepo(session)
     item_repo = ItemRepo(session)

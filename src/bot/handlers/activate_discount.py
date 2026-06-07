@@ -23,8 +23,8 @@ async def process_discount_selection(
         return
 
     user_id = callback.from_user.id
-    task_id = callback_data.task_id
-    discount = callback_data.discount
+    task_id = callback_data.t_id
+    discount = callback_data.dc
 
     repo = UserRepo(session)
     current_task = await repo.get_task_by_task_id(user_id, task_id)
@@ -63,8 +63,8 @@ async def activate_task_discount(
         return
 
     user_id = callback.from_user.id
-    task_id = callback_data.task_id
-    discount = callback_data.discount
+    task_id = callback_data.t_id
+    discount = callback_data.dc
 
     user_repo = UserRepo(session)
     item_name = await user_repo.get_item_name_by_task_id(user_id, task_id, i18n.locale)

@@ -21,7 +21,7 @@ async def navigate_menu_tasks(
     session: AsyncSession,
     i18n: I18nContext,
 ):
-    await show_main_menu(callback, session, i18n, task_idx=callback_data.task_index)
+    await show_main_menu(callback, session, i18n, task_idx=callback_data.idx)
 
 
 @router.callback_query(MenuClick.filter(F.target == MenuAction.MENU))
@@ -45,7 +45,7 @@ async def open_finish_task(
         return
 
     user_id = callback.from_user.id
-    task_id = callback_data.task_id
+    task_id = callback_data.t_id
 
     user_repo = UserRepo(session)
     item_name = await user_repo.get_item_name_by_task_id(user_id, task_id, i18n.locale)
@@ -101,7 +101,7 @@ async def open_delete_task(
         return
 
     user_id = callback.from_user.id
-    task_id = callback_data.task_id
+    task_id = callback_data.t_id
 
     user_repo = UserRepo(session)
     item_name = await user_repo.get_item_name_by_task_id(user_id, task_id, i18n.locale)
@@ -123,7 +123,7 @@ async def open_activate_discount(
         await callback.answer()
         return
 
-    task_id = callback_data.task_id
+    task_id = callback_data.t_id
 
     await callback.message.edit_text(
         text=f"{i18n.get("activate_discount-placeholder")}\n___"
@@ -146,7 +146,7 @@ async def open_manage_resources(
         return
 
     user_id = callback.from_user.id
-    task_id = callback_data.task_id
+    task_id = callback_data.t_id
 
     user_repo = UserRepo(session)
     item_repo = ItemRepo(session)

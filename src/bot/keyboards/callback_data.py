@@ -4,76 +4,76 @@ from aiogram.filters.callback_data import CallbackData
 
 # --- ACTIONS
 class MenuAction(StrEnum):
-    MENU = "menu"
-    FINISH_TASK = "finish_task"
-    ADD_TASK = "add_task"
-    DELETE_TASK = "delete_task"
-    ACTIVATE_DISCOUNT = "discount"
-    MANAGE_RESOURCES = "resources"
-    SETTINGS = "settings"
+    MENU = "m"
+    FINISH_TASK = "ft"
+    ADD_TASK = "at"
+    DELETE_TASK = "dt"
+    ACTIVATE_DISCOUNT = "dc"
+    MANAGE_RESOURCES = "rs"
+    SETTINGS = "st"
 
 
 class DiscountAction(StrEnum):
-    OFFER = "offer"
-    CONFIRM = "confirm"
+    OFFER = "o"
+    CONFIRM = "c"
 
 
 class AddTaskAction(StrEnum):
-    CONFIRM = "confirm"
-    SEARCH = "search"
-    NAVIGATION = "nav"
+    CONFIRM = "c"
+    SEARCH = "s"
+    NAVIGATION = "n"
 
 
 class ResourceCalcAction(StrEnum):
-    ADD = "add"
-    RESET = "reset"
-    CONFIRM = "confirm"
+    ADD = "a"
+    RESET = "r"
+    CONFIRM = "c"
 
 
 # --- MENU
-class MenuClick(CallbackData, prefix="menu"):
+class MenuClick(CallbackData, prefix="mn"):
     target: MenuAction
-    task_id: int = 0
+    t_id: int = 0
 
 
-class MenuNav(CallbackData, prefix="menu_nav"):
-    task_index: int
+class MenuNav(CallbackData, prefix="mn_nv"):
+    idx: int
 
 
-class FinishTaskClick(CallbackData, prefix="finish_task"):
-    task_id: int
+class FinishTaskClick(CallbackData, prefix="fn_tk"):
+    t_id: int
 
 
-class AddTaskClick(CallbackData, prefix="add_task"):
+class AddTaskClick(CallbackData, prefix="ad_tk"):
     action: AddTaskAction
     item_id: str
-    offer_idx: int = 0
+    o_idx: int = 0
     idx: int = 0
     prev_id: str = ""
 
 
-class DeleteTaskClick(CallbackData, prefix="delete_task"):
-    task_id: int
+class DeleteTaskClick(CallbackData, prefix="dl_tk"):
+    t_id: int
 
 
-class DiscountClick(CallbackData, prefix="discount"):
+class DiscountClick(CallbackData, prefix="ds_tk"):
     action: DiscountAction
-    task_id: int
-    discount: int
+    t_id: int
+    dc: int
 
 
-class ResourceClick(CallbackData, prefix="resource"):
-    task_id: int
+class ResourceClick(CallbackData, prefix="rsc"):
+    t_id: int
     ing_id: str
 
 
-class ResourceCalc(CallbackData, prefix="res_calc"):
+class ResourceCalc(CallbackData, prefix="rcc"):
     action: ResourceCalcAction
-    task_id: int
+    t_id: int
     ing_id: str
-    value: int = 0
+    val: int = 0
 
 
 # --- SETTINGS
-class LanguageClick(CallbackData, prefix="lang"):
-    locale: str
+class LanguageClick(CallbackData, prefix="lng"):
+    loc: str

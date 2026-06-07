@@ -16,7 +16,7 @@ async def change_language(
         await callback.answer()
         return
 
-    await i18n.set_locale(callback_data.locale)
+    await i18n.set_locale(callback_data.loc)
 
     await callback.message.edit_text(
         text=f"{i18n.get("settings-placeholder")}\n___"
