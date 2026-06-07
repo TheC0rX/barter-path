@@ -31,6 +31,7 @@ async def render_item_card(
     i18n: I18nContext,
     discount: int = 0,
     task_id: int | None = None,
+    prev_id: str = "",
 ):
     item_repo = ItemRepo(session)
     user_repo = UserRepo(session)
@@ -104,7 +105,7 @@ async def render_item_card(
     if task_id:
         return text, None, is_finished
 
-    kb = inline.get_card_nav_kb(offer_idx, total_offers, item_id, i18n)
+    kb = inline.get_card_nav_kb(offer_idx, total_offers, item_id, i18n, prev_id=prev_id)
     return text, kb, False
 
 

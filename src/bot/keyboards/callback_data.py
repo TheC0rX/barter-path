@@ -49,6 +49,7 @@ class AddTaskClick(CallbackData, prefix="add_task"):
     item_id: str
     offer_idx: int = 0
     idx: int = 0
+    prev_id: str = ""
 
 
 class DeleteTaskClick(CallbackData, prefix="delete_task"):

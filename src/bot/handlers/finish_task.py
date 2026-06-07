@@ -33,7 +33,7 @@ async def finish_user_task(
     next_items = await item_repo.get_next_craft_items(current_task.item_id)
 
     if next_items:
-        kb = inline.get_found_items_kb(next_items, i18n)
+        kb = inline.get_found_items_kb(next_items, i18n, prev_id=current_task.item_id)
     else:
         kb = inline.get_back_button(i18n)
 

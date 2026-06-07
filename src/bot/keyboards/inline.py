@@ -128,14 +128,20 @@ def get_back_button(i18n: I18nContext) -> InlineKeyboardMarkup:
     return add_back_button(InlineKeyboardBuilder(), i18n)
 
 
-def get_found_items_kb(items, i18n: I18nContext) -> InlineKeyboardMarkup:
+def get_found_items_kb(
+    items,
+    i18n: I18nContext,
+    prev_id: str = "",
+) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
     for item in items:
         display_name = item.name_ru if i18n.locale == "ru" else item.name_en
         builder.button(
             text=display_name,
-            callback_data=AddTaskClick(action=AddTaskAction.SEARCH, item_id=item.id),
+            callback_data=AddTaskClick(
+                action=AddTaskAction.SEARCH, item_id=item.id, prev_id=prev_id
+            ),
         )
 
     builder.adjust(1)
@@ -147,13 +153,17 @@ def get_card_nav_kb(
     total_offers: int,
     item_id: str,
     i18n: I18nContext,
+    prev_id: str = "",
 ) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
     builder.button(
         text=i18n.get("btn-confirm"),
         callback_data=AddTaskClick(
-            action=AddTaskAction.CONFIRM, item_id=item_id, offer_idx=offer_idx
+            action=AddTaskAction.CONFIRM,
+            item_id=item_id,
+            offer_idx=offer_idx,
+            prev_id=prev_id,
         ),
     )
 
@@ -163,7 +173,10 @@ def get_card_nav_kb(
         builder.button(
             text="⬅️",
             callback_data=AddTaskClick(
-                action=AddTaskAction.NAVIGATION, item_id=item_id, idx=prev_idx
+                action=AddTaskAction.NAVIGATION,
+                item_id=item_id,
+                idx=prev_idx,
+                prev_id=prev_id,
             ),
         )
         builder.button(
@@ -173,7 +186,10 @@ def get_card_nav_kb(
         builder.button(
             text="➡️",
             callback_data=AddTaskClick(
-                action=AddTaskAction.NAVIGATION, item_id=item_id, idx=next_idx
+                action=AddTaskAction.NAVIGATION,
+                item_id=item_id,
+                idx=next_idx,
+                prev_id=prev_id,
             ),
         )
 
@@ -182,7 +198,11 @@ def get_card_nav_kb(
     else:
         builder.adjust(1)
 
-    return add_back_button(builder, i18n, target=MenuAction.ADD_TASK)
+    return add_back_button(
+        builder,
+        i18n,
+        target=MenuAction.MENU if prev_id else MenuAction.ADD_TASK,
+    )
 
 
 def get_delete_task_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:

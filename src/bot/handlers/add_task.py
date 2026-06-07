@@ -77,7 +77,14 @@ async def process_item_selection(
 
     user_id = callback.from_user.id
     item_id = callback_data.item_id
-    text, kb, _ = await render_item_card(user_id, item_id, 0, session, i18n)
+    text, kb, _ = await render_item_card(
+        user_id,
+        item_id,
+        0,
+        session,
+        i18n,
+        prev_id=callback_data.prev_id,
+    )
 
     await callback.message.edit_text(
         text=f"{i18n.get("add_task-placeholder")}\n___" + "\n\n" + text,
@@ -108,6 +115,7 @@ async def navigate_recipe(
         int(callback_data.idx),
         session,
         i18n,
+        prev_id=callback_data.prev_id,
     )
 
     try:
@@ -132,11 +140,13 @@ async def add_user_task(
         await callback.answer()
         return
 
+    user_id = callback.from_user.id
     item_id = callback_data.item_id
     offer_idx = callback_data.offer_idx
+    prev_id = callback_data.prev_id
 
     repo = UserRepo(session)
-    is_task_exist = await repo.check_task_exists(callback.from_user.id, item_id)
+    is_task_exist = await repo.check_task_exists(user_id, item_id)
 
     if is_task_exist:
         await callback.message.edit_text(
@@ -147,9 +157,17 @@ async def add_user_task(
         )
         return
 
-    await repo.add_task(
-        user_id=callback.from_user.id, item_id=item_id, offer_idx=int(offer_idx)
+    new_task = await repo.add_task(
+        user_id=user_id, item_id=item_id, offer_idx=int(offer_idx)
     )
+    new_task_id = new_task.id
+    if prev_id:
+        await repo.add_resource_amount(
+            user_id,
+            new_task_id,
+            prev_id,
+            delta_value=1,
+        )
 
     await callback.message.edit_text(
         text=f"{i18n.get("add_task-placeholder")}\n___"
