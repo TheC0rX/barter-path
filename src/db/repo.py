@@ -413,6 +413,19 @@ class ItemRepo:
 
         return offers_data
 
+    async def get_next_craft_items(self, item_id: str) -> list[Item]:
+        stmt = (
+            select(Item)
+            .join(Recipe, Recipe.item_id == Item.id)
+            .where(Recipe.ingredient_id == item_id)
+            .options(selectinload(Item.recipe_results))
+            .distinct()
+            .limit(5)
+        )
+
+        result = await self.session.execute(stmt)
+        return list(result.scalars().all())
+
 
 class StalcraftRepo:
     def __init__(self, session: AsyncSession):
