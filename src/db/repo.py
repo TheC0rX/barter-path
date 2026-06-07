@@ -90,7 +90,7 @@ class UserRepo:
         result = await self.session.execute(stmt)
         return result.scalars().all()
 
-    async def add_task(self, user_id: int, item_id: str, offer_idx: int):
+    async def add_task(self, user_id: int, item_id: str, offer_idx: int) -> UserTask:
         new_task = UserTask(user_id=user_id, item_id=item_id, offer_idx=offer_idx)
         self.session.add(new_task)
         await self.session.flush()
@@ -112,6 +112,8 @@ class UserRepo:
             self.session.add(progress)
 
         await self.session.commit()
+
+        return new_task
 
     async def complete_task(self, user_id: int, task_id: int) -> None:
         stmt = (
