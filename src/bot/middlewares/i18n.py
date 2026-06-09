@@ -14,12 +14,20 @@ class UserLocaleManager(BaseManager):
         self.locale_cache: Any = TTLCache(maxsize=20_000, ttl=3600)
 
     async def get_locale(self, event_from_user: User) -> str:
+        if not event_from_user:
+            return self.default_locale
+
         user_id = event_from_user.id
-
         if user_id in self.locale_cache:
-            return str(self.locale_cache[user_id])
+            return self.locale_cache[user_id]
 
-        user_lang = event_from_user.language_code or "en"
+        async with async_session_maker() as session:
+            user_repo = UserRepo(session)
+            db_locale = await user_repo.get_user_locale(user_id)
+
+        user_lang = (
+            db_locale or event_from_user.language_code or str(self.default_locale)
+        )
 
         self.locale_cache[user_id] = user_lang
         return user_lang

@@ -31,6 +31,12 @@ class UserRepo:
         await self.session.execute(stmt)
         await self.session.commit()
 
+    async def get_user_locale(self, user_id: int) -> str | None:
+        stmt = select(User.locale).where(User.user_id == user_id)
+
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()
+
     async def update_user_locale(self, user_id: int, locale: str) -> None:
         stmt = update(User).where(User.user_id == user_id).values(locale=locale)
         await self.session.execute(stmt)
