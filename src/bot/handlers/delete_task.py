@@ -4,7 +4,7 @@ from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.repo import UserRepo
-from src.bot.keyboards import inline
+from src.bot.utils.ui import show_main_menu
 from src.bot.keyboards.callback_data import DeleteTaskClick
 
 router = Router()
@@ -26,11 +26,9 @@ async def delete_user_task(
 
     repo = UserRepo(session)
     await repo.abandon_task(user_id, task_id)
-
-    await callback.message.edit_text(
-        text=f"{i18n.get("delete_task-placeholder")}\n___"
-        + "\n\n"
-        + i18n.get("delete_task-deleted"),
-        reply_markup=inline.get_back_button(i18n),
+    await callback.answer(
+        text=i18n.get("delete_task-deleted"),
+        show_alert=False,
     )
-    await callback.answer()
+
+    await show_main_menu(callback, session, i18n)

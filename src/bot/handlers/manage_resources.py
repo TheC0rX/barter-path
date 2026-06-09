@@ -5,6 +5,7 @@ from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.bot.keyboards import inline
+from src.bot.utils.ui import show_main_menu
 from src.bot.utils.states import ResourceCalcStates
 from src.bot.keyboards.callback_data import (
     ResourceClick,
@@ -213,10 +214,9 @@ async def update_resources(
     else:
         await user_repo.add_resource_amount(user_id, task_id, ing_id, value)
 
-    await callback.message.edit_text(
-        text=f"{i18n.get("manage_resources-placeholder")}\n___"
-        + "\n\n"
-        + i18n.get("update_resources-updated"),
-        reply_markup=inline.get_back_button(i18n),
+    await callback.answer(
+        text=i18n.get("update_resources-updated"),
+        show_alert=False,
     )
-    await callback.answer()
+
+    await show_main_menu(callback, session, i18n)

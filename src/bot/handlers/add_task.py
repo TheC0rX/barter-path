@@ -10,7 +10,7 @@ from src.bot.utils.states import AddTaskStates
 from src.bot.keyboards.callback_data import AddTaskClick
 from src.bot.keyboards.callback_data import AddTaskAction
 
-from src.bot.utils.ui import render_item_card
+from src.bot.utils.ui import render_item_card, show_main_menu
 
 router = Router()
 
@@ -169,12 +169,9 @@ async def add_user_task(
             delta_value=1,
         )
 
-    await callback.message.edit_text(
-        text=f"{i18n.get("add_task-placeholder")}\n___"
-        + "\n\n"
-        + i18n.get("add_task-created")
-        + "\n"
-        + i18n.get("add_task-good_luck"),
-        reply_markup=inline.get_back_button(i18n),
+    await callback.answer(
+        text=f"{i18n.get("add_task-created")}\n{i18n.get("add_task-good_luck")}",
+        show_alert=False,
     )
-    await callback.answer()
+
+    await show_main_menu(callback, session, i18n)
