@@ -26,11 +26,16 @@ async def navigate_menu_tasks(
 
 @router.callback_query(MenuClick.filter(F.target == MenuAction.MENU))
 async def open_main_menu(
-    callback: CallbackQuery, state: FSMContext, session: AsyncSession, i18n: I18nContext
+    callback: CallbackQuery,
+    callback_data: MenuClick,
+    state: FSMContext,
+    session: AsyncSession,
+    i18n: I18nContext,
 ) -> None:
     await state.clear()
 
-    await show_main_menu(callback, session, i18n)
+    task_id = callback_data.t_id
+    await show_main_menu(callback, session, i18n, task_id=task_id)
 
 
 @router.callback_query(MenuClick.filter(F.target == MenuAction.FINISH_TASK))
@@ -177,15 +182,21 @@ async def open_manage_resources(
 
 
 @router.callback_query(MenuClick.filter(F.target == MenuAction.SETTINGS))
-async def open_settings(callback: CallbackQuery, i18n: I18nContext) -> None:
+async def open_settings(
+    callback: CallbackQuery,
+    callback_data: MenuClick,
+    i18n: I18nContext,
+) -> None:
     if not isinstance(callback.message, Message):
         await callback.answer()
         return
+
+    task_id = callback_data.t_id
 
     await callback.message.edit_text(
         text=f"{i18n.get("settings-placeholder")}\n___"
         + "\n\n"
         + i18n.get("settings-description-text"),
-        reply_markup=inline.get_settings_kb(i18n),
+        reply_markup=inline.get_settings_kb(task_id, i18n),
     )
     await callback.answer()

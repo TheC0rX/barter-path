@@ -219,4 +219,4 @@ async def update_resources(
         show_alert=False,
     )
 
-    await show_main_menu(callback, session, i18n)
+    await show_main_menu(callback, session, i18n, task_id=task_id)

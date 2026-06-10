@@ -20,10 +20,12 @@ async def change_language(
         await callback.answer()
         return
 
+    task_id = callback_data.t_id
+
     await i18n.set_locale(callback_data.loc)
     await callback.answer(
         text=i18n.get("settings-language_changed"),
         show_alert=False,
     )
 
-    await show_main_menu(callback, session, i18n)
+    await show_main_menu(callback, session, i18n, task_id=task_id)

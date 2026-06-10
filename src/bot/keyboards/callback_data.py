@@ -76,4 +76,5 @@ class ResourceCalc(CallbackData, prefix="rcc"):
 
 # --- SETTINGS
 class LanguageClick(CallbackData, prefix="lng"):
+    t_id: int
     loc: str
