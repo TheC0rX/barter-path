@@ -95,7 +95,7 @@ def get_main_menu_kb(
 
     builder.button(
         text=i18n.get("btn-settings"),
-        callback_data=MenuClick(target=MenuAction.SETTINGS),
+        callback_data=MenuClick(target=MenuAction.SETTINGS, t_id=current_task_id),
     )
 
     if has_tasks and total_tasks > 1:
@@ -123,7 +123,7 @@ def get_finish_task_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
     )
 
     builder.adjust(1)
-    return add_back_button(builder, i18n)
+    return add_back_button(builder, i18n, task_id=task_id)
 
 
 def get_back_button(i18n: I18nContext) -> InlineKeyboardMarkup:
@@ -216,7 +216,7 @@ def get_delete_task_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
     )
 
     builder.adjust(1)
-    return add_back_button(builder, i18n)
+    return add_back_button(builder, i18n, task_id=task_id)
 
 
 def get_discount_offers_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
@@ -234,7 +234,7 @@ def get_discount_offers_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMar
         )
 
     builder.adjust(3)
-    return add_back_button(builder, i18n)
+    return add_back_button(builder, i18n, task_id=task_id)
 
 
 def get_activate_discount_kb(
@@ -290,7 +290,7 @@ def get_resources_management_kb(
         )
 
     builder.adjust(1)
-    return add_back_button(builder, i18n)
+    return add_back_button(builder, i18n, task_id=task_id)
 
 
 def get_resource_calc_kb(
@@ -340,14 +340,14 @@ def get_update_resources_kb(
     )
 
 
-def get_settings_kb(i18n: I18nContext) -> InlineKeyboardMarkup:
+def get_settings_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
     target_locale = "en" if i18n.locale == "ru" else "ru"
     builder.button(
         text=i18n.get("btn-switch_lang"),
-        callback_data=LanguageClick(loc=target_locale),
+        callback_data=LanguageClick(t_id=task_id, loc=target_locale),
     )
 
     builder.adjust(1)
-    return add_back_button(builder, i18n)
+    return add_back_button(builder, i18n, task_id=task_id)
