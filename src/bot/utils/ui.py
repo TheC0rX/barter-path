@@ -113,7 +113,8 @@ async def show_main_menu(
     event: Message | CallbackQuery,
     session: AsyncSession,
     i18n: I18nContext,
-    task_idx: int = 0,
+    task_idx: int | None = None,
+    task_id: int | None = None,
 ) -> None:
     if not event.from_user:
         return
@@ -125,10 +126,20 @@ async def show_main_menu(
     if not tasks:
         text = f"{i18n.get("main_menu-placeholder")}\n___\n\n{i18n.get("no-tasks")}"
         kb = inline.get_main_menu_kb(i18n, has_tasks=False)
-    else:
-        current_task_idx = task_idx % len(tasks)
-        current_task = tasks[current_task_idx]
 
+    else:
+        if task_id is not None:
+            current_task_idx = 0
+            for idx, task in enumerate(tasks):
+                if task.id == task_id:
+                    current_task_idx = idx
+                    break
+        elif task_idx is not None:
+            current_task_idx = task_idx % len(tasks)
+        else:
+            current_task_idx = 0
+
+        current_task = tasks[current_task_idx]
         card_text, _, is_finished = await render_item_card(
             user_id,
             current_task.item_id,
@@ -139,7 +150,7 @@ async def show_main_menu(
             current_task.id,
         )
 
-        text = f"{i18n.get("main_menu-placeholder")}\n___\n\n" f"{card_text}"
+        text = f"{i18n.get("main_menu-placeholder")}\n___\n\n{card_text}"
         kb = inline.get_main_menu_kb(
             i18n=i18n,
             has_tasks=True,
