@@ -28,6 +28,23 @@ async def finish_user_task(
     user_repo = UserRepo(session)
     item_repo = ItemRepo(session)
 
+    tasks = await user_repo.get_user_tasks(user_id)
+    total_tasks = len(tasks)
+
+    target_idx = None
+    for idx, task in enumerate(tasks):
+        if task.id == task_id:
+            target_idx = idx
+            break
+
+    if target_idx is not None:
+        if target_idx == total_tasks - 1 and total_tasks > 1:
+            task_idx = target_idx - 1
+        else:
+            task_idx = target_idx
+    else:
+        task_idx = 0
+
     await user_repo.complete_task(user_id, task_id)
     await callback.answer(
         text=i18n.get("finish_task-finished"),
@@ -49,4 +66,4 @@ async def finish_user_task(
             ),
         )
     else:
-        await show_main_menu(callback, session, i18n)
+        await show_main_menu(callback, session, i18n, task_idx=task_idx)

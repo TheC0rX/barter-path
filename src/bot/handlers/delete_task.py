@@ -23,12 +23,29 @@ async def delete_user_task(
 
     user_id = callback.from_user.id
     task_id = callback_data.t_id
+    user_repo = UserRepo(session)
 
-    repo = UserRepo(session)
-    await repo.abandon_task(user_id, task_id)
+    tasks = await user_repo.get_user_tasks(user_id)
+    total_tasks = len(tasks)
+
+    target_idx = None
+    for idx, task in enumerate(tasks):
+        if task.id == task_id:
+            target_idx = idx
+            break
+
+    if target_idx is not None:
+        if target_idx == total_tasks - 1 and total_tasks > 1:
+            task_idx = target_idx - 1
+        else:
+            task_idx = target_idx
+    else:
+        task_idx = 0
+
+    await user_repo.abandon_task(user_id, task_id)
     await callback.answer(
         text=i18n.get("delete_task-deleted"),
         show_alert=False,
     )
 
-    await show_main_menu(callback, session, i18n)
+    await show_main_menu(callback, session, i18n, task_idx=task_idx)
