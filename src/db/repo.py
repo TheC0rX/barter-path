@@ -22,6 +22,14 @@ class UserRepo:
     def __init__(self, session: AsyncSession):
         self.session = session
 
+    async def get_task_index(self, user_id: int, task_id: int) -> int:
+        tasks = await self.get_user_tasks(user_id)
+
+        for idx, task in enumerate(tasks):
+            if task.id == task_id:
+                return idx
+        return 0
+
     async def add_user(self, user_id: int, locale: str) -> None:
         stmt = (
             insert(User)
