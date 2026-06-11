@@ -23,9 +23,9 @@ from src.bot.keyboards.callback_data import (
 
 def add_back_button(
     builder: InlineKeyboardBuilder,
+    task_id: int,
     i18n: I18nContext,
     target: MenuAction = MenuAction.MENU,
-    task_id: int = 0,
 ) -> InlineKeyboardMarkup:
     builder.row(
         InlineKeyboardButton(
@@ -123,11 +123,11 @@ def get_finish_task_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
     )
 
     builder.adjust(1)
-    return add_back_button(builder, i18n, task_id=task_id)
+    return add_back_button(builder, task_id, i18n)
 
 
 def get_back_button(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
-    return add_back_button(InlineKeyboardBuilder(), i18n, task_id=task_id)
+    return add_back_button(InlineKeyboardBuilder(), task_id, i18n)
 
 
 def get_found_items_kb(
@@ -151,7 +151,7 @@ def get_found_items_kb(
         )
 
     builder.adjust(1)
-    return add_back_button(builder, i18n, task_id=task_id)
+    return add_back_button(builder, task_id, i18n)
 
 
 def get_card_nav_kb(
@@ -210,9 +210,9 @@ def get_card_nav_kb(
 
     return add_back_button(
         builder,
+        task_id,
         i18n,
         target=MenuAction.MENU if prev_id else MenuAction.ADD_TASK,
-        task_id=task_id,
     )
 
 
@@ -225,7 +225,7 @@ def get_delete_task_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
     )
 
     builder.adjust(1)
-    return add_back_button(builder, i18n, task_id=task_id)
+    return add_back_button(builder, task_id, i18n)
 
 
 def get_discount_offers_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
@@ -243,7 +243,7 @@ def get_discount_offers_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMar
         )
 
     builder.adjust(3)
-    return add_back_button(builder, i18n, task_id=task_id)
+    return add_back_button(builder, task_id, i18n)
 
 
 def get_activate_discount_kb(
@@ -265,9 +265,9 @@ def get_activate_discount_kb(
     builder.adjust(1)
     return add_back_button(
         builder,
+        task_id,
         i18n,
         target=MenuAction.ACTIVATE_DISCOUNT,
-        task_id=task_id,
     )
 
 
@@ -299,7 +299,7 @@ def get_resources_management_kb(
         )
 
     builder.adjust(1)
-    return add_back_button(builder, i18n, task_id=task_id)
+    return add_back_button(builder, task_id, i18n)
 
 
 def get_resource_calc_kb(
@@ -319,9 +319,9 @@ def get_resource_calc_kb(
     builder.adjust(1)
     return add_back_button(
         builder,
+        task_id,
         i18n,
         target=MenuAction.MANAGE_RESOURCES,
-        task_id=task_id,
     )
 
 
@@ -343,9 +343,9 @@ def get_update_resources_kb(
     builder.adjust(1)
     return add_back_button(
         builder,
+        task_id,
         i18n,
         target=MenuAction.MANAGE_RESOURCES,
-        task_id=task_id,
     )
 
 
@@ -359,4 +359,4 @@ def get_settings_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
     )
 
     builder.adjust(1)
-    return add_back_button(builder, i18n, task_id=task_id)
+    return add_back_button(builder, task_id, i18n)
