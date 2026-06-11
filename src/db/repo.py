@@ -22,14 +22,6 @@ class UserRepo:
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    async def get_task_index(self, user_id: int, task_id: int) -> int:
-        tasks = await self.get_user_tasks(user_id)
-
-        for idx, task in enumerate(tasks):
-            if task.id == task_id:
-                return idx
-        return 0
-
     async def add_user(self, user_id: int, locale: str) -> None:
         stmt = (
             insert(User)
@@ -68,19 +60,6 @@ class UserRepo:
             UserTask.user_id == user_id,
             UserTask.item_id == item_id,
             UserTask.status == TaskStatus.IN_PROGRESS,
-        )
-        result = await self.session.execute(stmt)
-
-        return result.scalar_one_or_none() is not None
-
-    async def has_tasks(self, user_id: int) -> bool:
-        stmt = (
-            select(UserTask)
-            .where(
-                UserTask.user_id == user_id,
-                UserTask.status == TaskStatus.IN_PROGRESS,
-            )
-            .limit(1)
         )
         result = await self.session.execute(stmt)
 
