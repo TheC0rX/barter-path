@@ -70,7 +70,7 @@ def get_main_menu_kb(
 
     builder.button(
         text=i18n.get("btn-add_task"),
-        callback_data=MenuClick(target=MenuAction.ADD_TASK),
+        callback_data=MenuClick(target=MenuAction.ADD_TASK, t_id=current_task_id),
     )
 
     if has_tasks:
@@ -126,11 +126,12 @@ def get_finish_task_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
     return add_back_button(builder, i18n, task_id=task_id)
 
 
-def get_back_button(i18n: I18nContext) -> InlineKeyboardMarkup:
-    return add_back_button(InlineKeyboardBuilder(), i18n)
+def get_back_button(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
+    return add_back_button(InlineKeyboardBuilder(), i18n, task_id=task_id)
 
 
 def get_found_items_kb(
+    task_id: int,
     items,
     i18n: I18nContext,
     prev_id: str = "",
@@ -142,15 +143,19 @@ def get_found_items_kb(
         builder.button(
             text=display_name,
             callback_data=AddTaskClick(
-                action=AddTaskAction.SEARCH, item_id=item.id, prev_id=prev_id
+                action=AddTaskAction.SEARCH,
+                t_id=task_id,
+                item_id=item.id,
+                prev_id=prev_id,
             ),
         )
 
     builder.adjust(1)
-    return add_back_button(builder, i18n)
+    return add_back_button(builder, i18n, task_id=task_id)
 
 
 def get_card_nav_kb(
+    task_id: int,
     offer_idx: int,
     total_offers: int,
     item_id: str,
@@ -163,6 +168,7 @@ def get_card_nav_kb(
         text=i18n.get("btn-confirm"),
         callback_data=AddTaskClick(
             action=AddTaskAction.CONFIRM,
+            t_id=task_id,
             item_id=item_id,
             o_idx=offer_idx,
             prev_id=prev_id,
@@ -176,6 +182,7 @@ def get_card_nav_kb(
             text="⬅️",
             callback_data=AddTaskClick(
                 action=AddTaskAction.NAVIGATION,
+                t_id=task_id,
                 item_id=item_id,
                 idx=prev_idx,
                 prev_id=prev_id,
@@ -189,6 +196,7 @@ def get_card_nav_kb(
             text="➡️",
             callback_data=AddTaskClick(
                 action=AddTaskAction.NAVIGATION,
+                t_id=task_id,
                 item_id=item_id,
                 idx=next_idx,
                 prev_id=prev_id,
@@ -204,6 +212,7 @@ def get_card_nav_kb(
         builder,
         i18n,
         target=MenuAction.MENU if prev_id else MenuAction.ADD_TASK,
+        task_id=task_id,
     )
 
 

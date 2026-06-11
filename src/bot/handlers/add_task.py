@@ -22,6 +22,9 @@ async def process_item_searching(
     if not message.from_user:
         return
 
+    data = await state.get_data()
+    task_id = data.get("task_id", 0)
+
     repo = ItemRepo(session)
     items = await repo.search_items(str(message.text))
 
@@ -32,7 +35,7 @@ async def process_item_searching(
             + i18n.get("search-empty")
             + "\n"
             + i18n.get("enter-item-name-again"),
-            reply_markup=inline.get_back_button(i18n),
+            reply_markup=inline.get_back_button(task_id, i18n),
         )
         return
 
@@ -45,6 +48,7 @@ async def process_item_searching(
             0,
             session,
             i18n,
+            task_id=task_id,
         )
         await message.answer(
             text=f"{i18n.get("add_task-placeholder")}\n___" + "\n\n" + text,
@@ -58,7 +62,7 @@ async def process_item_searching(
         text=f"{i18n.get("add_task-placeholder")}\n___"
         + "\n\n"
         + i18n.get("search-results"),
-        reply_markup=inline.get_found_items_kb(items, i18n),
+        reply_markup=inline.get_found_items_kb(task_id, items, i18n),
     )
     await state.clear()
 
@@ -77,6 +81,8 @@ async def process_item_selection(
 
     user_id = callback.from_user.id
     item_id = callback_data.item_id
+    task_id = callback_data.t_id
+
     text, kb, _ = await render_item_card(
         user_id,
         item_id,
@@ -84,6 +90,7 @@ async def process_item_selection(
         session,
         i18n,
         prev_id=callback_data.prev_id,
+        task_id=task_id,
     )
 
     await callback.message.edit_text(
@@ -108,6 +115,7 @@ async def navigate_recipe(
 
     user_id = callback.from_user.id
     item_id = callback_data.item_id
+    task_id = callback_data.t_id
 
     text, kb, _ = await render_item_card(
         user_id,
@@ -116,6 +124,7 @@ async def navigate_recipe(
         session,
         i18n,
         prev_id=callback_data.prev_id,
+        task_id=task_id,
     )
 
     try:
@@ -141,6 +150,7 @@ async def add_user_task(
         return
 
     user_id = callback.from_user.id
+    task_id = callback_data.t_id
     item_id = callback_data.item_id
     offer_idx = callback_data.o_idx
     prev_id = callback_data.prev_id
@@ -153,7 +163,7 @@ async def add_user_task(
             text=f"{i18n.get("add_task-placeholder")}\n___"
             + "\n\n"
             + i18n.get("task-already-exist"),
-            reply_markup=inline.get_back_button(i18n),
+            reply_markup=inline.get_back_button(task_id, i18n),
         )
         return
 

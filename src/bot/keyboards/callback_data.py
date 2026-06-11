@@ -46,6 +46,7 @@ class FinishTaskClick(CallbackData, prefix="fn_tk"):
 
 class AddTaskClick(CallbackData, prefix="ad_tk"):
     action: AddTaskAction
+    t_id: int
     item_id: str
     o_idx: int = 0
     idx: int = 0

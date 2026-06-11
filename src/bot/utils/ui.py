@@ -102,11 +102,15 @@ async def render_item_card(
 
     text = "\n".join(text_lines) + "\n"
 
-    if task_id:
-        return text, None, is_finished
-
-    kb = inline.get_card_nav_kb(offer_idx, total_offers, item_id, i18n, prev_id=prev_id)
-    return text, kb, False
+    kb = inline.get_card_nav_kb(
+        task_id if task_id else 0,
+        offer_idx,
+        total_offers,
+        item_id,
+        i18n,
+        prev_id=prev_id,
+    )
+    return text, kb, is_finished if task_id else False
 
 
 async def show_main_menu(

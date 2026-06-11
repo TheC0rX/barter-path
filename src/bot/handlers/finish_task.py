@@ -60,6 +60,7 @@ async def finish_user_task(
             + "\n\n"
             + f"{i18n.get("finish_task-next_tasks")}\n{i18n.get("finish_task-next_tasks_list")}",
             reply_markup=inline.get_found_items_kb(
+                task_id,
                 next_items,
                 i18n,
                 prev_id=current_task.item_id,

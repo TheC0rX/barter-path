@@ -66,11 +66,17 @@ async def open_finish_task(
 
 @router.callback_query(MenuClick.filter(F.target == MenuAction.ADD_TASK))
 async def open_add_task(
-    callback: CallbackQuery, state: FSMContext, session: AsyncSession, i18n: I18nContext
+    callback: CallbackQuery,
+    callback_data: MenuClick,
+    state: FSMContext,
+    session: AsyncSession,
+    i18n: I18nContext,
 ) -> None:
     if not isinstance(callback.message, Message):
         await callback.answer()
         return
+
+    task_id = callback_data.t_id
 
     repo = UserRepo(session)
     user_tasks_count = await repo.get_user_tasks_count(callback.from_user.id)
@@ -80,16 +86,18 @@ async def open_add_task(
             text=f"{i18n.get("main_menu-placeholder")}\n___"
             + "\n\n"
             + i18n.get("too-many-tasks"),
-            reply_markup=inline.get_back_button(i18n),
+            reply_markup=inline.get_back_button(task_id, i18n),
         )
         return
 
+    await state.update_data(task_id=task_id)
     await state.set_state(AddTaskStates.wait_for_item_name)
+
     await callback.message.edit_text(
         text=f"{i18n.get("add_task-placeholder")}\n___"
         + "\n\n"
         + i18n.get("enter-item-name"),
-        reply_markup=inline.get_back_button(i18n),
+        reply_markup=inline.get_back_button(task_id, i18n),
     )
     await callback.answer()
 
