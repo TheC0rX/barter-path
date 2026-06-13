@@ -34,6 +34,7 @@ class ResourceCalcAction(StrEnum):
 class MenuClick(CallbackData, prefix="mn"):
     target: MenuAction
     t_id: int = 0
+    t_idx: int | None = None
 
 
 class MenuNav(CallbackData, prefix="mn_nv"):

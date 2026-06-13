@@ -35,7 +35,14 @@ async def open_main_menu(
     await state.clear()
 
     task_id = callback_data.t_id
-    await show_main_menu(callback, session, i18n, task_id=task_id)
+    task_idx = callback_data.t_idx
+
+    await show_main_menu(
+        callback,
+        session,
+        i18n,
+        **({"task_idx": task_idx} if task_idx else {"task_id": task_id}),
+    )
 
 
 @router.callback_query(MenuClick.filter(F.target == MenuAction.FINISH_TASK))

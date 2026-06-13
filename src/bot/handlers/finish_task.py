@@ -64,6 +64,7 @@ async def finish_user_task(
                 next_items,
                 i18n,
                 prev_id=current_task.item_id,
+                task_idx=task_idx,
             ),
         )
     else:

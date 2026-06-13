@@ -26,11 +26,12 @@ def add_back_button(
     task_id: int,
     i18n: I18nContext,
     target: MenuAction = MenuAction.MENU,
+    task_idx: int | None = None,
 ) -> InlineKeyboardMarkup:
     builder.row(
         InlineKeyboardButton(
             text=i18n.get("btn-back"),
-            callback_data=MenuClick(target=target, t_id=task_id).pack(),
+            callback_data=MenuClick(target=target, t_id=task_id, t_idx=task_idx).pack(),
         )
     )
     return builder.as_markup()
@@ -135,6 +136,7 @@ def get_found_items_kb(
     items,
     i18n: I18nContext,
     prev_id: str = "",
+    task_idx: int | None = None,
 ) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
@@ -151,7 +153,7 @@ def get_found_items_kb(
         )
 
     builder.adjust(1)
-    return add_back_button(builder, task_id, i18n)
+    return add_back_button(builder, task_id, i18n, task_idx=task_idx)
 
 
 def get_card_nav_kb(
