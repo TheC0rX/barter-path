@@ -1,6 +1,6 @@
 [project]
 name = "barter-path"
-version = "0.1.0"
+version = "1.0"
 description = "Stalcraft barter progress tracker powered by Aiogram."
 authors = [
     {name = "TheC0rX",email = "therealcorx@gmail.com"}
