@@ -32,6 +32,7 @@ async def render_item_card(
     discount: int = 0,
     task_id: int | None = None,
     prev_id: str = "",
+    task_idx: int | None = None,
 ):
     item_repo = ItemRepo(session)
     user_repo = UserRepo(session)
@@ -109,6 +110,7 @@ async def render_item_card(
         item_id,
         i18n,
         prev_id=prev_id,
+        task_idx=task_idx,
     )
     return text, kb, is_finished if task_id else False
 

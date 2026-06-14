@@ -127,8 +127,17 @@ def get_finish_task_kb(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
     return add_back_button(builder, task_id, i18n)
 
 
-def get_back_button(task_id: int, i18n: I18nContext) -> InlineKeyboardMarkup:
-    return add_back_button(InlineKeyboardBuilder(), task_id, i18n)
+def get_back_button(
+    task_id: int,
+    i18n: I18nContext,
+    task_idx: int | None = None,
+) -> InlineKeyboardMarkup:
+    return add_back_button(
+        InlineKeyboardBuilder(),
+        task_id,
+        i18n,
+        task_idx=task_idx,
+    )
 
 
 def get_found_items_kb(
@@ -149,6 +158,7 @@ def get_found_items_kb(
                 t_id=task_id,
                 item_id=item.id,
                 prev_id=prev_id,
+                t_idx=task_idx,
             ),
         )
 
@@ -163,6 +173,7 @@ def get_card_nav_kb(
     item_id: str,
     i18n: I18nContext,
     prev_id: str = "",
+    task_idx: int | None = None,
 ) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
@@ -174,6 +185,7 @@ def get_card_nav_kb(
             item_id=item_id,
             o_idx=offer_idx,
             prev_id=prev_id,
+            t_idx=task_idx,
         ),
     )
 
@@ -188,6 +200,7 @@ def get_card_nav_kb(
                 item_id=item_id,
                 idx=prev_idx,
                 prev_id=prev_id,
+                t_idx=task_idx,
             ),
         )
         builder.button(
@@ -202,6 +215,7 @@ def get_card_nav_kb(
                 item_id=item_id,
                 idx=next_idx,
                 prev_id=prev_id,
+                t_idx=task_idx,
             ),
         )
 
@@ -215,6 +229,7 @@ def get_card_nav_kb(
         task_id,
         i18n,
         target=MenuAction.MENU if prev_id else MenuAction.ADD_TASK,
+        task_idx=task_idx,
     )
 
 
