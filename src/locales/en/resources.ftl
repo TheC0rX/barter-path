@@ -67,3 +67,13 @@ ing_card-selected_item =
 
 ing_card-ing_progress =
     { $icon } Collected { $collected_amount } of { $required_amount }
+
+# --- INGREDIENT FORMAT
+ing_format-main_menu =
+    { $icon } { $item }: { $collected_amount }/{ $required_amount } { $unit }
+
+ing_format-discount_menu =
+    - { $item }: <s>{ $amount }</s> { $discount_amount } { $unit }
+
+ing_format-resource_amount =
+    - { $item }: { $amount } { $unit }

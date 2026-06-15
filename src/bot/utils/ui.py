@@ -91,7 +91,14 @@ async def render_item_card(
                 is_finished = False
 
             text_lines.append(
-                f"{icon} {name}: <code>{display_collected}</code>/<code>{discount_amount}</code> {unit}"
+                i18n.get(
+                    "ing_format-main_menu",
+                    icon=icon,
+                    item=name,
+                    collected_amount=display_collected,
+                    required_amount=discount_amount,
+                    unit=unit,
+                )
             )
             if remains > 0:
                 text_lines.append(f"{i18n.get("item_card-remains", amount=remains)}")
@@ -99,10 +106,23 @@ async def render_item_card(
         else:
             if amount != discount_amount:
                 text_lines.append(
-                    f"- {name}: <s>{amount}</s> <code>{discount_amount}</code> {unit}"
+                    i18n.get(
+                        "ing_format-discount_menu",
+                        item=name,
+                        amount=amount,
+                        discount_amount=discount_amount,
+                        unit=unit,
+                    )
                 )
             else:
-                text_lines.append(f"- {name}: <code>{amount}</code> {unit}")
+                text_lines.append(
+                    i18n.get(
+                        "ing_format-resource_amount",
+                        item=name,
+                        amount=amount,
+                        unit=unit,
+                    )
+                )
 
     text = "\n".join(text_lines) + "\n"
 
