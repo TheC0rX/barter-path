@@ -36,6 +36,7 @@ async def process_discount_selection(
         session,
         i18n,
         discount=discount,
+        is_preview=True,
     )
 
     await callback.message.edit_text(

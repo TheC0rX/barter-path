@@ -33,6 +33,7 @@ async def render_item_card(
     task_id: int | None = None,
     prev_id: str = "",
     task_idx: int | None = None,
+    is_preview: bool = False,
 ):
     item_repo = ItemRepo(session)
     user_repo = UserRepo(session)
@@ -64,9 +65,11 @@ async def render_item_card(
 
     text_lines.append(f"\n{i18n.get('item_card-required_ings')}")
 
-    is_finished = bool(task_id)
+    is_finished = bool(task_id) and not is_preview
     progress_dict = (
-        await user_repo.get_task_progress_dict(user_id, task_id) if task_id else {}
+        await user_repo.get_task_progress_dict(user_id, task_id)
+        if task_id and not is_preview
+        else {}
     )
 
     for ing_item, amount in current_ings:
@@ -76,7 +79,7 @@ async def render_item_card(
         name = ing_item.name_ru if i18n.locale == "ru" else ing_item.name_en
         unit = "₽" if is_money else i18n.get("item_card-pieces", amount=discount_amount)
 
-        if task_id:
+        if task_id and not is_preview:
             collected = progress_dict.get(ing_item.id, 0)
             remains = max(0, discount_amount - collected)
             display_collected = min(collected, discount_amount)
@@ -112,7 +115,7 @@ async def render_item_card(
         prev_id=prev_id,
         task_idx=task_idx,
     )
-    return text, kb, is_finished if task_id else False
+    return text, kb, is_finished if task_id and not is_preview else False
 
 
 async def show_main_menu(

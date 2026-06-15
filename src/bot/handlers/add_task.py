@@ -49,6 +49,7 @@ async def process_item_searching(
             session,
             i18n,
             task_id=task_id,
+            is_preview=True,
         )
         await message.answer(
             text=f"{i18n.get("add_task-placeholder")}\n___" + "\n\n" + text,
@@ -93,6 +94,7 @@ async def process_item_selection(
         prev_id=callback_data.prev_id,
         task_id=task_id,
         task_idx=task_idx,
+        is_preview=True,
     )
 
     await callback.message.edit_text(
@@ -129,6 +131,7 @@ async def navigate_recipe(
         prev_id=callback_data.prev_id,
         task_id=task_id,
         task_idx=task_idx,
+        is_preview=True,
     )
 
     try:
