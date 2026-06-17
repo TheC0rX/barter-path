@@ -8,7 +8,7 @@ class StalcraftAPI:
         self.token = config.GITHUB_TOKEN.get_secret_value()
 
         self.owner = "EXBO-Studio"
-        self.repo = "stalcraft-database"
+        self.repo = "stalzone-database"
 
         self.headers = {
             "Authorization": f"Bearer {self.token}",
@@ -20,11 +20,13 @@ class StalcraftAPI:
             base_url="https://api.github.com",
             headers=self.headers,
             http2=True,
+            follow_redirects=True,
         )
         self.raw_client = httpx.AsyncClient(
             base_url="https://raw.githubusercontent.com",
             headers={"User-Agent": "Barter-Path"},
             http2=True,
+            follow_redirects=True,
         )
 
     async def close(self):
