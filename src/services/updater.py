@@ -41,7 +41,7 @@ class StalcraftUpdater:
                 )
                 return None
 
-    async def update_all_data(self, session: AsyncSession):
+    async def update_all_data(self, session: AsyncSession) -> bool:
         logger.info("[bold magenta][UPDATER][/] Updating items database...")
 
         paths = await self.api.get_items_tree()
@@ -49,7 +49,7 @@ class StalcraftUpdater:
 
         if not recipes_data:
             logger.error("[bold magenta][UPDATER][/] Failed to fetch barter recipes.")
-            return
+            return False
 
         barterable_ids = set()
         ingredient_ids = set()
@@ -176,6 +176,8 @@ class StalcraftUpdater:
         repo = StalcraftRepo(session)
         await repo.update_items_and_recipes(items_to_merge, recipes_to_add)
 
+        return True
+
     async def check_and_update(self):
         try:
             latest_sha = await self.api.get_latest_commit_sha()
@@ -195,11 +197,11 @@ class StalcraftUpdater:
                         f"[bold magenta][UPDATER][/] Update required. [bold yellow]{current_sha[:7] if current_sha else "NONE"}[/] -> [bold cyan]{latest_sha[:7]}[/]"
                     )
 
-                    await self.update_all_data(session)
-                    await repo.update_commit_sha(sha=latest_sha)
+                    if await self.update_all_data(session):
+                        await repo.update_commit_sha(sha=latest_sha)
 
-                    logger.success(
-                        f"[bold magenta][UPDATER][/] Successfully updated to [bold cyan]{latest_sha[:7]}[/]"
-                    )
+                        logger.success(
+                            f"[bold magenta][UPDATER][/] Successfully updated to [bold cyan]{latest_sha[:7]}[/]"
+                        )
         except Exception as e:
             logger.error(f"[bold magenta][UPDATER][/] Update failed: {e}")
