@@ -1,4 +1,4 @@
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery, Message, InputRichMessage
 from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -194,7 +194,13 @@ async def show_main_menu(
             await event.answer()
             return
 
-        await event.message.edit_text(text=text, reply_markup=kb)
+        await event.message.edit_text(
+            text=text,
+            reply_markup=kb,
+        )
         await event.answer()
     else:
-        await event.answer(text=text, reply_markup=kb)
+        await event.answer_rich(
+            rich_message=InputRichMessage(html=text),
+            reply_markup=kb,
+        )

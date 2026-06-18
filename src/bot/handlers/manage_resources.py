@@ -1,5 +1,5 @@
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, InputRichMessage
 from aiogram.fsm.context import FSMContext
 from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -86,35 +86,38 @@ async def adding_resources(
 
     text = message.text.strip() if message.text else ""
     if not text.isdigit():
-        await message.answer(
-            text=f"{i18n.get("manage_resources-placeholder")}\n___"
-            + "\n\n"
-            + i18n.get("type-resources")
-            + "\n"
-            + i18n.get("must-be-number"),
+        await message.answer_rich(
+            rich_message=InputRichMessage(html=f"""
+                    {i18n.get("manage_resources-placeholder")}
+
+                    {i18n.get("type-resources")}
+                    {i18n.get("must-be-number")}
+                """),
             reply_markup=inline.get_resource_calc_kb(task_id, ing_id, i18n),
         )
         return
 
     value_to_add = int(text)
     if value_to_add <= 0:
-        await message.answer(
-            text=f"{i18n.get("manage_resources-placeholder")}\n___"
-            + "\n\n"
-            + i18n.get("type-resources")
-            + "\n"
-            + i18n.get("must-be-more-zero"),
+        await message.answer_rich(
+            rich_message=InputRichMessage(html=f"""
+                    {i18n.get("manage_resources-placeholder")}
+
+                    {i18n.get("type-resources")}
+                    {i18n.get("must-be-more-zero")}
+                """),
             reply_markup=inline.get_resource_calc_kb(task_id, ing_id, i18n),
         )
         return
 
     if value_to_add >= 100_000_000:
-        await message.answer(
-            text=f"{i18n.get("manage_resources-placeholder")}\n___"
-            + "\n\n"
-            + i18n.get("type-resources")
-            + "\n"
-            + i18n.get("must-be-less-limit"),
+        await message.answer_rich(
+            rich_message=InputRichMessage(html=f"""
+                    {i18n.get("manage_resources-placeholder")}
+
+                    {i18n.get("type-resources")}
+                    {i18n.get("must-be-less-limit")}
+                """),
             reply_markup=inline.get_resource_calc_kb(task_id, ing_id, i18n),
         )
         return
@@ -122,10 +125,12 @@ async def adding_resources(
     await state.clear()
 
     if remains == 0:
-        await message.answer(
-            text=f"{i18n.get("manage_resources-placeholder")}\n___"
-            + "\n\n"
-            + i18n.get("resource-already-finished"),
+        await message.answer_rich(
+            rich_message=InputRichMessage(html=f"""
+                    {i18n.get("manage_resources-placeholder")}
+
+                    {i18n.get("resource-already-finished")}
+                """),
             reply_markup=inline.get_resource_calc_kb(task_id, ing_id, i18n),
         )
         return
@@ -141,15 +146,17 @@ async def adding_resources(
         i18n.locale,
     )
 
-    await message.answer(
-        text=f"{i18n.get("manage_resources-placeholder")}\n___"
-        + "\n\n"
-        + i18n.get(
-            "adding_resources-confirmation",
-            amount=value_to_add,
-            ing_name=ing_name,
-            item_name=item_name,
-        ),
+    await message.answer_rich(
+        rich_message=InputRichMessage(html=f"""
+                {i18n.get("manage_resources-placeholder")}
+
+                {i18n.get(
+                    "adding_resources-confirmation",
+                    amount=value_to_add,
+                    ing_name=ing_name,
+                    item_name=item_name,
+                )}
+            """),
         reply_markup=inline.get_update_resources_kb(
             task_id, ing_id, value_to_add, i18n
         ),

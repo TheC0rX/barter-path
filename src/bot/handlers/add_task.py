@@ -1,5 +1,5 @@
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, InputRichMessage
 from aiogram.fsm.context import FSMContext
 from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -29,12 +29,13 @@ async def process_item_searching(
     items = await repo.search_items(str(message.text))
 
     if not items:
-        await message.answer(
-            text=f"{i18n.get("add_task-placeholder")}\n___"
-            + "\n\n"
-            + i18n.get("search-empty")
-            + "\n"
-            + i18n.get("enter-item-name-again"),
+        await message.answer_rich(
+            rich_message=InputRichMessage(html=f"""
+                    {i18n.get("add_task-placeholder")}
+
+                    {i18n.get("search-empty")}
+                    {i18n.get("enter-item-name-again")}
+                """),
             reply_markup=inline.get_back_button(task_id, i18n),
         )
         return
@@ -51,18 +52,24 @@ async def process_item_searching(
             task_id=task_id,
             is_preview=True,
         )
-        await message.answer(
-            text=f"{i18n.get("add_task-placeholder")}\n___" + "\n\n" + text,
+        await message.answer_rich(
+            rich_message=InputRichMessage(html=f"""
+                    {i18n.get("add_task-placeholder")}
+                    
+                    {text}
+                """),
             reply_markup=kb,
         )
 
         await state.clear()
         return
 
-    await message.answer(
-        text=f"{i18n.get("add_task-placeholder")}\n___"
-        + "\n\n"
-        + i18n.get("search-results"),
+    await message.answer_rich(
+        rich_message=InputRichMessage(html=f"""
+                {i18n.get("add_task-placeholder")}
+                
+                {i18n.get("search-results")}
+            """),
         reply_markup=inline.get_found_items_kb(task_id, items, i18n),
     )
     await state.clear()
