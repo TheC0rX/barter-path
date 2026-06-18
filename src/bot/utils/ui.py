@@ -186,7 +186,7 @@ async def show_main_menu(
         text = f"""
             {i18n.get("main_menu-placeholder")}
             
-            {card_text}"
+            {card_text}
         """
         kb = inline.get_main_menu_kb(
             i18n=i18n,
