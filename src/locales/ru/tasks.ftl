@@ -36,9 +36,6 @@ task-already-exist =
 add_task-created =
     ✅ Задача была успешно добавлена.
 
-add_task-good_luck =
-    🍀 Удачи!
-
 # --- DELETING TASK
 delete_task-confirmation =
     ❓ Вы действительно хотите удалить задачу на создание { $item_name }?

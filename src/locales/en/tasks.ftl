@@ -36,9 +36,6 @@ task-already-exist =
 add_task-created =
     ✅ The task has been successfully added.
 
-add_task-good_luck =
-    🍀 Good luck!
-
 # --- DELETING TASK
 delete_task-confirmation =
     ❓ Do you really want to delete the task to craft { $item_name }?
