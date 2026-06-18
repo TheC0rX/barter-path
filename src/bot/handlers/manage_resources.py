@@ -71,9 +71,9 @@ async def process_resource_selection(
                     collected_amount=collected,
                     required_amount=discount_amount,
                 )}
-                {i18n.get("item_card-remains", amount=remains) + "\n\n" if remains > 0 else "\n"}
+                {i18n.get("item_card-remains", amount=remains) if remains > 0 else ""}
 
-                {i18n.get("type-resources") + "\n" if remains > 1 else ""}
+                {i18n.get("type-resources") if remains > 1 else ""}
                 {i18n.get("reset-description")}
             """),
         reply_markup=inline.get_resource_calc_kb(task_id, ing_id, i18n),

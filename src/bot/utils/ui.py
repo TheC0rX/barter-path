@@ -55,7 +55,7 @@ async def render_item_card(
     offer_suffix = "" if task_id else f"/{total_offers}"
     text_lines = [
         f"{i18n.get("item_card-selected_item", icon=item.icon, item_name=target_name)}",
-        f"{i18n.get('item_card-selected_offer', icon=offer_icon, offer=offer_idx+1)}{offer_suffix}",
+        f"{i18n.get('item_card-selected_offer', icon=offer_icon, offer=offer_idx+1, total_offers=offer_suffix)}",
     ]
 
     if task_id:
@@ -63,7 +63,7 @@ async def render_item_card(
             f"{i18n.get("item_card-selected_discount", discount=discount)}"
         )
 
-    text_lines.append(f"\n{i18n.get('item_card-required_ings')}")
+    text_lines.append(f"{i18n.get('item_card-required_ings')}")
 
     is_finished = bool(task_id) and not is_preview
     progress_dict = (
@@ -124,7 +124,7 @@ async def render_item_card(
                     )
                 )
 
-    text = "\n".join(text_lines) + "\n"
+    text = "".join(text_lines)
 
     kb = inline.get_card_nav_kb(
         task_id if task_id else 0,

@@ -3,7 +3,7 @@ item_card-selected_item =
     { $icon } Selected item: { $item_name }
 
 item_card-selected_offer =
-    { $icon } Selected offer: { $offer }
+    { $icon } Selected offer: { $offer }{ $total_offers }
 
 item_card-selected_discount =
     🎟️ Selected discount: { $discount }%
