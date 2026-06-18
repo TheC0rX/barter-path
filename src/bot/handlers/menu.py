@@ -1,5 +1,5 @@
 from aiogram import Router, F
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery, Message, InputRichMessage
 from aiogram.fsm.context import FSMContext
 from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -63,9 +63,11 @@ async def open_finish_task(
     item_name = await user_repo.get_item_name_by_task_id(user_id, task_id, i18n.locale)
 
     await callback.message.edit_text(
-        text=f"{i18n.get("finish_task-placeholder")}\n___"
-        + "\n\n"
-        + i18n.get("finish_task-confirmation", item_name=item_name),
+        rich_message=InputRichMessage(html=f"""
+                {i18n.get("finish_task-placeholder")}
+
+                {i18n.get("finish_task-confirmation", item_name=item_name)}
+            """),
         reply_markup=inline.get_finish_task_kb(task_id=task_id, i18n=i18n),
     )
     await callback.answer()
@@ -90,9 +92,11 @@ async def open_add_task(
 
     if user_tasks_count >= 3:
         await callback.message.edit_text(
-            text=f"{i18n.get("main_menu-placeholder")}\n___"
-            + "\n\n"
-            + i18n.get("too-many-tasks"),
+            rich_message=InputRichMessage(html=f"""
+                    {i18n.get("main_menu-placeholder")}
+
+                    {i18n.get("too-many-tasks")}
+                """),
             reply_markup=inline.get_back_button(task_id, i18n),
         )
         return
@@ -101,9 +105,11 @@ async def open_add_task(
     await state.set_state(AddTaskStates.wait_for_item_name)
 
     await callback.message.edit_text(
-        text=f"{i18n.get("add_task-placeholder")}\n___"
-        + "\n\n"
-        + i18n.get("enter-item-name"),
+        rich_message=InputRichMessage(html=f"""
+                {i18n.get("add_task-placeholder")}
+
+                {i18n.get("enter-item-name")}
+            """),
         reply_markup=inline.get_back_button(task_id, i18n),
     )
     await callback.answer()
@@ -127,9 +133,11 @@ async def open_delete_task(
     item_name = await user_repo.get_item_name_by_task_id(user_id, task_id, i18n.locale)
 
     await callback.message.edit_text(
-        text=f"{i18n.get("delete_task-placeholder")}\n___"
-        + "\n\n"
-        + i18n.get("delete_task-confirmation", item_name=item_name),
+        rich_message=InputRichMessage(html=f"""
+                {i18n.get("delete_task-placeholder")}
+
+                {i18n.get("delete_task-confirmation", item_name=item_name)}
+            """),
         reply_markup=inline.get_delete_task_kb(task_id=task_id, i18n=i18n),
     )
     await callback.answer()
@@ -146,9 +154,11 @@ async def open_activate_discount(
     task_id = callback_data.t_id
 
     await callback.message.edit_text(
-        text=f"{i18n.get("activate_discount-placeholder")}\n___"
-        + "\n\n"
-        + i18n.get("select-discount"),
+        rich_message=InputRichMessage(html=f"""
+                {i18n.get("activate_discount-placeholder")}
+
+                {i18n.get("select-discount")}
+            """),
         reply_markup=inline.get_discount_offers_kb(task_id, i18n),
     )
     await callback.answer()
@@ -182,9 +192,11 @@ async def open_manage_resources(
     ]
 
     await callback.message.edit_text(
-        text=f"{i18n.get("manage_resources-placeholder")}\n___"
-        + "\n\n"
-        + i18n.get("select-ingredient"),
+        rich_message=InputRichMessage(html=f"""
+                {i18n.get("manage_resources-placeholder")}
+
+                {i18n.get("select-ingredient")}
+            """),
         reply_markup=inline.get_resources_management_kb(
             task_id=task_id,
             current_ings=current_ings,
@@ -209,9 +221,11 @@ async def open_settings(
     task_id = callback_data.t_id
 
     await callback.message.edit_text(
-        text=f"{i18n.get("settings-placeholder")}\n___"
-        + "\n\n"
-        + i18n.get("settings-description-text"),
+        rich_message=InputRichMessage(html=f"""
+                {i18n.get("settings-placeholder")}
+
+                {i18n.get("settings-description-text")}
+            """),
         reply_markup=inline.get_settings_kb(task_id, i18n),
     )
     await callback.answer()

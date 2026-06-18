@@ -1,5 +1,5 @@
 from aiogram import Router, F
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery, Message, InputRichMessage
 from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -40,11 +40,13 @@ async def process_discount_selection(
     )
 
     await callback.message.edit_text(
-        text=f"{i18n.get("activate_discount-placeholder")}\n___"
-        + "\n\n"
-        + i18n.get("discount-preview", discount=discount)
-        + "\n\n"
-        + card_text,
+        rich_message=InputRichMessage(html=f"""
+                {i18n.get("activate_discount-placeholder")}
+
+                {i18n.get("discount-preview", discount=discount)}
+
+                {card_text}
+            """),
         reply_markup=inline.get_activate_discount_kb(
             task_id=task_id, discount=discount, i18n=i18n
         ),

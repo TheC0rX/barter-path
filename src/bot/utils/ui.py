@@ -153,7 +153,11 @@ async def show_main_menu(
     tasks = await user_repo.get_user_tasks(user_id)
 
     if not tasks:
-        text = f"{i18n.get("main_menu-placeholder")}\n___\n\n{i18n.get("no-tasks")}"
+        text = f"""
+            {i18n.get("main_menu-placeholder")}
+
+            {i18n.get("no-tasks")}
+        """
         kb = inline.get_main_menu_kb(i18n, has_tasks=False)
 
     else:
@@ -179,7 +183,11 @@ async def show_main_menu(
             current_task.id,
         )
 
-        text = f"{i18n.get("main_menu-placeholder")}\n___\n\n{card_text}"
+        text = f"""
+            {i18n.get("main_menu-placeholder")}
+            
+            {card_text}"
+        """
         kb = inline.get_main_menu_kb(
             i18n=i18n,
             has_tasks=True,
@@ -195,7 +203,7 @@ async def show_main_menu(
             return
 
         await event.message.edit_text(
-            text=text,
+            rich_message=InputRichMessage(html=text),
             reply_markup=kb,
         )
         await event.answer()

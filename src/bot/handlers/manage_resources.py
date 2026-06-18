@@ -55,18 +55,21 @@ async def process_resource_selection(
     await state.set_state(ResourceCalcStates.wait_for_amount)
 
     await callback.message.edit_text(
-        text=f"{i18n.get("manage_resources-placeholder")} | {item_name}\n___"
-        + "\n\n"
-        + f"{i18n.get("ing_card-selected_item", icon=ingredient.icon, ing_name=ing_name)}\n"
-        + f"{i18n.get(
-            "ing_card-ing_progress",
-            icon=icon,
-            collected_amount=collected,
-            required_amount=discount_amount,
-        )}\n"
-        + f"{i18n.get("item_card-remains", amount=remains) + "\n\n" if remains > 0 else "\n"}"
-        + f"{i18n.get("type-resources") + "\n" if remains > 1 else ""}"
-        + i18n.get("reset-description"),
+        rich_message=InputRichMessage(html=f"""
+                {i18n.get("manage_resources-placeholder")} | {item_name}
+
+                {i18n.get("ing_card-selected_item", icon=ingredient.icon, ing_name=ing_name)}
+                {i18n.get(
+                    "ing_card-ing_progress",
+                    icon=icon,
+                    collected_amount=collected,
+                    required_amount=discount_amount,
+                )}
+                {i18n.get("item_card-remains", amount=remains) + "\n\n" if remains > 0 else "\n"}
+
+                {i18n.get("type-resources") + "\n" if remains > 1 else ""}
+                {i18n.get("reset-description")}
+            """),
         reply_markup=inline.get_resource_calc_kb(task_id, ing_id, i18n),
     )
     await callback.answer()
@@ -188,11 +191,15 @@ async def reset_resources(
     item_name = await user_repo.get_item_name_by_task_id(user_id, task_id, i18n.locale)
 
     await callback.message.edit_text(
-        text=f"{i18n.get("manage_resources-placeholder")}\n___"
-        + "\n\n"
-        + i18n.get(
-            "reset_resources-confirmation", ing_name=ing_name, item_name=item_name
-        ),
+        rich_message=InputRichMessage(html=f"""
+                {i18n.get("manage_resources-placeholder")}
+
+                {i18n.get(
+                    "reset_resources-confirmation",
+                    ing_name=ing_name,
+                    item_name=item_name,
+                )}
+            """),
         reply_markup=inline.get_update_resources_kb(task_id, ing_id, -1, i18n),
     )
     await callback.answer()

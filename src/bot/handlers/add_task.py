@@ -105,7 +105,11 @@ async def process_item_selection(
     )
 
     await callback.message.edit_text(
-        text=f"{i18n.get("add_task-placeholder")}\n___" + "\n\n" + text,
+        rich_message=InputRichMessage(html=f"""
+                {i18n.get("add_task-placeholder")}
+                
+                {text}
+            """),
         reply_markup=kb,
     )
     await state.clear()
@@ -143,7 +147,11 @@ async def navigate_recipe(
 
     try:
         await callback.message.edit_text(
-            text=f"{i18n.get("add_task-placeholder")}\n___" + "\n\n" + text,
+            rich_message=InputRichMessage(html=f"""
+                    {i18n.get("add_task-placeholder")}
+
+                    {text}
+                """),
             reply_markup=kb,
         )
     except Exception:
@@ -175,9 +183,11 @@ async def add_user_task(
 
     if is_task_exist:
         await callback.message.edit_text(
-            text=f"{i18n.get("add_task-placeholder")}\n___"
-            + "\n\n"
-            + i18n.get("task-already-exist"),
+            rich_message=InputRichMessage(html=f"""
+                    {i18n.get("add_task-placeholder")}
+
+                    {i18n.get("task-already-exist")}
+                """),
             reply_markup=inline.get_back_button(task_id, i18n, task_idx=task_idx),
         )
         return

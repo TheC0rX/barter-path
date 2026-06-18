@@ -1,5 +1,5 @@
 from aiogram import Router
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery, Message, InputRichMessage
 from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -56,9 +56,12 @@ async def finish_user_task(
 
     if next_items:
         await callback.message.edit_text(
-            text=f"{i18n.get("finish_task-placeholder")}\n___"
-            + "\n\n"
-            + f"{i18n.get("finish_task-next_tasks")}\n{i18n.get("finish_task-next_tasks_list")}",
+            rich_message=InputRichMessage(html=f"""
+                    {i18n.get("finish_task-placeholder")}
+
+                    {i18n.get("finish_task-next_tasks")}
+                    {i18n.get("finish_task-next_tasks_list")}
+                """),
             reply_markup=inline.get_found_items_kb(
                 task_id,
                 next_items,
