@@ -45,7 +45,12 @@ async def process_resource_selection(
 
     ingredient = await item_repo.get_item(ing_id)
     ing_name = ingredient.name_ru if i18n.locale == "ru" else ingredient.name_en
-    item_name = await user_repo.get_item_name_by_task_id(user_id, task_id, i18n.locale)
+
+    item = await user_repo.get_task_by_task_id(user_id, task_id)
+
+    current_item = item.item
+    item_icon = current_item.icon
+    item_name = current_item.name_ru if i18n.locale == "ru" else current_item.name_en
 
     icon = "✅" if remains == 0 else "⌛"
 
@@ -56,8 +61,9 @@ async def process_resource_selection(
 
     await callback.message.edit_text(
         rich_message=InputRichMessage(html=f"""
-                {i18n.get("manage_resources-placeholder")} | {item_name}
+                {i18n.get("manage_resources-placeholder")}
 
+                {i18n.get("item_card-selected_item", icon=item_icon, item_name=item_name)}
                 {i18n.get("ing_card-selected_item", icon=ingredient.icon, ing_name=ing_name)}
                 {i18n.get(
                     "ing_card-ing_progress",
