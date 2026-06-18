@@ -205,7 +205,7 @@ async def add_user_task(
         )
 
     await callback.answer(
-        text=f"{i18n.get("add_task-created")}\n{i18n.get("add_task-good_luck")}",
+        text=f"{i18n.get("add_task-created")}",
         show_alert=False,
     )
 
