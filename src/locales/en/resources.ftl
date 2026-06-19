@@ -27,9 +27,6 @@ select-discount =
 discount-preview = 
     🎟️ Preview with { $discount }% discount applied.
 
-activate_discount-activated =
-    ✅ Discount { $discount }% was successfully applied to task { $item_name }.
-
 # --- RESOURCE MANAGER
 select-ingredient =
     🎯 Select the ingredient you want to edit.
@@ -57,9 +54,6 @@ adding_resources-confirmation =
 
 reset_resources-confirmation =
     ❓ Are you sure you want to reset the progress of { $ing_name } for { $item_name }?
-
-update_resources-updated =
-    ✅ Resources have been successfully updated.
 
 # --- INGREDIENT CARD
 ing_card-selected_item =

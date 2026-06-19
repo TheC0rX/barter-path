@@ -23,9 +23,6 @@ select-discount =
 discount-preview = 
     🎟️ Предварительный просмотр с учётом скидки { $discount }%.
 
-activate_discount-activated =
-    ✅ Скидка { $discount }% была успешно применена к задаче на { $item_name }.
-
 # --- RESOURCE MANAGER
 select-ingredient =
     🎯 Выберите ресурс, который хотите редактировать.
@@ -53,9 +50,6 @@ adding_resources-confirmation =
 
 reset_resources-confirmation =
     ❓ Вы уверены, что хотите сбросить прогресс { $ing_name } для { $item_name }?
-
-update_resources-updated =
-    ✅ Ресурсы были успешно обновлены.
 
 # --- INGREDIENT CARD
 ing_card-selected_item =

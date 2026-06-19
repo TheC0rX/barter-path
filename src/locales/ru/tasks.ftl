@@ -2,9 +2,6 @@
 finish_task-confirmation =
     ❓ Вы действительно хотите завершить задачу на создание { $item_name }?
 
-finish_task-finished =
-    ✅ Задача была успешно завершена.
-
 finish_task-next_tasks =
     🔔 Этот предмет участвует в создании других предметов.
 
@@ -33,12 +30,6 @@ too-many-tasks =
 task-already-exist =
     ⚠️ Задача на этот предмет уже существует.
 
-add_task-created =
-    ✅ Задача была успешно добавлена.
-
 # --- DELETING TASK
 delete_task-confirmation =
     ❓ Вы действительно хотите удалить задачу на создание { $item_name }?
-
-delete_task-deleted =
-    ✅ Задача была успешно удалена.
