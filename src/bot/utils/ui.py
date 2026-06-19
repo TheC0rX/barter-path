@@ -60,10 +60,10 @@ async def render_item_card(
 
     if task_id:
         text_lines.append(
-            f"{i18n.get("item_card-selected_discount", discount=discount)}<br>"
+            f"{i18n.get("item_card-selected_discount", discount=discount)}"
         )
 
-    text_lines.append(f"{i18n.get('item_card-required_ings')}")
+    text_lines.append(f"<br>{i18n.get('item_card-required_ings')}")
 
     is_finished = bool(task_id) and not is_preview
     progress_dict = (

@@ -44,7 +44,6 @@ async def process_discount_selection(
                 {i18n.get("activate_discount-placeholder")}
 
                 {i18n.get("discount-preview", discount=discount)}
-                <br>
                 {card_text}
             """),
         reply_markup=inline.get_activate_discount_kb(
