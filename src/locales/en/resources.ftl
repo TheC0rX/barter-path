@@ -1,15 +1,15 @@
 # --- ITEM CARD
 item_card-selected_item =
-    { $icon } Selected item: { $item_name }
+    <p>{ $icon } Selected item: { $item_name }</p>
 
 item_card-selected_offer =
-    { $icon } Selected offer: { $offer }{ $total_offers }
+    <p>{ $icon } Selected offer: { $offer }{ $total_offers }</p>
 
 item_card-selected_discount =
-    🎟️ Selected discount: { $discount }%
+    <p>🎟️ Selected discount: { $discount }%</p>
 
 item_card-required_ings =
-    📋 Required resources:
+    <p>📋 Required resources:</p>
 
 item_card-pieces =
     { $amount ->
@@ -18,56 +18,56 @@ item_card-pieces =
     }
 
 item_card-remains =
-    └ { $amount } Remaining.
+    <p>└ { $amount } Remaining.</p>
 
 # --- ACTIVATING DISCOUNT
 select-discount =
-    🎯 Select the discount you want to apply.
+    <p>🎯 Select the discount you want to apply.</p>
 
 discount-preview = 
-    🎟️ Preview with { $discount }% discount applied.
+    <p>🎟️ Preview with { $discount }% discount applied.</p>
 
 # --- RESOURCE MANAGER
 select-ingredient =
-    🎯 Select the ingredient you want to edit.
+    <p>🎯 Select the ingredient you want to edit.</p>
 
 type-resources =
-    📝 Type the amount of resources to add them.
+    <p>📝 Type the amount of resources to add them.</p>
 
 reset-description =
-    🔄️ You can also reset the progress of collecting, by clicking reset button.
+    <p>🔄️ You can also reset the progress of collecting, by clicking reset button.</p>
 
 resource-already-finished =
-    ⚠️ The resource was already collected.
+    <p>⚠️ The resource was already collected.</p>
 
 must-be-number =
-    ⚠️ Resource amount must be a number.
+    <p>⚠️ Resource amount must be a number.</p>
 
 must-be-more-zero =
-    ⚠️ Resource amount must be greater than 0.
+    <p>⚠️ Resource amount must be greater than 0.</p>
 
 must-be-less-limit =
-    ⚠️ Resource amount must be less than 100 million.
+    <p>⚠️ Resource amount must be less than 100 million.</p>
 
 adding_resources-confirmation =
-    ❓ Are you sure you want to add { $amount } { $ing_name } for { $item_name }?
+    <p>❓ Are you sure you want to add { $amount } { $ing_name } for { $item_name }?</p>
 
 reset_resources-confirmation =
-    ❓ Are you sure you want to reset the progress of { $ing_name } for { $item_name }?
+    <p>❓ Are you sure you want to reset the progress of { $ing_name } for { $item_name }?</p>
 
 # --- INGREDIENT CARD
 ing_card-selected_item =
-    { $icon } Selected resource: { $ing_name }
+    <p>{ $icon } Selected resource: { $ing_name }</p>
 
 ing_card-ing_progress =
-    { $icon } Collected { $collected_amount } of { $required_amount }
+    <p>{ $icon } Collected { $collected_amount } of { $required_amount }</p>
 
 # --- INGREDIENT FORMAT
 ing_format-main_menu =
-    { $icon } { $item }: { $collected_amount }/{ $required_amount } { $unit }
+    <p>{ $icon } { $item }: { $collected_amount }/{ $required_amount } { $unit }</p>
 
 ing_format-discount_menu =
-    - { $item }: <s>{ $amount }</s> { $discount_amount } { $unit }
+    <p>- { $item }: <s>{ $amount }</s> { $discount_amount } { $unit }</p>
 
 ing_format-resource_amount =
-    - { $item }: { $amount } { $unit }
+    <p>- { $item }: { $amount } { $unit }</p>

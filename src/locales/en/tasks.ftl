@@ -1,35 +1,35 @@
 # --- FINISHING TASK
 finish_task-confirmation =
-    ❓ Do you really want to finish the task to craft { $item_name }?
+    <p>❓ Do you really want to finish the task to craft { $item_name }?</p>
 
 finish_task-next_tasks =
-    🔔 This item is used to craft other items.
+    <p>🔔 This item is used to craft other items.</p>
 
 finish_task-next_tasks_list =
-    👇 Click an item below to start a new task.
+    <p>👇 Click an item below to start a new task.</p>
 
 # --- ADDING TASK
 enter-item-name =
-    📝 Type an item name you want to craft.
+    <p>📝 Type an item name you want to craft.</p>
 
 enter-item-name-again =
-    📝 Try to type the full item name you want to craft.
+    <p>📝 Try to type the full item name you want to craft.</p>
 
 search-empty =
-    🤷 No items found with this name.
+    <p>🤷 No items found with this name.</p>
 
 search-results =
-    🔍 A few items were found:
+    <p>🔍 A few items were found:</p>
 
 no-tasks =
-    ⚠️ You don't have any tasks.
+    <p>⚠️ You don't have any tasks.</p>
 
 too-many-tasks =
-    ⚠️ You already have too many tasks.
+    <p>⚠️ You already have too many tasks.</p>
 
 task-already-exist =
-    ⚠️ This task already exists.
+    <p>⚠️ This task already exists.</p>
 
 # --- DELETING TASK
 delete_task-confirmation =
-    ❓ Do you really want to delete the task to craft { $item_name }?
+    <p>❓ Do you really want to delete the task to craft { $item_name }?</p>

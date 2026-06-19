@@ -15,3 +15,6 @@ add_task-created =
 
 delete_task-deleted =
     ✅ Задача была успешно удалена.
+
+throttling-warning =
+    ⌛ Не спамьте! Подождите немного.

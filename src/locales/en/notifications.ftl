@@ -15,3 +15,6 @@ add_task-created =
 
 delete_task-deleted =
     ✅ The task has been successfully deleted.
+
+throttling-warning =
+    ⌛ Slow down. Please wait a moment.

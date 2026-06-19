@@ -1,24 +1,28 @@
 # --- PLACEHOLDERS
 main_menu-placeholder =
-    <b>Main Menu</b>
+    <h1>Main Menu</h1>
+    <hr/>
 
 finish_task-placeholder =
-    <b>Finishing Task</b>
+    <h1>Finishing Task</h1>
+    <hr/>
 
 add_task-placeholder =
-    <b>Adding Task</b>
+    <h1>Adding Task</h1>
+    <hr/>
 
 delete_task-placeholder =
-    <b>Deleting Task</b>
+    <h1>Deleting Task</h1>
+    <hr/>
 
 activate_discount-placeholder =
-    <b>Activating Discount</b>
+    <h1>Activating Discount</h1>
+    <hr/>
 
 manage_resources-placeholder =
-    <b>Resource Manager</b>
+    <h1>Resource Manager</h1>
+    <hr/>
 
 settings-placeholder =
-    <b>Settings</b>
-
-throttling-warning =
-    ⌛ Slow down. Please wait a moment.
+    <h1>Settings</h1>
+    <hr/>

@@ -1,69 +1,69 @@
 # --- ITEM CARD
 item_card-selected_item =
-    { $icon } Выбранный предмет: { $item_name }
+    <p>{ $icon } Выбранный предмет: { $item_name }</p>
 
 item_card-selected_offer =
-    { $icon } Выбранное предложение: { $offer }{ $total_offers }
+    <p>{ $icon } Выбранное предложение: { $offer }{ $total_offers }</p>
 
 item_card-selected_discount =
-    🎟️ Выбранная скидка: { $discount }%
+    <p>🎟️ Выбранная скидка: { $discount }%</p>
 
 item_card-required_ings =
-    📋 Необходимые ресурсы:
+    <p>📋 Необходимые ресурсы:</p>
 
 item_card-pieces = шт.
 
 item_card-remains =
-    └ Осталось { $amount }.
+    <p>└ Осталось { $amount }.</p>
 
 # --- ACTIVATING DISCOUNT
 select-discount =
-    🎯 Выберите скидку, которую хотите применить.
+    <p>🎯 Выберите скидку, которую хотите применить.</p>
 
 discount-preview = 
-    🎟️ Предварительный просмотр с учётом скидки { $discount }%.
+    <p>🎟️ Предварительный просмотр с учётом скидки { $discount }%.</p>
 
 # --- RESOURCE MANAGER
 select-ingredient =
-    🎯 Выберите ресурс, который хотите редактировать.
+    <p>🎯 Выберите ресурс, который хотите редактировать.</p>
 
 type-resources =
-    📝 Введите количество ресурсов для добавления.
+    <p>📝 Введите количество ресурсов для добавления.</p>
 
 reset-description =
-    🔄️ Вы также можете сбросить прогресс сбора до нуля, нажав на кнопку сброса.
+    <p>🔄️ Вы также можете сбросить прогресс сбора до нуля, нажав на кнопку сброса.</p>
 
 resource-already-finished =
-    ⚠️ Данный ресурс был уже собран.
+    <p>⚠️ Данный ресурс был уже собран.</p>
 
 must-be-number =
-    ⚠️ Количество ресурсов должно быть написано цифрами.
+    <p>⚠️ Количество ресурсов должно быть написано цифрами.</p>
 
 must-be-more-zero =
-    ⚠️ Количество ресурсов должно быть больше нуля.
+    <p>⚠️ Количество ресурсов должно быть больше нуля.</p>
 
 must-be-less-limit =
-    ⚠️ Количество ресурсов должно быть меньше 100 миллионов.
+    <p>⚠️ Количество ресурсов должно быть меньше 100 миллионов.</p>
 
 adding_resources-confirmation =
-    ❓ Вы уверены, что хотите добавить { $amount } { $ing_name } для { $item_name }?
+    <p>❓ Вы уверены, что хотите добавить { $amount } { $ing_name } для { $item_name }?</p>
 
 reset_resources-confirmation =
-    ❓ Вы уверены, что хотите сбросить прогресс { $ing_name } для { $item_name }?
+    <p>❓ Вы уверены, что хотите сбросить прогресс { $ing_name } для { $item_name }?</p>
 
 # --- INGREDIENT CARD
 ing_card-selected_item =
-    { $icon } Выбранный ресурс: { $ing_name }
+    <p>{ $icon } Выбранный ресурс: { $ing_name }</p>
 
 ing_card-ing_progress =
-    { $icon } Собранно { $collected_amount } из { $required_amount }
+    <p>{ $icon } Собранно { $collected_amount } из { $required_amount }</p>
 
 # --- INGREDIENT FORMAT
 ing_format-main_menu =
-    { $icon } { $item }: { $collected_amount }/{ $required_amount } { $unit }
+    <p>{ $icon } { $item }: { $collected_amount }/{ $required_amount } { $unit }</p>
 
 ing_format-discount_menu =
-    - { $item }: <s>{ $amount }</s> { $discount_amount } { $unit }
+    <p>- { $item }: <s>{ $amount }</s> { $discount_amount } { $unit }</p>
 
 ing_format-resource_amount =
-    - { $item }: { $amount } { $unit }
+    <p>- { $item }: { $amount } { $unit }</p>

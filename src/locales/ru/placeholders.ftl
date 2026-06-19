@@ -1,24 +1,28 @@
 # --- PLACEHOLDERS
 main_menu-placeholder =
-    <b>Главное Меню</b>
+    <h1>Главное Меню</h1>
+    <hr/>
 
 finish_task-placeholder =
-    <b>Завершение Задачи</b>
+    <h1>Завершение Задачи</h1>
+    <hr/>
 
 add_task-placeholder =
-    <b>Добавление Задачи</b>
+    <h1>Добавление Задачи</h1>
+    <hr/>
 
 delete_task-placeholder =
-    <b>Удаление Задачи</b>
+    <h1>Удаление Задачи</h1>
+    <hr/>
 
 activate_discount-placeholder =
-    <b>Активация Скидки</b>
+    <h1>Активация Скидки</h1>
+    <hr/>
 
 manage_resources-placeholder =
-    <b>Управление Ресурсами</b>
+    <h1>Управление Ресурсами</h1>
+    <hr/>
 
 settings-placeholder =
-    <b>Настройки</b>
-
-throttling-warning =
-    ⌛ Не спамьте! Подождите немного.
+    <h1>Настройки</h1>
+    <hr/>
