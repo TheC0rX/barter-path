@@ -72,7 +72,7 @@ async def process_resource_selection(
                     required_amount=discount_amount,
                 )}
                 {i18n.get("item_card-remains", amount=remains) if remains > 0 else ""}
-
+                <br>
                 {i18n.get("type-resources") if remains > 1 else ""}
                 {i18n.get("reset-description")}
             """),

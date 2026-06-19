@@ -60,7 +60,7 @@ async def render_item_card(
 
     if task_id:
         text_lines.append(
-            f"{i18n.get("item_card-selected_discount", discount=discount)}"
+            f"{i18n.get("item_card-selected_discount", discount=discount)}<br>"
         )
 
     text_lines.append(f"{i18n.get('item_card-required_ings')}")
