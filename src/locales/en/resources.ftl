@@ -57,10 +57,10 @@ reset_resources-confirmation =
 
 # --- INGREDIENT CARD
 ing_card-selected_item =
-    <p>{ $icon } Selected resource: { $ing_name }</p>
+    <p><b>📦 Selected resource:</b> { $ing_name }</p>
 
 ing_card-ing_progress =
-    <p>{ $icon } Collected { $collected_amount } of { $required_amount }</p>
+    <p>{ $icon } Collected { $collected_amount } of { $required_amount } { $unit }</p>
 
 # --- INGREDIENT FORMAT
 ing_format-main_menu =

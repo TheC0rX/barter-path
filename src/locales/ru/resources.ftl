@@ -53,10 +53,10 @@ reset_resources-confirmation =
 
 # --- INGREDIENT CARD
 ing_card-selected_item =
-    <p>{ $icon } Выбранный ресурс: { $ing_name }</p>
+    <p><b>📦 Выбранный ресурс:</b> { $ing_name }</p>
 
 ing_card-ing_progress =
-    <p>{ $icon } Собранно { $collected_amount } из { $required_amount }</p>
+    <p>{ $icon } Собранно { $collected_amount } из { $required_amount } { $unit }</p>
 
 # --- INGREDIENT FORMAT
 ing_format-main_menu =

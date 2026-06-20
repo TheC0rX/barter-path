@@ -42,6 +42,7 @@ async def process_resource_selection(
         ing_id,
     )
     remains = max(0, discount_amount - collected)
+    unit = i18n.get("item_card-pieces", amount=discount_amount)
 
     ingredient = await item_repo.get_item(ing_id)
     ing_name = ingredient.name_ru if i18n.locale == "ru" else ingredient.name_en
@@ -63,16 +64,18 @@ async def process_resource_selection(
         rich_message=InputRichMessage(html=f"""
                 {i18n.get("manage_resources-placeholder")}
 
+                <blockquote>
                 {i18n.get("item_card-selected_item", icon=item_icon, item_name=item_name)}
-                {i18n.get("ing_card-selected_item", icon=ingredient.icon, ing_name=ing_name)}
+                {i18n.get("ing_card-selected_item", ing_name=ing_name)}
                 {i18n.get(
                     "ing_card-ing_progress",
                     icon=icon,
                     collected_amount=collected,
                     required_amount=discount_amount,
+                    unit=unit
                 )}
                 {i18n.get("item_card-remains", amount=remains) if remains > 0 else ""}
-                <br>
+                </blockquote>
                 {i18n.get("type-resources") if remains > 1 else ""}
                 {i18n.get("reset-description")}
             """),
