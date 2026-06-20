@@ -48,7 +48,7 @@ async def render_item_card(
     actual_offer_key = sorted_offer_indices[offer_idx]
     current_ings = offers_data[actual_offer_key]
 
-    item = await item_repo.get_item(item_id)
+    item = await item_repo.get_item_info(item_id)
     target_name = item.name_ru if i18n.locale == "ru" else item.name_en
     offer_icon = get_nubmer_emoji(offer_idx + 1)
 
