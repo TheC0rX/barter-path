@@ -27,7 +27,7 @@ class RegistrationMiddleware(BaseMiddleware):
 
         user_id = tg_user.id
         if user_id not in self.reg_cache:
-            session = data.get("session")
+            session = data.get("session", None)
             if session:
                 user_repo = UserRepo(session)
                 await user_repo.add_user(user_id, locale=str(tg_user.language_code))
