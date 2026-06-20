@@ -1,6 +1,6 @@
 # --- FINISHING TASK
 finish_task-confirmation =
-    <p>❓ Do you really want to finish the task to craft { $item_name }?</p>
+    <p>❓ Do you really want to finish the task to craft <b>{ $item_name }</b>?</p>
 
 finish_task-next_tasks =
     <p>🔔 This item is used to craft other items.</p>
@@ -32,4 +32,4 @@ task-already-exist =
 
 # --- DELETING TASK
 delete_task-confirmation =
-    <p>❓ Do you really want to delete the task to craft { $item_name }?</p>
+    <p>❓ Do you really want to delete the task to craft <b>{ $item_name }</b>?</p>

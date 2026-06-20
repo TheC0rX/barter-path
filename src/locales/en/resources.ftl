@@ -25,7 +25,7 @@ select-discount =
     <p>🎯 Select the discount you want to apply.</p>
 
 discount-preview = 
-    <p>🎟️ Preview with { $discount }% discount applied.</p>
+    <p>🎟️ Preview with <b><u>{ $discount }%</u></b> discount applied.</p>
 
 # --- RESOURCE MANAGER
 select-ingredient =
@@ -50,10 +50,10 @@ must-be-less-limit =
     <p>⚠️ Resource amount must be less than 100 million.</p>
 
 adding_resources-confirmation =
-    <p>❓ Are you sure you want to add { $amount } { $ing_name } for { $item_name }?</p>
+    <p>❓ Are you sure you want to add <b>{ $amount }</b> <b>{ $ing_name }</b> for <b>{ $item_name }</b>?</p>
 
 reset_resources-confirmation =
-    <p>❓ Are you sure you want to reset the progress of { $ing_name } for { $item_name }?</p>
+    <p>❓ Are you sure you want to reset the progress of <b>{ $ing_name }</b> for <b>{ $item_name }</b>?</p>
 
 # --- INGREDIENT CARD
 ing_card-selected_item =

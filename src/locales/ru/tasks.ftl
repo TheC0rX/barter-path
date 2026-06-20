@@ -1,6 +1,6 @@
 # --- FINISHING TASK
 finish_task-confirmation =
-    <p>❓ Вы действительно хотите завершить задачу на создание { $item_name }?</p>
+    <p>❓ Вы действительно хотите завершить задачу на создание <b>{ $item_name }</b>?</p>
 
 finish_task-next_tasks =
     <p>🔔 Этот предмет участвует в создании других предметов.</p>
@@ -32,4 +32,4 @@ task-already-exist =
 
 # --- DELETING TASK
 delete_task-confirmation =
-    <p>❓ Вы действительно хотите удалить задачу на создание { $item_name }?</p>
+    <p>❓ Вы действительно хотите удалить задачу на создание <b>{ $item_name }</b>?</p>
