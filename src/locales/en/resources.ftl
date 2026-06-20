@@ -1,15 +1,15 @@
 # --- ITEM CARD
 item_card-selected_item =
-    <p>{ $icon } Selected item: { $item_name }</p>
+    <p><b>{ $icon } Selected item:</b> { $item_name }</p>
 
 item_card-selected_offer =
-    <p>{ $icon } Selected offer: { $offer }{ $total_offers }</p>
+    <p><b>{ $icon } Selected offer:</b> { $offer }{ $total_offers }</p>
 
 item_card-selected_discount =
-    <p>🎟️ Selected discount: { $discount }%</p>
+    <p><b>🎟️ Selected discount:</b> { $discount }%</p>
 
 item_card-required_ings =
-    <p>📋 Required resources:</p>
+    <p><b>📋 Required resources:</b></p>
 
 item_card-pieces =
     { $amount ->

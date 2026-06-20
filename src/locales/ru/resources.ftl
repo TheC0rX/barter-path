@@ -1,15 +1,15 @@
 # --- ITEM CARD
 item_card-selected_item =
-    <p>{ $icon } Выбранный предмет: { $item_name }</p>
+    <p><b>{ $icon } Выбранный предмет:</b> { $item_name }</p>
 
 item_card-selected_offer =
-    <p>{ $icon } Выбранное предложение: { $offer }{ $total_offers }</p>
+    <p><b>{ $icon } Выбранное предложение:</b> { $offer }{ $total_offers }</p>
 
 item_card-selected_discount =
-    <p>🎟️ Выбранная скидка: { $discount }%</p>
+    <p><b>🎟️ Выбранная скидка:</b> { $discount }%</p>
 
 item_card-required_ings =
-    <p>📋 Необходимые ресурсы:</p>
+    <p><b>📋 Необходимые ресурсы:</b></p>
 
 item_card-pieces = шт.
 

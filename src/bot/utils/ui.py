@@ -64,6 +64,7 @@ async def render_item_card(
         )
 
     text_lines.append(f"<br>{i18n.get('item_card-required_ings')}")
+    text_lines.append("<blockquote>")
 
     is_finished = bool(task_id) and not is_preview
     progress_dict = (
@@ -124,6 +125,7 @@ async def render_item_card(
                     )
                 )
 
+    text_lines.append("</blockquote>")
     text = "".join(text_lines)
 
     kb = inline.get_card_nav_kb(
