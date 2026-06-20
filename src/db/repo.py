@@ -209,6 +209,19 @@ class UserRepo:
 
         return result.scalar_one()
 
+    async def get_item_id_by_task_id(self, user_id: int, task_id: int) -> str:
+        stmt = (
+            select(Item.id)
+            .join(UserTask, UserTask.item_id == Item.id)
+            .where(
+                UserTask.id == task_id,
+                UserTask.user_id == user_id,
+            )
+        )
+        result = await self.session.execute(stmt)
+
+        return result.scalar_one()
+
     async def get_item_name_by_task_id(
         self, user_id: int, task_id: int, locale: str
     ) -> str:

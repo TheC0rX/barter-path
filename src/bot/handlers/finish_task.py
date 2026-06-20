@@ -51,8 +51,8 @@ async def finish_user_task(
         show_alert=False,
     )
 
-    current_task = await user_repo.get_task_by_task_id(user_id, task_id)
-    next_items = await item_repo.get_next_craft_items(current_task.item_id)
+    item_id = await user_repo.get_item_id_by_task_id(user_id, task_id)
+    next_items = await item_repo.get_next_craft_items(item_id)
 
     if next_items:
         await callback.message.edit_text(
@@ -66,7 +66,7 @@ async def finish_user_task(
                 task_id,
                 next_items,
                 i18n,
-                prev_id=current_task.item_id,
+                prev_id=item_id,
                 task_idx=task_idx,
             ),
         )
