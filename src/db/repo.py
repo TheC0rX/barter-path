@@ -355,6 +355,17 @@ class ItemRepo:
     def __init__(self, session: AsyncSession):
         self.session = session
 
+    async def get_item_name_by_item_id(
+        self,
+        item_id: str,
+        locale: str,
+    ) -> str:
+        name_col = Item.name_ru if locale == "ru" else Item.name_en
+        stmt = select(name_col).where(Item.id == item_id)
+
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
+
     async def search_items(self, query: str):
         clean_query = query.strip().lower()
         for char in "«»\"'.-":

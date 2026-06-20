@@ -43,9 +43,7 @@ async def process_resource_selection(
     )
     remains = max(0, discount_amount - collected)
     unit = i18n.get("item_card-pieces", amount=discount_amount)
-
-    ingredient = await item_repo.get_item(ing_id)
-    ing_name = ingredient.name_ru if i18n.locale == "ru" else ingredient.name_en
+    ing_name = await item_repo.get_item_name_by_item_id(ing_id, i18n.locale)
 
     item = await user_repo.get_task_by_task_id(user_id, task_id)
 
@@ -150,8 +148,7 @@ async def adding_resources(
     user_repo = UserRepo(session)
     item_repo = ItemRepo(session)
 
-    ingredient = await item_repo.get_item(ing_id)
-    ing_name = ingredient.name_ru if i18n.locale == "ru" else ingredient.name_en
+    ing_name = await item_repo.get_item_name_by_item_id(ing_id, i18n.locale)
     item_name = await user_repo.get_item_name_by_task_id(
         message.from_user.id,
         task_id,
@@ -195,8 +192,8 @@ async def reset_resources(
 
     user_repo = UserRepo(session)
     item_repo = ItemRepo(session)
-    ingredient = await item_repo.get_item(ing_id)
-    ing_name = ingredient.name_ru if i18n.locale == "ru" else ingredient.name_en
+
+    ing_name = await item_repo.get_item_name_by_item_id(ing_id, i18n.locale)
     item_name = await user_repo.get_item_name_by_task_id(user_id, task_id, i18n.locale)
 
     await callback.message.edit_text(
