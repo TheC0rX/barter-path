@@ -1,22 +1,14 @@
-from typing import Any, Dict, Callable, Awaitable, cast
+from typing import Any, Dict, Callable, Awaitable
 
 from aiogram import BaseMiddleware
-from aiogram_i18n import I18nMiddleware
+from aiogram_i18n import I18nContext
 from aiogram.types import Message, CallbackQuery, TelegramObject, InputRichMessage
 from cachetools import TTLCache
 
-from src.bot.middlewares.i18n import UserLocaleManager
-
 
 class ThrottlingMiddleware(BaseMiddleware):
-    def __init__(
-        self,
-        i18n_middleware: I18nMiddleware,
-        rate_limit: float = 0.6,
-    ) -> None:
+    def __init__(self, rate_limit: float = 0.6) -> None:
         super().__init__()
-        self.i18n = i18n_middleware
-        self.locale_manager = cast(UserLocaleManager, i18n_middleware.manager)
         self.cache: Any = TTLCache(maxsize=10_000, ttl=rate_limit)
 
     async def __call__(
@@ -34,8 +26,12 @@ class ThrottlingMiddleware(BaseMiddleware):
 
         user_id = tg_user.id
         if user_id in self.cache:
-            locale = await self.locale_manager.get_locale(tg_user)
-            warning_msg = self.i18n.core.get("throttling-warning", locale=locale)
+            i18n: I18nContext | None = data.get("i18n")
+
+            if i18n:
+                warning_msg = i18n.get("throttling-warning")
+            else:
+                warning_msg = "⌛ Slow down. Please wait a moment."
 
             if isinstance(event, CallbackQuery):
                 await event.answer(warning_msg, show_alert=True)

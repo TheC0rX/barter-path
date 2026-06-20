@@ -51,16 +51,16 @@ async def main() -> None:
         manager=UserLocaleManager(),
     )
 
-    dp.message.outer_middleware(ThrottlingMiddleware(i18n_middleware))
-    dp.callback_query.outer_middleware(ThrottlingMiddleware(i18n_middleware))
-
     dp.message.outer_middleware(DbSessionMiddleware(async_session_maker))
     dp.callback_query.outer_middleware(DbSessionMiddleware(async_session_maker))
 
+    i18n_middleware.setup(dp)
+
+    dp.message.outer_middleware(ThrottlingMiddleware())
+    dp.callback_query.outer_middleware(ThrottlingMiddleware())
+
     dp.message.outer_middleware(RegistrationMiddleware())
     dp.callback_query.outer_middleware(RegistrationMiddleware())
-
-    i18n_middleware.setup(dp)
 
     dp.include_router(setup_routers())
 
