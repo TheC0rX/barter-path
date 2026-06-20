@@ -18,3 +18,6 @@ delete_task-deleted =
 
 throttling-warning =
     ⌛ Не спамьте! Подождите немного.
+
+something-went-wrong =
+    🤔 Что-то пошло не так.

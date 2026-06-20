@@ -18,3 +18,6 @@ delete_task-deleted =
 
 throttling-warning =
     ⌛ Slow down. Please wait a moment.
+
+something-went-wrong =
+    🤔 Something went wrong.

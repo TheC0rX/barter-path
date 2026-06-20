@@ -2,7 +2,7 @@ from typing import Any, Dict, Callable, Awaitable
 
 from aiogram import BaseMiddleware
 from aiogram_i18n import I18nContext
-from aiogram.types import Message, CallbackQuery, TelegramObject, InputRichMessage
+from aiogram.types import Message, CallbackQuery, TelegramObject
 from cachetools import TTLCache
 
 
@@ -36,7 +36,7 @@ class ThrottlingMiddleware(BaseMiddleware):
             if isinstance(event, CallbackQuery):
                 await event.answer(warning_msg, show_alert=True)
             elif isinstance(event, Message):
-                await event.reply_rich(rich_message=InputRichMessage(html=warning_msg))
+                await event.reply(warning_msg)
 
             return
 

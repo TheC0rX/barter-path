@@ -11,10 +11,11 @@ from sqlalchemy import text
 
 from src.services.updater import StalcraftUpdater
 
-from src.bot.middlewares.throttling import ThrottlingMiddleware
-from src.bot.middlewares.db import DbSessionMiddleware
-from src.bot.middlewares.registration import RegistrationMiddleware
 from src.bot.middlewares.i18n import UserLocaleManager
+from src.bot.middlewares.errors import ErrorsMiddleware
+from src.bot.middlewares.db import DbSessionMiddleware
+from src.bot.middlewares.throttling import ThrottlingMiddleware
+from src.bot.middlewares.registration import RegistrationMiddleware
 from src.bot.handlers import setup_routers
 
 from src.db.base import engine, async_session_maker
@@ -54,6 +55,7 @@ async def main() -> None:
     i18n_middleware.setup(dp)
 
     for observer in (dp.message, dp.callback_query):
+        observer.outer_middleware(ErrorsMiddleware())
         observer.outer_middleware(DbSessionMiddleware(async_session_maker))
         observer.outer_middleware(ThrottlingMiddleware())
         observer.outer_middleware(RegistrationMiddleware())
