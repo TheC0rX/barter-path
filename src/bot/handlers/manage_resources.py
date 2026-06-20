@@ -58,6 +58,7 @@ async def process_resource_selection(
     )
     await state.set_state(ResourceCalcStates.wait_for_amount)
 
+    is_reset = True if remains < discount_amount else False
     await callback.message.edit_text(
         rich_message=InputRichMessage(html=f"""
                 {i18n.get("manage_resources-placeholder")}
@@ -74,10 +75,15 @@ async def process_resource_selection(
                 )}
                 {i18n.get("item_card-remains", amount=remains) if remains > 0 else ""}
                 </blockquote>
-                {i18n.get("type-resources") if remains > 1 else ""}
-                {i18n.get("reset-description")}
+                {i18n.get("type-resources") if remains > 0 else ""}
+                {i18n.get("reset-description") if is_reset else ""}
             """),
-        reply_markup=inline.get_resource_calc_kb(task_id, ing_id, i18n),
+        reply_markup=inline.get_resource_calc_kb(
+            task_id,
+            ing_id,
+            i18n,
+            is_reset=is_reset,
+        ),
     )
     await callback.answer()
 
@@ -93,6 +99,22 @@ async def adding_resources(
     task_id = data.get("task_id", 0)
     ing_id = data.get("ing_id", "")
     remains = data.get("remains", 0)
+
+    if remains == 0:
+        await message.answer_rich(
+            rich_message=InputRichMessage(html=f"""
+                    {i18n.get("manage_resources-placeholder")}
+
+                    {i18n.get("resource-already-finished")}
+                """),
+            reply_markup=inline.get_resource_calc_kb(
+                task_id,
+                ing_id,
+                i18n,
+                is_reset=True,
+            ),
+        )
+        return
 
     text = message.text.strip() if message.text else ""
     if not text.isdigit():
@@ -133,17 +155,6 @@ async def adding_resources(
         return
 
     await state.clear()
-
-    if remains == 0:
-        await message.answer_rich(
-            rich_message=InputRichMessage(html=f"""
-                    {i18n.get("manage_resources-placeholder")}
-
-                    {i18n.get("resource-already-finished")}
-                """),
-            reply_markup=inline.get_resource_calc_kb(task_id, ing_id, i18n),
-        )
-        return
 
     user_repo = UserRepo(session)
     item_repo = ItemRepo(session)
