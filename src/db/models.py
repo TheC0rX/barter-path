@@ -198,15 +198,17 @@ class Item(Base):
 
     @property
     def icon(self) -> str:
-        if self.category.startswith("armor"):
-            return "🎽"
-        if self.category.startswith("weapon"):
-            return "🔫"
-        if self.category.startswith("attachment"):
-            return "🔦"
-        if self.category.startswith("currency"):
-            return "💵"
-        return "📦"
+        match self.category.split("/")[0]:
+            case "armor":
+                return "🎽"
+            case "weapon":
+                return "🔫"
+            case "attachment":
+                return "🔦"
+            case "currency":
+                return "💵"
+            case _:
+                return "📦"
 
 
 class Recipe(Base):

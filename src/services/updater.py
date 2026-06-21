@@ -33,7 +33,7 @@ class StalzoneUpdater:
                     "id": data["id"],
                     "name_ru": name_data.get("ru", "Unknown"),
                     "name_en": name_data.get("en", "Unknown"),
-                    "category": data.get("category", "unknown"),
+                    "category": data.get("category", "Unknown"),
                 }
             except Exception as e:
                 logger.error(
