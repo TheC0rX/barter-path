@@ -21,3 +21,6 @@ throttling-warning =
 
 something-went-wrong =
     🤔 Something went wrong.
+
+use-start-tip =
+    If you see it again, try to use /start. 

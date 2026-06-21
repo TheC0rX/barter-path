@@ -18,7 +18,9 @@ class ErrorsMiddleware(BaseMiddleware):
         except Exception as e:
             i18n: I18nContext | None = data.get("i18n")
             error_text = (
-                i18n.get("something-went-wrong") if i18n else "🤔 Something went wrong."
+                f"{i18n.get("something-went-wrong")}\n{i18n.get("use-start-tip")}"
+                if i18n
+                else "🤔 Something went wrong.\nIf you see it again, try to use /start."
             )
             logger.exception(f"Error handling event {event.__class__.__name__}: {e}")
 
