@@ -297,8 +297,8 @@ class ResourceLog(Base):
     )
 
 
-class StalcraftVersion(Base):
-    __tablename__ = "stalcraft_version"
+class StalzoneVersion(Base):
+    __tablename__ = "stalzone_version"
 
     id: Mapped[str] = mapped_column(
         VARCHAR(6),

@@ -9,14 +9,14 @@
 [![PostgreSQL](https://img.shields.io/badge/Postgres-1F2937?style=for-the-badge&logo=postgresql&logoColor=FFFFFF)](https://www.postgresql.org/)
 [![Alembic](https://img.shields.io/badge/Alembic-1F2937?style=for-the-badge)](https://github.com/sqlalchemy/alembic)
 
-An automated Stalcraft barter tracker providing real-time resource calculations, discount management, and progression monitoring via official database.
+An automated Stalzone barter tracker providing real-time resource calculations, discount management, and progression monitoring via official database.
 
 </div>
 
 ## Features
 
 - 🤖 **Interactive Bot Control** — Easy navigation via inline keyboards.
-- 🎒 **Stalcraft Barter Tracker** — Add crafting goals (e.g., A-545) and track your progress.
+- 🎒 **Stalzone Barter Tracker** — Add crafting goals (e.g., A-545) and track your progress.
 - 📊 **Dynamic Loot Logging** — Log successfully extracted resources to instantly recalculate what is left.
 - 🌍 **Multi-Language Support** — Full English and Russian localization via Fluent.
 

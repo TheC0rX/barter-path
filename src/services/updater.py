@@ -11,15 +11,15 @@ from rich.progress import (
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.services.stalcraft_api import StalcraftAPI
+from src.services.stalzone_api import StalzoneAPI
 from src.db.models import Recipe
 from src.db.base import async_session_maker
-from src.db.repo import StalcraftRepo
+from src.db.repo import StalzoneRepo
 
 
-class StalcraftUpdater:
+class StalzoneUpdater:
     def __init__(self):
-        self.api = StalcraftAPI()
+        self.api = StalzoneAPI()
 
     async def _fetch_and_parse_item(self, path: str, semaphore: asyncio.Semaphore):
         async with semaphore:
@@ -173,8 +173,8 @@ class StalcraftUpdater:
                             )
                             seen_recipes.add(recipe_key)
 
-        repo = StalcraftRepo(session)
-        await repo.update_items_and_recipes(items_to_merge, recipes_to_add)
+        stal_repo = StalzoneRepo(session)
+        await stal_repo.update_items_and_recipes(items_to_merge, recipes_to_add)
 
         return True
 
@@ -184,8 +184,8 @@ class StalcraftUpdater:
 
             async with async_session_maker() as session:
                 async with session.begin():
-                    repo = StalcraftRepo(session)
-                    current_sha = await repo.get_current_commit_sha()
+                    stal_repo = StalzoneRepo(session)
+                    current_sha = await stal_repo.get_current_commit_sha()
 
                     if current_sha == latest_sha:
                         logger.success(
@@ -198,7 +198,7 @@ class StalcraftUpdater:
                     )
 
                     if await self.update_all_data(session):
-                        await repo.update_commit_sha(sha=latest_sha)
+                        await stal_repo.update_commit_sha(sha=latest_sha)
 
                         logger.success(
                             f"[bold magenta][UPDATER][/] Successfully updated to [bold cyan]{latest_sha[:7]}[/]"

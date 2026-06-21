@@ -14,7 +14,7 @@ from src.db.models import (
     TaskProgress,
     ResourceLog,
     ResourceActionType,
-    StalcraftVersion,
+    StalzoneVersion,
 )
 
 
@@ -446,7 +446,7 @@ class ItemRepo:
         return list(result.scalars().all())
 
 
-class StalcraftRepo:
+class StalzoneRepo:
     def __init__(self, session: AsyncSession):
         self.session = session
 
@@ -475,13 +475,11 @@ class StalcraftRepo:
             await self.session.flush()
 
     async def get_current_commit_sha(self) -> str | None:
-        stmt = select(StalcraftVersion.version_sha).where(
-            StalcraftVersion.id == "latest"
-        )
+        stmt = select(StalzoneVersion.version_sha).where(StalzoneVersion.id == "latest")
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
     async def update_commit_sha(self, sha: str):
-        new_version = StalcraftVersion(id="latest", version_sha=sha)
+        new_version = StalzoneVersion(id="latest", version_sha=sha)
         await self.session.merge(new_version)
         await self.session.commit()

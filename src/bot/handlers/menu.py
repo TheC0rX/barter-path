@@ -87,8 +87,8 @@ async def open_add_task(
 
     task_id = callback_data.t_id
 
-    repo = UserRepo(session)
-    user_tasks_count = await repo.get_user_tasks_count(callback.from_user.id)
+    user_repo = UserRepo(session)
+    user_tasks_count = await user_repo.get_user_tasks_count(callback.from_user.id)
 
     if user_tasks_count >= 3:
         await callback.message.edit_text(

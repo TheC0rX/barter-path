@@ -25,8 +25,8 @@ async def process_item_searching(
     data = await state.get_data()
     task_id = data.get("task_id", 0)
 
-    repo = ItemRepo(session)
-    items = await repo.search_items(str(message.text))
+    item_repo = ItemRepo(session)
+    items = await item_repo.search_items(str(message.text))
 
     if not items:
         await message.answer_rich(
@@ -178,8 +178,8 @@ async def add_user_task(
     prev_id = callback_data.prev_id
     task_idx = callback_data.t_idx
 
-    repo = UserRepo(session)
-    is_task_exist = await repo.check_task_exists(user_id, item_id)
+    user_repo = UserRepo(session)
+    is_task_exist = await user_repo.check_task_exists(user_id, item_id)
 
     if is_task_exist:
         await callback.message.edit_text(
@@ -192,12 +192,14 @@ async def add_user_task(
         )
         return
 
-    new_task = await repo.add_task(
-        user_id=user_id, item_id=item_id, offer_idx=int(offer_idx)
+    new_task = await user_repo.add_task(
+        user_id=user_id,
+        item_id=item_id,
+        offer_idx=int(offer_idx),
     )
     new_task_id = new_task.id
     if prev_id:
-        await repo.add_resource_amount(
+        await user_repo.add_resource_amount(
             user_id,
             new_task_id,
             prev_id,

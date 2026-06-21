@@ -26,8 +26,8 @@ async def process_discount_selection(
     task_id = callback_data.t_id
     discount = callback_data.dc
 
-    repo = UserRepo(session)
-    current_task = await repo.get_task_by_task_id(user_id, task_id)
+    user_repo = UserRepo(session)
+    current_task = await user_repo.get_task_by_task_id(user_id, task_id)
 
     card_text, _, _ = await render_item_card(
         user_id,

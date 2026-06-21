@@ -34,7 +34,10 @@ class UserLocaleManager(BaseManager):
 
     async def set_locale(self, locale: str, event_from_user: User) -> None:
         async with async_session_maker() as session:
-            repo = UserRepo(session)
-            await repo.update_user_locale(user_id=event_from_user.id, locale=locale)
+            user_repo = UserRepo(session)
+            await user_repo.update_user_locale(
+                user_id=event_from_user.id,
+                locale=locale,
+            )
 
         self.locale_cache[event_from_user.id] = locale

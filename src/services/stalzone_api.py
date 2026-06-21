@@ -3,7 +3,7 @@ import httpx
 from src.config import config
 
 
-class StalcraftAPI:
+class StalzoneAPI:
     def __init__(self):
         self.token = config.GITHUB_TOKEN.get_secret_value()
 

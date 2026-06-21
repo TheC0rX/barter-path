@@ -9,7 +9,7 @@ from aiogram.client.default import DefaultBotProperties
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from sqlalchemy import text
 
-from src.services.updater import StalcraftUpdater
+from src.services.updater import StalzoneUpdater
 
 from src.bot.middlewares.i18n import UserLocaleManager
 from src.bot.middlewares.errors import ErrorsMiddleware
@@ -62,7 +62,7 @@ async def main() -> None:
 
     dp.include_router(setup_routers())
 
-    updater = StalcraftUpdater()
+    updater = StalzoneUpdater()
     scheduler = AsyncIOScheduler()
 
     @dp.startup()
@@ -84,11 +84,9 @@ async def main() -> None:
 
         try:
             await updater.api.close()
-            logger.info(
-                "[bold magenta][API][/] Stalcraft API clients have been closed."
-            )
+            logger.info("[bold magenta][API][/] Stalzone API clients have been closed.")
         except Exception as e:
-            logger.error(f"[bold magenta][API][/] Error closing Stalcraft API: {e}")
+            logger.error(f"[bold magenta][API][/] Error closing Stalzone API: {e}")
 
     try:
         await bot.delete_webhook(drop_pending_updates=True)
