@@ -5,7 +5,7 @@ from src.config import config
 
 class StalzoneAPI:
     def __init__(self):
-        self.token = config.GITHUB_TOKEN.get_secret_value()
+        self.token = config.PAT_TOKEN.get_secret_value()
 
         self.owner = "EXBO-Studio"
         self.repo = "stalzone-database"
