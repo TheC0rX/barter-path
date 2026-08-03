@@ -12,6 +12,10 @@ class Config(BaseSettings):
     POSTGRES_PORT: SecretStr
     POSTGRES_DB: SecretStr
 
+    REDIS_HOST: str
+    REDIS_PORT: int
+    REDIS_DB: int
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

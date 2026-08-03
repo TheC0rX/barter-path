@@ -19,6 +19,7 @@ from src.bot.middlewares.registration import RegistrationMiddleware
 from src.bot.handlers import setup_routers
 
 from src.db.base import engine, async_session_maker
+from src.redis.client import storage, redis_client
 from src.config import config
 
 
@@ -41,7 +42,7 @@ async def main() -> None:
         token=config.BOT_TOKEN.get_secret_value(),
         default=DefaultBotProperties(parse_mode=ParseMode.HTML),
     )
-    dp = Dispatcher()
+    dp = Dispatcher(storage=storage)
 
     locales_path = Path(__file__).parent.parent / "locales"
     core = FluentRuntimeCore(path=str(locales_path / "{locale}"))
@@ -87,6 +88,14 @@ async def main() -> None:
             logger.info("[bold magenta][API][/] Stalzone API clients have been closed.")
         except Exception as e:
             logger.error(f"[bold magenta][API][/] Error closing Stalzone API: {e}")
+
+        try:
+            await redis_client.close()
+            logger.info(
+                "[bold magenta][REDIS][/] Redis connection pool has been closed."
+            )
+        except Exception as e:
+            logger.error(f"[bold magenta][REDIS][/] Error closing Redis: {e}")
 
     try:
         await bot.delete_webhook(drop_pending_updates=True)
