@@ -1,8 +1,13 @@
-__pycache__/
-.venv/
-.vscode/
-
 .env
+*.env
+!.env.example
 
-/logs/*
-!/logs/.gitkeep
+**/__pycache__/
+*.pyc
+.venv/
+
+.vscode/
+.idea/
+
+/logs/
+*.log
