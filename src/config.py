@@ -21,7 +21,7 @@ class Config(BaseSettings):
     @property
     def db_url(self) -> str:
         return (
-            "asyncpg://"
+            "postgresql+asyncpg://"
             f"{self.POSTGRES_USER.get_secret_value()}:{self.POSTGRES_PASS.get_secret_value()}"
             f"@{self.POSTGRES_HOST.get_secret_value()}:{self.POSTGRES_PORT.get_secret_value()}"
             f"/{self.POSTGRES_DB.get_secret_value()}"
