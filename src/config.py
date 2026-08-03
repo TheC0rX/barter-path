@@ -4,13 +4,13 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Config(BaseSettings):
     BOT_TOKEN: SecretStr
-    GITHUB_TOKEN: SecretStr
+    PAT_TOKEN: SecretStr
 
-    DB_USER: str = "postgres"
-    DB_PASSWORD: SecretStr
-    DB_HOST: str = "localhost"
-    DB_PORT: int = 5432
-    DB_NAME: str
+    POSTGRES_USER: SecretStr
+    POSTGRES_PASS: SecretStr
+    POSTGRES_HOST: SecretStr
+    POSTGRES_PORT: SecretStr
+    POSTGRES_DB: SecretStr
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -19,12 +19,13 @@ class Config(BaseSettings):
     )
 
     @property
-    def DB_URL(self) -> SecretStr:
-        url = (
-            f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD.get_secret_value()}"
-            f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+    def db_url(self) -> str:
+        return (
+            "asyncpg://"
+            f"{self.POSTGRES_USER.get_secret_value()}:{self.POSTGRES_PASS.get_secret_value()}"
+            f"@{self.POSTGRES_HOST.get_secret_value()}:{self.POSTGRES_PORT.get_secret_value()}"
+            f"/{self.POSTGRES_DB.get_secret_value()}"
         )
-        return SecretStr(url)
 
 
 config = Config(**{})
