@@ -37,7 +37,30 @@ An automated Stalzone barter tracker providing real-time resource calculations, 
 └── pyproject.toml                    # Dependencies
 ```
 
-## Getting Started
+## 🐳 Quick Start with Docker
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/TheC0rX/barter-path.git
+cd barter-path
+```
+
+### 2. Environment setup
+
+Copy `.env.example` to `.env` and fill in the required values.
+
+```bash
+cp .env.example .env
+```
+
+### 3. Run application
+
+```bash
+docker compose up -d --build
+```
+
+## 💻 Local Development Setup
 
 ### 1. Clone repository
 
@@ -56,15 +79,8 @@ poetry install
 
 Copy `.env.example` to `.env` and fill in the required values.
 
-```env
-BOT_TOKEN=BOT_TOKEN
-PAT_TOKEN=PAT_TOKEN
-
-POSTGRES_USER=POSTGRES_USER
-POSTGRES_PASS=POSTGRES_PASS
-POSTGRES_HOST=POSTGRES_HOST
-POSTGRES_PORT=POSTGRES_PORT
-POSTGRES_DB=POSTGRES_DB
+```bash
+cp .env.example .env
 ```
 
 > ⚠️ **Note:** Create an empty PostgreSQL database matching your `DB_NAME` before proceeding to the next step.
