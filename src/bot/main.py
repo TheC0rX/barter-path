@@ -32,7 +32,19 @@ async def check_db_connection() -> bool:
         return False
 
 
+async def check_redis_connection() -> bool:
+    try:
+        await redis_client.ping()
+        return True
+    except Exception:
+        return False
+
+
 async def main() -> None:
+    if not await check_redis_connection():
+        logger.critical(f"[bold magenta][REDIS][/] Redis is unavailable.")
+        return
+
     if not await check_db_connection():
         logger.critical(f"[bold magenta][DB][/] Database is unavailable.")
         await engine.dispose()
