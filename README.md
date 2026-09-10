@@ -57,7 +57,7 @@ cp .env.example .env
 ### 3. Run application
 
 ```bash
-docker compose up -d --build
+docker compose up --build
 ```
 
 ## 💻 Local Development Setup
