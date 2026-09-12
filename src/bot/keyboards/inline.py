@@ -40,7 +40,7 @@ def add_back_button(
 def get_main_menu_kb(
     i18n: I18nContext,
     has_tasks: bool,
-    task_idx: int,
+    task_idx: int = 0,
     total_tasks: int = 0,
     current_task_id: int = 0,
     is_finished: bool = False,

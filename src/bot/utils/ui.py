@@ -151,7 +151,6 @@ async def show_main_menu(
     user_repo = UserRepo(session)
     user_id = event.from_user.id
     tasks = await user_repo.get_user_tasks(user_id)
-    current_task_idx = int(await redis.get(f"user:{user_id}:page") or 0) % len(tasks)
 
     if not tasks:
         text = f"""
@@ -159,9 +158,12 @@ async def show_main_menu(
 
             {i18n.get("no-tasks")}
         """
-        kb = inline.get_main_menu_kb(i18n, has_tasks=False, task_idx=current_task_idx)
+        kb = inline.get_main_menu_kb(i18n, has_tasks=False)
 
     else:
+        current_task_idx = int(await redis.get(f"user:{user_id}:page") or 0) % len(
+            tasks
+        )
         current_task = tasks[current_task_idx]
 
         card_text, _, is_finished = await render_item_card(
