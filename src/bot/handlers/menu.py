@@ -3,10 +3,11 @@ from aiogram.types import CallbackQuery, Message, InputRichMessage
 from aiogram.fsm.context import FSMContext
 from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
+from redis.asyncio import Redis
 
 from src.bot.keyboards import inline
 from src.bot.keyboards.callback_data import MenuClick, MenuNav
-from src.bot.keyboards.callback_data import MenuAction
+from src.bot.keyboards.callback_data import MenuNavAction, MenuAction
 from src.bot.utils.ui import show_main_menu
 from src.bot.utils.states import AddTaskStates
 from src.db.repo import UserRepo, ItemRepo
@@ -20,29 +21,29 @@ async def navigate_menu_tasks(
     callback_data: MenuNav,
     session: AsyncSession,
     i18n: I18nContext,
+    redis: Redis,
 ):
-    await show_main_menu(callback, session, i18n, task_idx=callback_data.idx)
+    user_id = callback.from_user.id
+
+    if callback_data.action == MenuNavAction.PREV:
+        await redis.decr(f"user:{user_id}:page")
+    else:
+        await redis.incr(f"user:{user_id}:page")
+
+    await show_main_menu(callback, session, i18n, redis)
 
 
 @router.callback_query(MenuClick.filter(F.target == MenuAction.MENU))
 async def open_main_menu(
     callback: CallbackQuery,
-    callback_data: MenuClick,
     state: FSMContext,
     session: AsyncSession,
     i18n: I18nContext,
+    redis: Redis,
 ) -> None:
     await state.clear()
 
-    task_id = callback_data.t_id
-    task_idx = callback_data.t_idx
-
-    await show_main_menu(
-        callback,
-        session,
-        i18n,
-        **({"task_idx": task_idx} if task_idx else {"task_id": task_id}),
-    )
+    await show_main_menu(callback, session, i18n, redis)
 
 
 @router.callback_query(MenuClick.filter(F.target == MenuAction.FINISH_TASK))

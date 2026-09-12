@@ -14,6 +14,7 @@ from src.bot.keyboards.callback_data import (
     LanguageClick,
 )
 from src.bot.keyboards.callback_data import (
+    MenuNavAction,
     MenuAction,
     DiscountAction,
     AddTaskAction,
@@ -40,7 +41,7 @@ def add_back_button(
 def get_main_menu_kb(
     i18n: I18nContext,
     has_tasks: bool,
-    task_idx: int = 0,
+    task_idx: int,
     total_tasks: int = 0,
     current_task_id: int = 0,
     is_finished: bool = False,
@@ -58,7 +59,7 @@ def get_main_menu_kb(
     if has_tasks and total_tasks > 1:
         builder.button(
             text="⬅️",
-            callback_data=MenuNav(idx=task_idx - 1),
+            callback_data=MenuNav(action=MenuNavAction.PREV),
         )
         builder.button(
             text=f"{task_idx + 1}/{total_tasks}",
@@ -66,7 +67,7 @@ def get_main_menu_kb(
         )
         builder.button(
             text="➡️",
-            callback_data=MenuNav(idx=task_idx + 1),
+            callback_data=MenuNav(action=MenuNavAction.NEXT),
         )
 
     builder.button(

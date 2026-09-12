@@ -3,6 +3,11 @@ from aiogram.filters.callback_data import CallbackData
 
 
 # --- ACTIONS
+class MenuNavAction(StrEnum):
+    NEXT = "n"
+    PREV = "p"
+
+
 class MenuAction(StrEnum):
     MENU = "m"
     FINISH_TASK = "ft"
@@ -38,7 +43,7 @@ class MenuClick(CallbackData, prefix="mn"):
 
 
 class MenuNav(CallbackData, prefix="mn_nv"):
-    idx: int
+    action: MenuNavAction
 
 
 class FinishTaskClick(CallbackData, prefix="fn_tk"):

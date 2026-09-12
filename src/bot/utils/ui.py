@@ -1,6 +1,7 @@
 from aiogram.types import CallbackQuery, Message, InputRichMessage
 from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
+from redis.asyncio import Redis
 
 from src.db.repo import UserRepo, ItemRepo
 from src.bot.keyboards import inline
@@ -144,8 +145,7 @@ async def show_main_menu(
     event: Message | CallbackQuery,
     session: AsyncSession,
     i18n: I18nContext,
-    task_idx: int | None = None,
-    task_id: int | None = None,
+    redis: Redis,
 ) -> None:
     if not event.from_user:
         return
@@ -153,6 +153,7 @@ async def show_main_menu(
     user_repo = UserRepo(session)
     user_id = event.from_user.id
     tasks = await user_repo.get_user_tasks(user_id)
+    current_task_idx = int(await redis.get(f"user:{user_id}:page") or 0) % len(tasks)
 
     if not tasks:
         text = f"""
@@ -160,21 +161,11 @@ async def show_main_menu(
 
             {i18n.get("no-tasks")}
         """
-        kb = inline.get_main_menu_kb(i18n, has_tasks=False)
+        kb = inline.get_main_menu_kb(i18n, has_tasks=False, task_idx=current_task_idx)
 
     else:
-        if task_id is not None:
-            current_task_idx = 0
-            for idx, task in enumerate(tasks):
-                if task.id == task_id:
-                    current_task_idx = idx
-                    break
-        elif task_idx is not None:
-            current_task_idx = task_idx % len(tasks)
-        else:
-            current_task_idx = 0
-
         current_task = tasks[current_task_idx]
+
         card_text, _, is_finished = await render_item_card(
             user_id,
             current_task.item_id,
