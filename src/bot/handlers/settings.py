@@ -2,6 +2,7 @@ from aiogram import Router
 from aiogram.types import CallbackQuery, Message
 from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
+from redis.asyncio import Redis
 
 from src.bot.utils.ui import show_main_menu
 from src.bot.keyboards.callback_data import LanguageClick
@@ -15,12 +16,11 @@ async def change_language(
     callback_data: LanguageClick,
     session: AsyncSession,
     i18n: I18nContext,
+    redis: Redis,
 ) -> None:
     if not isinstance(callback.message, Message):
         await callback.answer()
         return
-
-    task_id = callback_data.t_id
 
     await i18n.set_locale(callback_data.loc)
     await callback.answer(
@@ -28,4 +28,4 @@ async def change_language(
         show_alert=False,
     )
 
-    await show_main_menu(callback, session, i18n, task_id=task_id)
+    await show_main_menu(callback, session, i18n, redis)

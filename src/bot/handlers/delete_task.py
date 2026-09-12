@@ -2,6 +2,7 @@ from aiogram import Router
 from aiogram.types import CallbackQuery, Message
 from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
+from redis.asyncio import Redis
 
 from src.db.repo import UserRepo
 from src.bot.utils.ui import show_main_menu
@@ -16,6 +17,7 @@ async def delete_user_task(
     callback_data: DeleteTaskClick,
     session: AsyncSession,
     i18n: I18nContext,
+    redis: Redis,
 ) -> None:
     if not isinstance(callback.message, Message):
         await callback.answer()
@@ -28,19 +30,9 @@ async def delete_user_task(
     tasks = await user_repo.get_user_tasks(user_id)
     total_tasks = len(tasks)
 
-    target_idx = None
-    for idx, task in enumerate(tasks):
-        if task.id == task_id:
-            target_idx = idx
-            break
-
-    if target_idx is not None:
-        if target_idx == total_tasks - 1 and total_tasks > 1:
-            task_idx = target_idx - 1
-        else:
-            task_idx = target_idx
-    else:
-        task_idx = 0
+    current_task_idx = int(await redis.get(f"user:{user_id}:page") or 0)
+    if current_task_idx == total_tasks - 1 and total_tasks > 1:
+        current_task_idx = await redis.decr(f"user:{user_id}:page")
 
     await user_repo.abandon_task(user_id, task_id)
     await callback.answer(
@@ -48,4 +40,4 @@ async def delete_user_task(
         show_alert=False,
     )
 
-    await show_main_menu(callback, session, i18n, task_idx=task_idx)
+    await show_main_menu(callback, session, i18n, redis)

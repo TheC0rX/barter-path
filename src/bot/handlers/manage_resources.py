@@ -3,6 +3,7 @@ from aiogram.types import Message, CallbackQuery, InputRichMessage
 from aiogram.fsm.context import FSMContext
 from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
+from redis.asyncio import Redis
 
 from src.bot.keyboards import inline
 from src.bot.utils.ui import show_main_menu
@@ -228,6 +229,7 @@ async def update_resources(
     callback_data: ResourceCalc,
     session: AsyncSession,
     i18n: I18nContext,
+    redis: Redis,
 ) -> None:
     if not isinstance(callback.message, Message):
         await callback.answer()
@@ -250,4 +252,4 @@ async def update_resources(
         show_alert=False,
     )
 
-    await show_main_menu(callback, session, i18n, task_id=task_id)
+    await show_main_menu(callback, session, i18n, redis)

@@ -2,6 +2,7 @@ from aiogram import Router, F
 from aiogram.types import CallbackQuery, Message, InputRichMessage
 from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
+from redis.asyncio import Redis
 
 from src.bot.utils.ui import render_item_card, show_main_menu
 from src.bot.keyboards import inline
@@ -59,6 +60,7 @@ async def activate_task_discount(
     callback_data: DiscountClick,
     session: AsyncSession,
     i18n: I18nContext,
+    redis: Redis,
 ) -> None:
     if not isinstance(callback.message, Message):
         await callback.answer()
@@ -81,4 +83,4 @@ async def activate_task_discount(
         show_alert=False,
     )
 
-    await show_main_menu(callback, session, i18n, task_id=task_id)
+    await show_main_menu(callback, session, i18n, redis)
