@@ -139,7 +139,6 @@ def get_found_items_kb(
     items,
     i18n: I18nContext,
     prev_id: str = "",
-    task_idx: int | None = None,
 ) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
@@ -152,7 +151,6 @@ def get_found_items_kb(
                 t_id=task_id,
                 item_id=item.id,
                 prev_id=prev_id,
-                t_idx=task_idx,
             ),
         )
 
@@ -167,7 +165,6 @@ def get_card_nav_kb(
     item_id: str,
     i18n: I18nContext,
     prev_id: str = "",
-    task_idx: int | None = None,
 ) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
@@ -179,7 +176,6 @@ def get_card_nav_kb(
             item_id=item_id,
             o_idx=offer_idx,
             prev_id=prev_id,
-            t_idx=task_idx,
         ),
     )
 
@@ -194,7 +190,6 @@ def get_card_nav_kb(
                 item_id=item_id,
                 idx=prev_idx,
                 prev_id=prev_id,
-                t_idx=task_idx,
             ),
         )
         builder.button(
@@ -209,7 +204,6 @@ def get_card_nav_kb(
                 item_id=item_id,
                 idx=next_idx,
                 prev_id=prev_id,
-                t_idx=task_idx,
             ),
         )
 

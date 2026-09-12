@@ -56,7 +56,6 @@ class AddTaskClick(CallbackData, prefix="ad_tk"):
     o_idx: int = 0
     idx: int = 0
     prev_id: str = ""
-    t_idx: int | None = None
 
 
 class DeleteTaskClick(CallbackData, prefix="dl_tk"):

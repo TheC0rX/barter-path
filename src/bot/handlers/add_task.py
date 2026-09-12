@@ -3,6 +3,7 @@ from aiogram.types import Message, CallbackQuery, InputRichMessage
 from aiogram.fsm.context import FSMContext
 from aiogram_i18n import I18nContext
 from sqlalchemy.ext.asyncio import AsyncSession
+from redis.asyncio import Redis
 
 from src.db.repo import UserRepo, ItemRepo
 from src.bot.keyboards import inline
@@ -90,7 +91,6 @@ async def process_item_selection(
     user_id = callback.from_user.id
     item_id = callback_data.item_id
     task_id = callback_data.t_id
-    task_idx = callback_data.t_idx
 
     text, kb, _ = await render_item_card(
         user_id,
@@ -100,7 +100,6 @@ async def process_item_selection(
         i18n,
         prev_id=callback_data.prev_id,
         task_id=task_id,
-        task_idx=task_idx,
         is_preview=True,
     )
 
@@ -131,7 +130,6 @@ async def navigate_recipe(
     user_id = callback.from_user.id
     item_id = callback_data.item_id
     task_id = callback_data.t_id
-    task_idx = callback_data.t_idx
 
     text, kb, _ = await render_item_card(
         user_id,
@@ -141,7 +139,6 @@ async def navigate_recipe(
         i18n,
         prev_id=callback_data.prev_id,
         task_id=task_id,
-        task_idx=task_idx,
         is_preview=True,
     )
 
@@ -166,6 +163,7 @@ async def add_user_task(
     callback_data: AddTaskClick,
     session: AsyncSession,
     i18n: I18nContext,
+    redis: Redis,
 ) -> None:
     if not isinstance(callback.message, Message):
         await callback.answer()
@@ -176,7 +174,6 @@ async def add_user_task(
     item_id = callback_data.item_id
     offer_idx = callback_data.o_idx
     prev_id = callback_data.prev_id
-    task_idx = callback_data.t_idx
 
     user_repo = UserRepo(session)
     is_task_exist = await user_repo.check_task_exists(user_id, item_id)
@@ -188,7 +185,7 @@ async def add_user_task(
 
                     {i18n.get("task-already-exist")}
                 """),
-            reply_markup=inline.get_back_button(task_id, i18n, task_idx=task_idx),
+            reply_markup=inline.get_back_button(task_id, i18n),
         )
         return
 
@@ -211,4 +208,5 @@ async def add_user_task(
         show_alert=False,
     )
 
-    await show_main_menu(callback, session, i18n, task_idx=-1)
+    await redis.set(f"user:{user_id}:page", -1)
+    await show_main_menu(callback, session, i18n, redis)
