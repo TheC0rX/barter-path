@@ -19,7 +19,7 @@ from src.bot.middlewares.registration import RegistrationMiddleware
 from src.bot.handlers import setup_routers
 
 from src.db.base import engine, async_session_maker
-from src.redis.client import storage, redis_client
+from src.redis.client import redis_client
 from src.config import config
 
 
@@ -54,7 +54,7 @@ async def main() -> None:
         token=config.BOT_TOKEN.get_secret_value(),
         default=DefaultBotProperties(parse_mode=ParseMode.HTML),
     )
-    dp = Dispatcher(storage=storage)
+    dp = Dispatcher()
 
     locales_path = Path(__file__).parent.parent / "locales"
     core = FluentRuntimeCore(path=str(locales_path / "{locale}"))
@@ -111,7 +111,7 @@ async def main() -> None:
 
     try:
         await bot.delete_webhook(drop_pending_updates=True)
-        await dp.start_polling(bot)
+        await dp.start_polling(bot, redis=redis_client)
 
     except Exception as e:
         logger.exception(f"[bold magenta][BOT][/] Exception: \n{e}")
